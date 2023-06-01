@@ -1,7 +1,11 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
   <div id="app">
-    <header class="site-header sticky top-0 z-50 border border-gray-200" style="background-image: url('./src/assets/img/space_guy.jpg')">
+    <div><GlobalAlert /></div>
+    <div><ScreenLoader /></div>
+    <div><CollectionChangeSaver /></div>
+
+    <header class="site-header sticky top-0 z-50 border border-gray-200" :style="navBarStyle">
       <div class="container transition-all">
         <div class="header-inner border border-gray-200 dark:bg-[#0b14374d] flex justify-space-between dark:bg-deep-green-800">
           <div class="flex items-center justify-between w-full px-3 py-3 mx-auto max-w-8xl lg:px-4">
@@ -11,28 +15,35 @@
                 <svg id="toggleSidebarMobileClose" class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
               </button>
               <div class="flex items-center justify-between">
-                <a href="/" class="flex">
-                  <img src="./assets/img/logos/logo-no-background.svg" class="h-8 mr-3" alt="FlowBite Logo">
-                  <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">POSTAPI</span>
-                </a>
+                <router-link to="/">
+                  <div class="flex">
+                    <img src="./assets/img/logos/logo-no-background.svg" class="h-8 mr-3" alt="postapi logo">
+                    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">POSTAPI</span>
+                  </div>
+                </router-link>
               </div>
             </div>
         
             <div class="flex items-center">
               <ul id="flowbiteMenu" class="flex-col hidden pt-6 lg:flex-row lg:self-center lg:py-0 lg:flex">
-                <router-link to="/">
+                <router-link v-if="!auth" to="/">
                   <li class="mb-3 lg:px-2 xl:px-2 lg:mb-0">
-                    <a href="/docs/getting-started/quickstart/" class="text-md font-medium text-gray-900 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-500">Home</a>
+                    <span class="text-md font-medium text-gray-900 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-500">Home</span>
                   </li>
                 </router-link>
                 <router-link to="/published">
-                  <li class="mb-3 lg:px-2 xl:px-2 lg:mb-0">
-                    <a href="/blocks/" class="text-md font-medium text-gray-900 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-500">published</a>
+                  <li class="mb-3 cursor-pointer lg:px-2 xl:px-2 lg:mb-0">
+                    <span class="text-md font-medium text-gray-900 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-500">published</span>
                   </li>
                 </router-link>
-                <router-link to="/login">
-                  <li class="mb-3 lg:px-2 xl:px-2 lg:mb-0">
-                    <a href="/blog/" class="text-md font-medium text-gray-900 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-500">Login</a>
+                <div v-if="auth && user" @click="logout">
+                  <li class="mb-3 cursor-pointer lg:px-2 xl:px-2 lg:mb-0">
+                    <span class="text-md font-medium text-gray-900 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-500">Logout</span>
+                  </li>
+                </div>
+                <router-link to="/login" v-else>
+                  <li class="mb-3 cursor-pointer lg:px-2 xl:px-2 lg:mb-0">
+                    <span class="text-md font-medium text-gray-900 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-500">Login</span>
                   </li>
                 </router-link>
               </ul>
@@ -45,14 +56,7 @@
                   View on Github
                   <div class="tooltip-arrow" data-popper-arrow="" style="position: absolute; left: 0px; transform: translate3d(59.5px, 0px, 0px);"></div>
               </div>
-              <a href="https://discord.gg/4eeurUVvTy" data-tooltip-target="tooltip-discord-2" class="hidden sm:inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-md p-2.5 mr-1">
-                <svg class="w-6 h-6" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="discord" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path fill="currentColor" d="M524.5 69.84a1.5 1.5 0 0 0 -.764-.7A485.1 485.1 0 0 0 404.1 32.03a1.816 1.816 0 0 0 -1.923 .91 337.5 337.5 0 0 0 -14.9 30.6 447.8 447.8 0 0 0 -134.4 0 309.5 309.5 0 0 0 -15.14-30.6 1.89 1.89 0 0 0 -1.924-.91A483.7 483.7 0 0 0 116.1 69.14a1.712 1.712 0 0 0 -.788 .676C39.07 183.7 18.19 294.7 28.43 404.4a2.016 2.016 0 0 0 .765 1.375A487.7 487.7 0 0 0 176 479.9a1.9 1.9 0 0 0 2.063-.676A348.2 348.2 0 0 0 208.1 430.4a1.86 1.86 0 0 0 -1.019-2.588 321.2 321.2 0 0 1 -45.87-21.85 1.885 1.885 0 0 1 -.185-3.126c3.082-2.309 6.166-4.711 9.109-7.137a1.819 1.819 0 0 1 1.9-.256c96.23 43.92 200.4 43.92 295.5 0a1.812 1.812 0 0 1 1.924 .233c2.944 2.426 6.027 4.851 9.132 7.16a1.884 1.884 0 0 1 -.162 3.126 301.4 301.4 0 0 1 -45.89 21.83 1.875 1.875 0 0 0 -1 2.611 391.1 391.1 0 0 0 30.01 48.81 1.864 1.864 0 0 0 2.063 .7A486 486 0 0 0 610.7 405.7a1.882 1.882 0 0 0 .765-1.352C623.7 277.6 590.9 167.5 524.5 69.84zM222.5 337.6c-28.97 0-52.84-26.59-52.84-59.24S193.1 219.1 222.5 219.1c29.67 0 53.31 26.82 52.84 59.24C275.3 310.1 251.9 337.6 222.5 337.6zm195.4 0c-28.97 0-52.84-26.59-52.84-59.24S388.4 219.1 417.9 219.1c29.67 0 53.31 26.82 52.84 59.24C470.7 310.1 447.5 337.6 417.9 337.6z"></path></svg>
-                <span class="sr-only">Join Discord community</span>
-              </a>
-              <div id="tooltip-discord-2" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-md font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip" data-popper-placement="top" style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate3d(1065.5px, -64px, 0px);">
-                Join community on Discord
-                <div class="tooltip-arrow" data-popper-arrow="" style="position: absolute; left: 0px; transform: translate3d(99px, 0px, 0px);"></div>
-              </div>
+
               <button id="theme-toggle" data-tooltip-target="tooltip-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-md p-2.5">
                 <svg aria-hidden="true" id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
                 <svg aria-hidden="true" id="theme-toggle-light-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
@@ -62,6 +66,13 @@
                   Toggle dark mode
                   <div class="tooltip-arrow" data-popper-arrow="" style="position: absolute; left: 0px; transform: translate3d(68.5px, 0px, 0px);"></div>
               </div>
+
+              <router-link v-if="auth && user" to="/dashboard">
+                <div class="ml-3 cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-deep-green-700 rounded-full dark:bg-gray-600">
+                  <span class="font-medium text-gray-100 dark:text-gray-300">{{ stringIntials(user.name) }}</span>
+                </div>
+              </router-link>
+
             </div>
           </div>
         </div>
@@ -69,6 +80,7 @@
     </header>
 
     <router-view />
+    <div><ReadURLAndRefresh /></div>
   </div>
 </template>
 <style>
@@ -77,13 +89,50 @@
 <script>
 import { useUserStore } from "./stores/UserStore";
 import { AppwriteService } from "./Services/AppwriteService";
+import { getInitials } from "./Utils/GeneralUtls";
+import router from "./router";
+import { Auth } from "./Services/Auth";
 
 export default {
-  mounted() {
-    const account = AppwriteService().account();
+  data: () => ({
+    navBarStyle: `background-image: url('${
+      import.meta.env.VITE_BASE_URL
+    }/src/assets/img/space_guy.jpg')`,
+    user: useUserStore().get,
+    auth: false,
+    stringIntials: getInitials,
+  }),
+  components: {
+    GlobalAlert: () => import("./components/Common/GlobalAlert.vue"),
+    ScreenLoader: () => import("./components/Common/ScreenLoader.vue"),
+    CollectionChangeSaver: () =>
+      import("./components/CollectionHandler/CollectionChangeSaver.vue"),
+    ReadURLAndRefresh: () =>
+      import("./components/CollectionHandler/ReadURLAndRefresh.vue"),
+  },
+  methods: {
+    async logout() {
+      const account = AppwriteService().account();
 
-    account.get().then((response) => useUserStore().store(response));
-    account.createJWT().then((jwt) => useUserStore().storeJWT(jwt));
+      account.listSessions().then((sessions) => {
+        for (const session in sessions.sessions) {
+          account.deleteSession(sessions.sessions[session].$id).then(() => {
+            router.push({ path: "/" });
+            window.location.reload();
+          });
+        }
+      });
+    },
+  },
+  mounted() {
+    Auth()
+      .user()
+      .then((response) => {
+        useUserStore().store(response);
+        this.user = response;
+        this.auth = true;
+      })
+      .catch(() => (this.auth = false));
   },
 };
 </script>

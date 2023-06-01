@@ -1,5 +1,23 @@
-<!-- eslint-disable vue/valid-template-root -->
-<template></template>
+<!-- eslint-disable prettier/prettier -->
+<template>
+  <transition name="alert" v-if="isLoading">
+    <div id="toast-success" class="flex fixed z-30 bottom-2 right-5 items-center p-4 mb-4 max-w-md text-gray-500 bg-white rounded-xl shadow dark:text-gray-400 dark:bg-gray-800" role="alert" style="font-size: 15px">
+
+        <div class="inline-flex flex-shrink-0 justify-center items-center w-8 h-8">
+          <div>
+            <span class="relative inset-0 inline-flex h-6 w-6 animate-spin items-center justify-center rounded-full border-2 border-gray-300 after:absolute after:h-8 after:w-8 after:rounded-full after:border-2 after:border-y-indigo-500 after:border-x-transparent"></span>
+          </div>
+        </div>
+
+        <div class="ml-3 font-normal" style="font-size: 15px !important">{{ response }}</div>
+
+        <button @click="diableAlert()" type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
+            <span class="sr-only">Close</span>
+            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+        </button>
+    </div>
+</transition>
+</template>
 <script>
 import { appWriteCollections } from "../../config/services";
 import { AppwriteService } from "../../Services/AppwriteService";
@@ -11,6 +29,8 @@ export default {
     return {
       storage: AppwriteService().storage(),
       database: AppwriteService().database(),
+      isLoading: false,
+      response: "",
     };
   },
   methods: {
@@ -21,20 +41,42 @@ export default {
      */
     async submitCollectionChanges(data) {
       tryCatch(() => {
+        this.isLoading = true;
+
         let collection = useCollectionStore().get;
         let collectionFile = collection.file;
         let newCollection = {};
 
-        (data.section == "info.name") ? collectionFile.info.name = data.name
-        : (data.section == "info.description") ? collectionFile.info.description = data.description
-        : (collectionFile.hasOwnProperty("info")) ? newCollection.info = collectionFile.info
-        : (collectionFile.hasOwnProperty("auth")) ? newCollection.auth = collectionFile.auth
-        : (collectionFile.hasOwnProperty("event")) ? newCollection.event = collectionFile.event
-        : (collectionFile.hasOwnProperty("item")) ? newCollection.item = collectionFile.item
-        : false;
+        if (data.section == "info.name") {
+          collectionFile.info.name = data.name;
+        }
+        if (data.section == "info.description") {
+          collectionFile.info.description = data.description;
+        }
+
+        if (collectionFile.hasOwnProperty("info")) {
+          newCollection.info = collectionFile.info;
+        }
+
+        if (collectionFile.hasOwnProperty("auth")) {
+          newCollection.auth = collectionFile.auth;
+        }
+
+        if (collectionFile.hasOwnProperty("event")) {
+          newCollection.event = collectionFile.event;
+        }
+
+        if (collectionFile.hasOwnProperty("item")) {
+          newCollection.item = collectionFile.item;
+        }
 
         if (data.section == "item") {
-          let collectionItems = this.traverseThroughJSON(collectionFile.item, data.id, data);
+          let collectionItems = this.traverseThroughJSON(
+            collectionFile.item,
+            data.id,
+            data
+          );
+
           newCollection.item = collectionItems;
         }
 
@@ -67,6 +109,8 @@ export default {
                 response: "File updated successfully",
                 hasResponse: true,
               });
+
+              this.isLoading = false;
             });
           });
         });
@@ -106,15 +150,25 @@ export default {
   },
   mounted() {
     this.$root.$on("save_collection_changes", async (payload) => {
+      // Check if payload has element to run before then execute
       // eslint-disable-next-line no-prototype-builtins
       payload.hasOwnProperty("before") && payload.before instanceof Function
         ? payload.before()
         : "";
 
+      // Check if payload has custom message for alert
+      // eslint-disable-next-line no-prototype-builtins
+      this.response = payload.hasOwnProperty("alertMessage")
+        ? payload.alertMessage
+        : "Save changes";
+
       await this.submitCollectionChanges(payload.data);
 
+      // Check if payload has elemtn to run after then execute
       // eslint-disable-next-line no-prototype-builtins
-      payload.hasOwnProperty("after") && payload.after instanceof Function
+      payload.hasOwnProperty("after") &&
+      payload.after instanceof Function &&
+      !this.isLoading
         ? payload.after()
         : "";
     });

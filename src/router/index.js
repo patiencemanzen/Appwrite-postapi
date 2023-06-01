@@ -1,21 +1,55 @@
-/* eslint-disable prettier/prettier */
 import Vue from "vue";
 import VueRouter from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import { AppwriteService } from "../Services/AppwriteService";
+import { Auth } from "../Services/Auth";
 
 Vue.use(VueRouter);
 
+const DEFAULT_TITLE = "postapi | patienceman";
+
 const routes = [
-  { path: "/", name: "home", component: HomeView },
-  { path: "/login", name: "login", component: () => import("../views/LoginView.vue") },
-  { path: "/published", name: "published", component: () => import("../views/PublishedView.vue") },
-  { path: "/collection", name: "collection", component: () => import("../views/CollectionView.vue") },
-  { path: "/dashboard", name: "dashboard", component: () => import("../views/DashboardView.vue"), 
+  {
+    path: "/",
+    name: "home",
+    component: HomeView,
+    meta: { title: "Home" },
     beforeEnter: async (to, from, next) => {
-      if(to.name !== 'login' && !await isAuthenticated()) next({ name: 'login' });
+      if (await Auth().check()) next({ name: "dashboard" });
       else next();
-    }},
+    },
+  },
+  {
+    path: "/login",
+    name: "login",
+    meta: { title: "Login" },
+    component: () => import("../views/LoginView.vue"),
+    beforeEnter: async (to, from, next) => {
+      if (await Auth().check()) next({ name: "dashboard" });
+      else next();
+    },
+  },
+  {
+    path: "/published",
+    name: "published",
+    meta: { title: "Published Collections" },
+    component: () => import("../views/PublishedView.vue"),
+  },
+  {
+    path: "/collection/:collection",
+    name: "collection",
+    meta: { title: "Collection" },
+    component: () => import("../views/CollectionView.vue"),
+  },
+  {
+    path: "/dashboard",
+    name: "dashboard",
+    meta: { title: "Dashboard" },
+    component: () => import("../views/DashboardView.vue"),
+    beforeEnter: async (to, from, next) => {
+      if (!(await Auth().check())) next({ name: "login" });
+      else next();
+    },
+  },
 ];
 
 const router = new VueRouter({
@@ -24,16 +58,10 @@ const router = new VueRouter({
   routes: routes,
 });
 
-/**
- * Check if there is auth session
- * otherwise redirect back to login
- * 
- * @returns bool
- */
-// eslint-disable-next-line no-unused-vars
-const isAuthenticated = async () => {
-  const account = AppwriteService().account();
-  return account.get().then(() => true).catch(() => false);
-}
+router.afterEach((to) => {
+  Vue.nextTick(() => {
+    document.title = `${to.meta.title} | ${DEFAULT_TITLE}`;
+  });
+});
 
 export default router;

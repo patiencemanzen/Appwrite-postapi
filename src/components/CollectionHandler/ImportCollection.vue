@@ -61,9 +61,9 @@ export default {
      * then redirect back to dashboard
      */
     async submitCollection() {
-      this.$root.$emit("set_loader_on");
-
       tryCatch(() => {
+        this.$root.$emit("set_loader_on");
+
         const blob = new Blob([this.model.collection], {
           type: "application/json",
         });
@@ -106,19 +106,24 @@ export default {
             };
 
             this.database.collection(appWriteCollections.collection_table);
-
-            this.database.create(data).then(() => {
+            this.database.create(data).then((collection) => {
               this.$root.$emit("new_message", {
                 responseType: "success",
                 response: "File imported successfully",
                 hasResponse: true,
+              });
+
+              this.$root.$emit("set_loader_off");
+              this.$root.$emit("refresh_collections", {
+                ...collection,
+                file: this.newCollection,
+                file_id: collectionFile.$id,
               });
             });
           });
         });
       });
 
-      this.$root.$emit("set_loader_off");
       this.hasResponse = true;
     },
 
@@ -128,6 +133,7 @@ export default {
      * the function with that object as the new argument
      */
     recursiveMap(obj, callback) {
+      // eslint-disable-next-line no-unused-vars
       obj.forEach((value, key, array) => {
         // eslint-disable-next-line no-prototype-builtins
         if (value.hasOwnProperty("item")) {

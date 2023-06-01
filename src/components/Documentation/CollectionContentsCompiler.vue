@@ -3,7 +3,7 @@
     <div id="downloadable" class="flex relative">
 
         <!-- GET CAURSE CONTENT OF THE DOC AND SHARE -->
-        <div><about-collection-and-share
+        <div><TableOfContents
             :page_description="info.description"
             :page_title="info.name"
             :collection_items="items"
@@ -11,22 +11,24 @@
 
         <!-- PUBLISH COLLECTION -->
         <div v-if="owner">
-            <publish-collection :collectionId="preparedCollection.id" />
+            <PublishCollection :collectionId="preparedCollection.id" />
         </div>
 
         <div class="post-contents-wrapper">
             <div class="single-post-title">
-                <div class="post-date" style="letter-spacing: 1">
-                    {{ format(postCollection.created_at) }}
+                <div class="post-date font-anek text-gray-500 capitalize" style="letter-spacing: 1">
+                    {{ format(collection.$createdAt) }}
                 </div>
                 <div class="relative">
                     <h1 class="flex">
                         {{ data.name }}
-                        <span v-if="owner" @click="openEditor('_title_')" id="*_title_" class="editBtn border border-gray-200 ml-2 bg-gray-100 rounded-circle w-8 h-8 flex items-center justify-center text-gray-500 cursor-pointer">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-                            </svg>
-                        </span>
+                        <div v-if="owner" @click="openEditor('_title_')" id="*_title_" class="cursor-pointer ml-3 h-10 inline-flex items-center justify-between px-1 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">
+                            <span class="text-xs bg-white dark:bg-gray-900 rounded-full text-black px-3 py-1.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                                </svg>
+                            </span>
+                        </div>
                     </h1>
 
                     <div class="hidden" id="#_title_">
@@ -61,18 +63,22 @@
                 </div>
                 <div class="post-author-container">
                     <div class="post-author">Collected</div>
-                    <div class="by-text">by</div>
-                    <div class="post-author">{{ collector.name }}</div>
+                    <div class="by-text"> by</div>
+                    <div class="post-author capitalize">
+                      {{ author.name }} 
+                    </div>
                 </div>
                 <div class="relative">
-                    {{data.description}}
                     <p class="post-summary font-anek flex relative">
-                        <span v-if="owner" @click="openEditor('_desc_')" id="*_desc_" class="editBtn absolute bottom-0 right-0 border border-gray-200 ml-2 bg-gray-100 rounded-circle w-8 h-8 flex items-center justify-center text-gray-500 cursor-pointer">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-                            </svg>
-                        </span>
+                      {{data.description}}
                     </p>
+                    <div v-if="owner" @click="openEditor('_desc_')" id="*_desc_" class="cursor-pointer absolute bottom-0 -right-3 ml-3 h-10 inline-flex items-center justify-between px-1 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">
+                      <span class="text-xs bg-white dark:bg-gray-900 rounded-full text-black px-3 py-1.5">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                          </svg>
+                      </span>
+                    </div>
                     <div class="hidden" id="#_desc_">
                         <div class="absolute -bottom-48 z-20 w-auto border border-gray-100 rounded-[10px] bg-white px-3 py-2.5 shadow-md shadow-shadow-200 dark:!bg-navy-800 dark:shadow-none md:w-[365px] md:flex-grow-0 md:gap-1 xl:w-[365px] xl:gap-2">
                             <div class="flex-grow items-center justify-center relative">
@@ -102,17 +108,14 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="share-and-download">
-                <collection-fork-and-like :page_title="info.name" />
-            </div> -->
-            <div class="main-container">
+            <div class="main-container mt-3">
                 <div class="post-body w-richtext">
                     <ol class="relative border-l ml-3 border-gray-200 dark:border-gray-700">
-                        <collection-tree-structure
-                            v-for="item in items"
-                            :key="item.name + Math.random().toString(16).slice(2)"
-                            :folder="item"
-                            :owner="owner"
+                        <CollectionStructure
+                          v-for="item in items"
+                          :key="slugfi(item.name + id.unique())"
+                          :folder="item"
+                          :owner="owner"
                         />
                     </ol>
                 </div>
@@ -123,33 +126,20 @@
 <script>
 import moment from "moment";
 import { useCollectionStore } from "../../stores/CollectionStore";
+import axios from "axios";
+import { appAPIConfigs } from "../../config/services";
+import { useUserStore } from "../../stores/UserStore";
+import { ID } from "appwrite";
+import { slugify } from "../../Utils/GeneralUtls";
 
 export default {
   props: {
-    contents: {
-      type: String,
-      default: "### patienceman shared content loading",
-    },
     collection: { required: true },
-    author: { required: true },
-    owner: { required: true },
   },
-  computed: {
-    authUser: {
-      get() {
-        return JSON.parse(this.user);
-      },
-    },
-    collector: {
-      get() {
-        return JSON.parse(this.author);
-      },
-    },
-    postCollection: {
-      get() {
-        return JSON.parse(this.collection);
-      },
-    },
+  components: {
+    TableOfContents: () => import("./TableOfContents.vue"),
+    PublishCollection: () => import("./PublishCollection.vue"),
+    CollectionStructure: () => import("./CollectionStructure.vue"),
   },
   data: () => ({
     info: {},
@@ -161,47 +151,33 @@ export default {
       name: "",
       description: "",
     },
+    author: {},
+    owner: false,
+    user: useUserStore().get,
+    id: ID,
+    slugfi: slugify,
   }),
   methods: {
-    async getCollections() {
-      this.collections = [];
-
-      await this.inspectCollection(this.postCollection.collection_url).then(
-        (result) =>
-          (this.preparedCollection = { ...this.postCollection, file: result })
-      );
-    },
-
-    async inspectCollection(path) {
-      let result = fetch(`/storage/${path}`)
-        .then((response) => response.json())
-        .then((json) => json);
-
-      return await result;
-    },
-
-    async fetchAndRegisterCollection() {
-      await this.getCollections();
-
-      this.info = this.preparedCollection.file.info;
-      this.items = this.preparedCollection.file.item;
-      this.data.name = this.preparedCollection.file.info.name;
-      this.data.description = this.preparedCollection.file.info.description;
-
-      // Store collection globally
-      useCollectionStore().store(this.preparedCollection);
-    },
-
+    /**
+     * Format custom date
+     */
     format(date) {
       return moment(date).format("MMMM Do YYYY");
     },
 
-    // folder desc editor
+    /**
+     * Single Folder Desc
+     * editor opener
+     */
     openEditor(folderId) {
       document.getElementById("#" + folderId).classList.remove("hidden");
       document.getElementById("*" + folderId).classList.add("d-none");
     },
 
+    /**
+     * Single Folder Desc
+     * editor closer
+     */
     closeEditor(folderId) {
       document.getElementById("#" + folderId).classList.add("hidden");
       document.getElementById("*" + folderId).classList.remove("d-none");
@@ -212,21 +188,14 @@ export default {
      * and refresh the page
      */
     async submitDocTitle() {
-      let spinner = document.getElementById(
-        "*_title_spinner_" + this.uniqueIdentifier
-      );
-
       this.$root.$emit("save_collection_changes", {
-        before: () => spinner.classList.remove("hidden"),
+        alertMessage: `Saving Collection title`,
         data: {
           id: this.uniqueIdentifier,
           name: this.data.name,
           section: "info.name",
         },
-        after: () => {
-          spinner.classList.add("hidden");
-          this.$root.$emit("refresh_collection");
-        },
+        after: () => this.$root.$emit("refresh_collection"),
       });
     },
 
@@ -235,43 +204,72 @@ export default {
      * and refresh the page
      */
     async submitDocDesc() {
-      let spinner = document.getElementById(
-        "*_desc_spinner_" + this.uniqueIdentifier
-      );
-
       this.$root.$emit("save_collection_changes", {
-        before: () => spinner.classList.remove("hidden"),
+        alertMessage: `Saving Collection Description`,
         data: {
           id: this.uniqueIdentifier,
           description: this.data.description,
           section: "info.description",
         },
-        after: () => {
-          spinner.classList.add("hidden");
-          this.$root.$emit("refresh_collection");
-        },
+        after: () => this.$root.$emit("refresh_collection"),
       });
     },
   },
   watch: {
-    preparedCollection: {
-      handler(newPreparedCollection) {
-        if (Object.keys(newPreparedCollection).length !== 0) {
-          this.data.name = newPreparedCollection.file.info.name;
-          this.data.description = newPreparedCollection.file.info.description;
-          this.info = newPreparedCollection.file.info;
-          this.items = newPreparedCollection.file.item;
+    collection: {
+      handler(newCollection) {
+        if (newCollection && newCollection.file) {
+          this.data.name =
+            newCollection.file.info?.name !== undefined
+              ? newCollection.file.info.name
+              : "";
+          this.data.description =
+            newCollection.file.info?.description !== undefined
+              ? newCollection.file.info.description
+              : "";
+          this.info = newCollection.file.info;
+          this.items = newCollection.file.item;
+        }
+
+        useCollectionStore().store(newCollection);
+
+        /**
+         * If Collection loaded then get the author
+         * and check if auth user is the owner
+         */
+        if (newCollection.user_id) {
+          // eslint-disable-next-line prettier/prettier
+          const getUser = axios(`${import.meta.env.VITE_APPWRITE_CLIENT_ENDPOINT}/users/${newCollection.user_id}`,
+            { headers: appAPIConfigs.headers }
+          );
+
+          getUser.then((user) => {
+            this.author = user.data;
+
+            user.data.$id == this.user.$id
+              ? (this.owner = true)
+              : (this.owner = false);
+          });
         }
       },
       immediate: true,
     },
   },
   async mounted() {
-    await this.fetchAndRegisterCollection();
-    this.$root.$on(
-      "refresh_collection",
-      async () => await this.fetchAndRegisterCollection()
-    );
+    this.$root.$on("refresh_collection", () => {
+      const collection = useCollectionStore().get;
+
+      this.data.name =
+        collection.file.info?.name !== undefined
+          ? collection.file.info.name
+          : "";
+      this.data.description =
+        collection.file.info?.description !== undefined
+          ? collection.file.info.description
+          : "";
+      this.info = collection.file.info;
+      this.items = collection.file.item;
+    });
   },
 };
 </script>

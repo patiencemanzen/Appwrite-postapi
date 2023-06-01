@@ -25,6 +25,7 @@ export default {
     return {
       uniqueIdentifier: Math.random().toString(16).slice(2),
       nextGen: "dropdown-" + this.forlder.name + "-" + this.uniqueIdentifier,
+      urlParams: new URLSearchParams(window.location.search),
     };
   },
   methods: {
@@ -61,6 +62,15 @@ export default {
       // set request body
       this.$root.$emit("list_requests", requests);
     },
+  },
+  mounted() {
+    if (
+      this.forlder &&
+      this.urlParams.has("requests") &&
+      this.forlder.id == this.urlParams.get("requests")
+    ) {
+      document.getElementById(this.urlParams.get("requests")).click();
+    }
   },
 };
 </script>

@@ -22,8 +22,8 @@ export default {
           this.database.collection(appWriteCollections.collection_table);
           this.database
             .show(this.urlParams.get("collection"))
-            .then(async (document) => {
-              const file = this.storage.view(document.storage_file_id);
+            .then(async (collection) => {
+              const file = this.storage.view(collection.storage_file_id);
 
               fetch(file.href, {
                 method: "GET",
@@ -38,19 +38,11 @@ export default {
                   this.$root.$emit("autoload_collection", {
                     before: () => this.$root.$emit("set_loader_on"),
                     collection: {
-                      ...document,
+                      ...collection,
                       file: json,
-                      file_id: document.storage_file_id,
+                      file_id: collection.storage_file_id,
                     },
-                    after: () => {
-                      if (this.urlParams.has("requests")) {
-                        document
-                          .getElementById(this.urlParams.get("requests"))
-                          .click();
-                      }
-
-                      this.$root.$emit("set_loader_off");
-                    },
+                    after: () => this.$root.$emit("set_loader_off"),
                   });
                 });
             });

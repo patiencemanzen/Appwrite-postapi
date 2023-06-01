@@ -8,7 +8,7 @@
                     <div class="pb-0 mt-6 hidden sm:block z-0">
                         <div class="relative w-full block z-10">
                             <div class="text-gray-900 text-base font-bold font-anek leading-22 bg-transparent">
-                                About this Documentation
+                              <h4>Table of Contents</h4>
                             </div>
                         </div>
                         <div class="p-3 mt-2 relative transition-all border border-gray-100 rounded-[10px] duration-700 max-h-[20rem] overflow-y-auto false false">
@@ -27,7 +27,7 @@
                     </div>
                     <div class="flex gap-x-4 mt-6 flex-wrap">
                         <div class="text-sm leading-21 text-gray-16 capitalize -tracking-tight w-full flex mb-3 font-bold">
-                            Share This collection
+                            Share This doc
                         </div>
                         <div class="flex flex-grow items-center gap-2">
                             <div class="novashare-buttons novashare-floating novashare-no-print">
@@ -54,15 +54,17 @@
                                 </vue-goodshare-linkedIn>
                             </div>
                             <div class="share__action" data-interface="DownloadPostForm">
-                                <button @click="exportInPDF" class="opacity-100 border border-gray-100 rounded-[10px] px-3 py-2 bg-red-500 text-white">
+                                <button @click="exportInPDF" type="button" class="justify-center text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9.75v6.75m0 0l-3-3m3 3l3-3m-8.25 6a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9.75v6.75m0 0l-3-3m3 3l3-3m-8.25 6a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
                                     </svg>
+                                    <span class="ml-2">PDF</span>
                                 </button>
-                                <button @click="exportInDOCX" class="opacity-100 border border-gray-100 rounded-[10px] px-2 py-2 bg-indigo-500 text-white">
+                                <button @click="exportInDOCX" type="button" class="justify-center text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9.75v6.75m0 0l-3-3m3 3l3-3m-8.25 6a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9.75v6.75m0 0l-3-3m3 3l3-3m-8.25 6a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
                                     </svg>
+                                    <span class="ml-2">DOCX</span>
                                 </button>
                             </div>
                         </div>
@@ -98,12 +100,14 @@ export default {
     source: "downloadable",
   }),
   components: {
-    // Social links
     VueGoodshareFacebook,
     VueGoodshareTwitter,
     VueGoodshareLinkedIn,
   },
   methods: {
+    /**
+     * Export the doc as PDF file
+     */
     exportInPDF() {
       let options = {
         margin: 5,
@@ -115,6 +119,10 @@ export default {
 
       html2pdf(document.getElementById(this.source), options);
     },
+
+    /**
+     * Export the doc as DOCX file
+     */
     exportInDOCX() {
       var header =
         "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
@@ -141,7 +149,7 @@ export default {
 </script>
 <style scoped>
 .button-social {
-  padding: 3px 8px !important;
+  padding: 5px 8px !important;
   font-size: 14px !important;
 }
 </style>

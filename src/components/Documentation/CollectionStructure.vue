@@ -1,29 +1,41 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
     <div>
-        <!------------------------------------------
-            WHEN IT IS FOLDER TURN
-        ------------------------------------------>
         <li class="mb-10 ml-6" v-if="!folder.hasOwnProperty('request')" :id="folder.name">
-            <span class="absolute p-2 flex items-center justify-center w-8 h-8 bg-blue-400 text-center text-gray-200 rounded-full -left-3 ring-4 ring-[#ecf1fa] dark:ring-gray-900 dark:bg-blue-900">
+            <span class="absolute flex items-center justify-center w-8 h-8 bg-blue-400 text-center text-gray-200 rounded-full -left-4 top-2 ring-4 ring-[#ecf1fa] dark:ring-gray-900 dark:bg-blue-900">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
                 </svg>
             </span>
             <div class="relative">
-                <h3 class="flex  items-center mb-1 font-semibold text-gray-900 dark:text-white capitalize">{{ folder.name }}
-                    <span class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 ml-3">{{ folder.hasOwnProperty('request') ? "Request" : "Folder" }}</span>
-                    <div v-if="owner" @click="openFolderTitleEditor(uniqueIdentifier)" :id="'*_title_'+uniqueIdentifier" class="editBtn border border-gray-200 ml-2 bg-gray-100 rounded-circle w-8 h-8 flex items-center justify-center text-gray-500 cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
-                        </svg>
+                <div class="flex items-center ">
+                    <aside class="inline-flex items-center justify-between px-1 py-1 pr-4 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white" aria-label="Component requires Tailwind v3.0">
+                        <span class="bg-white dark:bg-gray-900 rounded-full text-black px-4 py-1 mr-3 text-center">
+                            <span class="text-lg mb-1 font-semibold text-gray-900 dark:text-white capitalize">{{ folder.name }}</span>
+                        </span> 
+                    </aside>
+                    <span class="bg-blue-100 text-blue-800 text-sm mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 ml-3">{{ folder.hasOwnProperty('request') ? "Request" : "Folder" }}</span>
+                    <div v-if="owner" @click="openFolderTitleEditor(uniqueIdentifier)" :id="'*_title_'+uniqueIdentifier" class="cursor-pointer inline-flex items-center justify-between px-1 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">
+                        <span class="text-xs bg-white dark:bg-gray-900 rounded-full text-black px-3 py-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                            </svg>
+                        </span>
                     </div>
-                    <div v-if="owner" @click="openDescEditor(uniqueIdentifier)" :id="'*_desc_'+uniqueIdentifier" class="editBtn border border-gray-200 ml-2 bg-gray-100 rounded-circle w-8 h-8 flex items-center justify-center text-gray-500 cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-                        </svg>
+                    <div v-if="owner" @click="openDescEditor(uniqueIdentifier)" :id="'*_desc_'+uniqueIdentifier" class="cursor-pointer inline-flex items-center justify-between px-1 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">
+                        <span class="text-xs bg-white dark:bg-gray-900 rounded-full text-black px-3 py-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                            </svg>
+                        </span>                        
                     </div>
-                </h3>
+                </div>
+                <div class="p-1"></div>
+                <div v-if="folder.description === ''" class="w-full mt-2">
+                    <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
+                    <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-2.5"></div>
+                    <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[400px] mb-2.5"></div>
+                </div>
                 <div class="hidden" :id="'#_title_'+uniqueIdentifier">
                     <div class="absolute -bottom-16 z-10 flex w-auto border border-gray-100 flex-grow items-center justify-center rounded-[10px] bg-white px-3 py-2.5 shadow-md shadow-shadow-200 dark:!bg-navy-800 dark:shadow-none md:w-[365px] md:flex-grow-0 md:gap-1 xl:w-[365px] xl:gap-2">
                         <div>
@@ -60,10 +72,10 @@
                         <textarea :value="folder.description" :id="'#v-model_desc_'+uniqueIdentifier" rows="2" class="font-anek font-medium text-gray-600 w-full px-0 text-sm bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="Write a comment..." required></textarea>
                     </div>
                     <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
-                        <button @click="submitDocFolderDescription(folder.id, uniqueIdentifier)" type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                        <button @click="submitDocFolderDescription(folder.id, uniqueIdentifier)" type="submit" class="inline-flex cursor-pointer items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                             Save changes
                         </button>
-                        <button @click="closeDescEditor(uniqueIdentifier)" type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-gray-500 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                        <button @click="closeDescEditor(uniqueIdentifier)" type="submit" class="inline-flex items-center py-2.5 cursor-pointer px-4 text-xs font-medium text-center text-white bg-gray-500 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                             Cancel
                         </button>
                     </div>
@@ -75,37 +87,38 @@
                 </div>
             </div>
 
-            <ol v-if="folder?.item" class="relative border-l mt-3 border-gray-200 dark:border-gray-700">
-                <collection-tree-structure v-for="nextItem in folder.item" :key="nextItem.name+uniqueIdentifier" :folder="nextItem" :owner="owner" />
+            <ol v-if="folder?.item" class="relative border-l mt-5 border-gray-200 dark:border-gray-700">
+                <CollectionStructure v-for="nextItem in folder.item" :key="slugfi(nextItem.id+uniqueIdentifier)" :folder="nextItem" :owner="owner" />
             </ol>
         </li>
 
-        <!------------------------------------------
-            WHEN IT IS REQUEST TURN
-        ------------------------------------------>
         <li class="mb-10 ml-6 pr-3" v-if="folder.hasOwnProperty('request')">
-            <span :class="methodsSymbols[folder.request.method]+' absolute flex items-center justify-center w-8 h-8 rounded-full -left-3 ring-4 p-2 ring-[#ecf1fa] dark:ring-gray-900 dark:bg-blue-900'">
+            <span :class="methodsSymbols[folder.request.method]+' absolute flex items-center justify-center w-8 h-8 rounded-full -left-4 ring-4 ring-[#ecf1fa] dark:ring-gray-900 dark:bg-blue-900'">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                 </svg>
             </span>
             <div class=relative>
-                <h3 class="flex items-center mb-1 text-lg font-semibold text-gray-900 dark:text-white capitalize">
+                <div class="flex items-center mb-1 text-lg font-semibold text-gray-900 dark:text-white capitalize">
                     <span :class="methodsSymbols[folder.request.method]+' text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300'">
                         {{ folder.request?.method !== undefined ? folder.request?.method : '' }}
                     </span>
                     {{ folder.name }}
-                    <div v-if="owner" @click="openFolderTitleEditor(uniqueIdentifier)" :id="'*_title_'+uniqueIdentifier" class="editBtn border border-gray-200 ml-2 bg-gray-100 rounded-circle w-8 h-8 flex items-center justify-center text-gray-500 cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
-                          </svg>
+                    <div v-if="owner" @click="openFolderTitleEditor(uniqueIdentifier)" :id="'*_title_'+uniqueIdentifier" class="cursor-pointer ml-3 inline-flex items-center justify-between px-1 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">
+                        <span class="text-xs bg-white dark:bg-gray-900 rounded-full text-black px-3 py-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                            </svg>
+                        </span>
                     </div>
-                    <div v-if="owner" @click="openDescEditor(uniqueIdentifier)" :id="'*_desc_'+uniqueIdentifier" class="editBtn border border-gray-200 ml-2 bg-gray-100 rounded-circle w-8 h-8 flex items-center justify-center text-gray-500 cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-                        </svg>
+                    <div v-if="owner" @click="openDescEditor(uniqueIdentifier)" :id="'*_desc_'+uniqueIdentifier" class="cursor-pointer inline-flex items-center justify-between px-1 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">
+                        <span class="text-xs bg-white dark:bg-gray-900 rounded-full text-black px-3 py-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                            </svg> 
+                        </span>
                     </div>
-                </h3>
+                </div>
                 <div class="hidden" :id="'#_title_'+uniqueIdentifier">
                     <div class="absolute -bottom-16 z-10 flex w-auto border border-gray-100 flex-grow items-center justify-center rounded-[10px] bg-white px-3 py-2.5 shadow-md shadow-shadow-200 dark:!bg-navy-800 dark:shadow-none md:w-[365px] md:flex-grow-0 md:gap-1 xl:w-[365px] xl:gap-2">
                         <div>
@@ -148,10 +161,10 @@
                         <textarea :value="folder.description" :id="'#v-model_desc_'+uniqueIdentifier" rows="2" class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="Write a comment..." required></textarea>
                     </div>
                     <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
-                        <button @click="submitDocFolderDescription(folder.id, uniqueIdentifier)" type="button" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                        <button @click="submitDocFolderDescription(folder.id, uniqueIdentifier)" type="button" class="cursor-pointer inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                             Save changes
                         </button>
-                        <button @click="closeDescEditor(uniqueIdentifier)" type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-gray-500 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                        <button @click="closeDescEditor(uniqueIdentifier)" type="submit" class="cursor-pointer inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-gray-500 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                             Cancel
                         </button>
                     </div>
@@ -236,14 +249,16 @@
                 <div class="px-4 py-2 bg-white rounded-b-lg dark:bg-gray-800 overflow-x-auto">
                     <label for="editor" class="sr-only">Publish post</label>
 
-                    <ssh-pre v-if="folder.request.body?.raw !== undefined" language="json" label="body" copy-button @copied="onCopiedDoSomething">
-                        <template #copy-button>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
-                            </svg>
-                        </template>
-                        {{ folder.request.body.raw }}
-                    </ssh-pre>
+                    <div class="text-sm">
+                        <ssh-pre v-if="folder.request.body?.raw !== undefined" language="json" label="body" copy-button @copied="onCopiedDoSomething">
+                            <template #copy-button>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+                                </svg>
+                            </template>
+                            {{ folder.request.body.raw }}
+                        </ssh-pre>
+                    </div>
 
                     <table v-if="folder.request.body?.formdata !== undefined" class="w-full text-sm text-left text-gray-500 dark:text-gray-400 overflow-scroll">
                         <tbody>
@@ -262,7 +277,6 @@
                     </table>
                 </div>
             </div>
-
         </li>
     </div>
 </template>
@@ -280,12 +294,15 @@ pre.ssh-pre {
 }
 </style>
 <script>
-import SshPre from "simple-syntax-highlighter";
 import "simple-syntax-highlighter/dist/sshpre.css";
+import { slugify } from "../../Utils/GeneralUtls";
 
 export default {
   props: ["folder", "owner"],
-  components: { SshPre },
+  components: {
+    SshPre: () => import("simple-syntax-highlighter"),
+    CollectionStructure: () => import("./CollectionStructure.vue"),
+  },
   data() {
     return {
       isLoading: false,
@@ -296,6 +313,7 @@ export default {
         PUT: "bg-gray-400 text-gray-50",
         DELETE: "bg-red-400 text-gray-50",
       },
+      slugfi: slugify,
     };
   },
   methods: {
@@ -325,20 +343,14 @@ export default {
       let folderModel = document.getElementById(
         "#v-model_name_" + identifier
       ).value;
-      let spinner = document.getElementById(
-        "*_foldername_spinner_" + identifier
-      );
 
       this.$root.$emit("save_collection_changes", {
-        before: () => spinner.classList.remove("hidden"),
+        alertMessage: `Save new changes from 'name'`,
+        after: () => this.$root.$emit("refresh_collection"),
         data: {
           id: folderId,
           name: folderModel,
           section: "item",
-        },
-        after: () => {
-          spinner.classList.add("hidden");
-          this.$root.$emit("refresh_collection");
         },
       });
     },
@@ -347,21 +359,15 @@ export default {
       let folderModel = document.getElementById(
         "#v-model_desc_" + identifier
       ).value;
-      let spinner = document.getElementById(
-        "*_folderdesc_spinner_" + identifier
-      );
 
       this.$root.$emit("save_collection_changes", {
-        before: () => spinner.classList.remove("hidden"),
+        alertMessage: `Save new changes from 'description'`,
         data: {
           id: folderId,
           description: folderModel,
           section: "item",
         },
-        after: () => {
-          spinner.classList.add("hidden");
-          this.$root.$emit("refresh_collection");
-        },
+        after: () => this.$root.$emit("refresh_collection"),
       });
     },
     onCopiedDoSomething() {

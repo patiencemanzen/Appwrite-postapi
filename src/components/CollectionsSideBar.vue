@@ -5,11 +5,11 @@
             <button @click="openDropDown('collection-list')" type="button" class="border border-gray-200 flex rounded-[10px] bg-clip-border shadow-3xl shadow-shadow-500 items-center w-full py-2 pl-3 pr-2 text-gray-900 transition duration-75 group bg-[#f5f7fe] dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
                 <div class="flex items-center space-x-4 mr-3">
                     <div class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-deep-green-700 rounded-full dark:bg-gray-600">
-                      <span class="font-medium text-gray-100 dark:text-gray-300">{{ user.get.name.split(" ").map((n)=>n[0]).join("").toUpperCase() }}</span>
+                      <span class="font-medium text-gray-100 dark:text-gray-300">{{ stringIntials(user.name) }}</span>
                     </div>
                     <div class="font-medium dark:text-white truncate ... w-40">
-                        <div class="text-left font-anek font-bold truncate capitalize">{{ user.get.name }}</div>
-                        <div class="text-sm text-left font-anek text-gray-500 dark:text-gray-400 truncate">Joined {{ diffFromHuman(user.get.$createdAt) }}</div>
+                        <div class="text-left font-anek font-bold truncate capitalize">{{ user.name }}</div>
+                        <div class="text-sm text-left font-anek text-gray-500 dark:text-gray-400 truncate">Joined {{ diffFromHuman(user.$createdAt) }}</div>
                     </div>
                 </div>
                 <svg sidebar-toggle-item class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -53,7 +53,7 @@
             <!-- Dropdown menu -->
             <div id="moreCollectionInfo" class="z-10 absolute right-0 top-11 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                 <ul v-if="Object.keys(items).length > 0" class="p-0 m-0 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
-                    <li><a :href="'/documentation/'+activeCollection.slug" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                    <li><a :href="'/collection/'+activeCollection.$id" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                         View documentation
                     </a></li>
                 </ul>
@@ -78,7 +78,7 @@ import { urlPushState, urlRemoveState } from "../Utils/UrlUtils";
 import { Query } from "appwrite";
 import { AppwriteService } from "../Services/AppwriteService.js";
 import { useUserStore } from "../stores/UserStore";
-import { tryCatch } from "../Utils/GeneralUtls";
+import { tryCatch, getInitials } from "../Utils/GeneralUtls";
 import { appWriteCollections } from "../config/services";
 import { useCollectionStore } from "../stores/CollectionStore";
 
@@ -97,9 +97,10 @@ export default {
     response: null,
     activeCollection: "",
     activeFile: "",
-    user: useUserStore(),
+    user: useUserStore().get,
     storage: AppwriteService().storage(),
     database: AppwriteService().database(),
+    stringIntials: getInitials,
   }),
   methods: {
     async getCollections() {
@@ -110,7 +111,7 @@ export default {
         this.database.collection(appWriteCollections.collection_table);
         this.database
           .index([
-            Query.equal("user_id", [this.user.get.$id]),
+            Query.equal("user_id", [this.user.$id]),
             Query.orderDesc("$createdAt"),
           ])
           .then(async (data) => {
@@ -126,13 +127,16 @@ export default {
                 },
               })
                 .then((response) => response.json())
-                .then((json) =>
-                  this.collections.push({
-                    ...value,
-                    file: json,
-                    file_id: value.storage_file_id,
-                  })
-                );
+                .then((json) => {
+                  // eslint-disable-next-line no-prototype-builtins
+                  if (json.hasOwnProperty("code") && json.code == "404") false;
+                  else
+                    this.collections.push({
+                      ...value,
+                      file: json,
+                      file_id: value.storage_file_id,
+                    });
+                });
             });
           });
       });
@@ -140,6 +144,9 @@ export default {
       this.isLoading = false;
     },
 
+    /**
+     * Activate active collection
+     */
     loadCollection(collection) {
       this.items = collection.file;
       this.activeCollection = collection;
@@ -154,14 +161,10 @@ export default {
       useCollectionStore().store(collection);
     },
 
-    async inspectCollection(path) {
-      let result = fetch(`/storage/${path}`)
-        .then((response) => response.json())
-        .then((json) => json);
-
-      return await result;
-    },
-
+    /**
+     * Get all request that are not
+     * in forlder on first iteration
+     */
     passInitialUnFoldedRequest() {
       let requests = [];
 
@@ -176,9 +179,17 @@ export default {
         ? this.$root.$emit("list_requests", requests)
         : this.$root.$emit("list_requests", null);
     },
+
+    /**
+     * Convert date to human friendly date
+     */
     diffFromHuman(date) {
       return moment(date).fromNow();
     },
+
+    /**
+     * Open and close collection list dropdown
+     */
     openDropDown(dropdownId) {
       const collections = document.getElementById(dropdownId);
       if (collections.classList.contains("hidden"))
@@ -195,11 +206,9 @@ export default {
     this.$root.$on("refresh_collections", async (collection) => {
       await this.getCollections();
 
-      await this.inspectCollection(collection.collection_url).then((result) => {
-        this.items = result;
-        this.activeCollection = { file: result, ...collection };
-        this.activeFile = result.info;
-      });
+      this.items = collection.file;
+      this.activeCollection = collection;
+      this.activeFile = collection.file.info;
 
       /**
        * reset window states
@@ -209,13 +218,12 @@ export default {
       urlRemoveState("request_tab");
 
       this.$root.$emit("list_requests", {});
-      this.$root.$emit("single_request", {});
 
       this.passInitialUnFoldedRequest();
     });
 
     /**
-     * Dump collection during reload
+     * autoload and set active collection during reload
      */
     this.$root.$on("autoload_collection", async (payload) => {
       // eslint-disable-next-line no-prototype-builtins
