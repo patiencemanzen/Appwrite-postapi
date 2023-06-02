@@ -78,6 +78,7 @@
         </div>
       </div>
     </header>
+    <ManageCollection />
 
     <router-view />
     <div><ReadURLAndRefresh /></div>
@@ -109,6 +110,8 @@ export default {
       import("./components/CollectionHandler/CollectionChangeSaver.vue"),
     ReadURLAndRefresh: () =>
       import("./components/CollectionHandler/ReadURLAndRefresh.vue"),
+    ManageCollection: () =>
+      import("./components/CollectionHandler/ManageCollections.vue"),
   },
   methods: {
     async logout() {

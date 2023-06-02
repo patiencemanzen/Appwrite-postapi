@@ -34,7 +34,11 @@ export default {
 
       // eslint-disable-next-line no-prototype-builtins
       if (forlder.hasOwnProperty("request")) {
-        this.$root.$emit("list_requests", forlder);
+        this.$root.$emit("list_requests", {
+          id: forlder.id,
+          name: forlder.name,
+          requests: forlder,
+        });
       }
 
       // eslint-disable-next-line no-prototype-builtins
@@ -59,8 +63,12 @@ export default {
       // update url
       urlPushState("requests", forlder.id);
 
-      // set request body
-      this.$root.$emit("list_requests", requests);
+      // set folder requests
+      this.$root.$emit("list_requests", {
+        id: forlder.id,
+        name: forlder.name,
+        requests: requests,
+      });
     },
   },
   mounted() {

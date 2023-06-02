@@ -31,6 +31,10 @@ export default {
       database: AppwriteService().database(),
       isLoading: false,
       response: "",
+      purposes: {
+        create_new_item: "add_item",
+        update_folder: "update_folder",
+      },
     };
   },
   methods: {
@@ -39,7 +43,7 @@ export default {
      *
      * @param {Object} data
      */
-    async submitCollectionChanges(data) {
+    async updateCollection(data) {
       tryCatch(() => {
         this.isLoading = true;
 
@@ -54,18 +58,22 @@ export default {
           collectionFile.info.description = data.description;
         }
 
+        // eslint-disable-next-line no-prototype-builtins
         if (collectionFile.hasOwnProperty("info")) {
           newCollection.info = collectionFile.info;
         }
 
+        // eslint-disable-next-line no-prototype-builtins
         if (collectionFile.hasOwnProperty("auth")) {
           newCollection.auth = collectionFile.auth;
         }
 
+        // eslint-disable-next-line no-prototype-builtins
         if (collectionFile.hasOwnProperty("event")) {
           newCollection.event = collectionFile.event;
         }
 
+        // eslint-disable-next-line no-prototype-builtins
         if (collectionFile.hasOwnProperty("item")) {
           newCollection.item = collectionFile.item;
         }
@@ -74,6 +82,7 @@ export default {
           let collectionItems = this.traverseThroughJSON(
             collectionFile.item,
             data.id,
+            this.purposes.update_folder,
             data
           );
 
@@ -121,7 +130,7 @@ export default {
      * Traverse and update json file based on search
      * and requested changes
      */
-    traverseThroughJSON(collectionItems, search, changes) {
+    traverseThroughJSON(collectionItems, search, purpose, changes) {
       for (var k in collectionItems) {
         if (
           typeof collectionItems[k] === "object" &&
@@ -130,22 +139,155 @@ export default {
           collectionItems[k] = this.traverseThroughJSON(
             collectionItems[k],
             search,
+            purpose,
             changes
           );
         } else if (k == "id" && collectionItems[k] == search) {
-          // eslint-disable-next-line no-prototype-builtins
-          if (changes.hasOwnProperty("name")) {
-            collectionItems["name"] = changes.name;
+          if (purpose == this.purposes.create_new_item) {
+            collectionItems["item"].push({
+              id: changes.id,
+              name: changes.name,
+              description: changes.description,
+              request: changes.request,
+              response: changes.response,
+            });
           }
 
-          // eslint-disable-next-line no-prototype-builtins
-          if (changes.hasOwnProperty("description")) {
-            collectionItems["description"] = changes.description;
+          if (purpose == this.purposes.update_folder) {
+            // eslint-disable-next-line no-prototype-builtins
+            if (changes.hasOwnProperty("name")) {
+              collectionItems["name"] = changes.name;
+            }
+
+            // eslint-disable-next-line no-prototype-builtins
+            if (changes.hasOwnProperty("description")) {
+              collectionItems["description"] = changes.description;
+            }
           }
         }
       }
 
       return collectionItems;
+    },
+
+    /**
+     * Submit newly changes to user collection
+     *
+     * @param {Object} data
+     */
+    async saveNewFolderInCollection(data) {
+      tryCatch(() => {
+        this.isLoading = true;
+
+        let collection = useCollectionStore().get;
+        let collectionFile = collection.file;
+        let newCollection = {};
+
+        newCollection.info = collectionFile.info;
+        newCollection.auth = collectionFile.auth;
+        newCollection.event = collectionFile.event;
+        newCollection.item = collectionFile.item;
+        newCollection.item.push(data);
+
+        const blob = new Blob([JSON.stringify(newCollection)], {
+          type: "application/json",
+        });
+
+        const file = new File([blob], "patienceman_" + randomId(10) + ".json", {
+          type: blob.type,
+        });
+
+        // Create new file and update user collection document
+        this.storage.store(file).then((collectionFile) => {
+          const data = {
+            storage_file_id: collectionFile.$id,
+            collection_url: collectionFile.name,
+          };
+
+          this.database.collection(appWriteCollections.collection_table);
+          this.database.update(collection.$id, data).then((response) => {
+            this.storage.destroy(collection.file_id).then(() => {
+              useCollectionStore().store({
+                ...response,
+                file: newCollection,
+                file_id: collectionFile.$id,
+              });
+
+              this.$root.$emit("new_message", {
+                responseType: "success",
+                response: "Folder created successfully",
+                hasResponse: true,
+              });
+
+              this.isLoading = false;
+            });
+          });
+        });
+      });
+    },
+
+    /**
+     * Submit newly request to collection folder
+     *
+     * @param {Object} data
+     */
+    async saveNewRequestInFolder(data) {
+      tryCatch(() => {
+        this.isLoading = true;
+
+        let collection = useCollectionStore().get;
+        let collectionFile = collection.file;
+        let newCollection = {};
+
+        newCollection.info = collectionFile.info;
+        newCollection.auth = collectionFile.auth;
+        newCollection.event = collectionFile.event;
+        newCollection.item = collectionFile.item;
+
+        let collectionItems = this.traverseThroughJSON(
+          collectionFile.item,
+          data.folderId,
+          this.purposes.create_new_item,
+          data
+        );
+
+        newCollection.item = collectionItems;
+
+        const blob = new Blob([JSON.stringify(newCollection)], {
+          type: "application/json",
+        });
+
+        const file = new File([blob], "patienceman_" + randomId(10) + ".json", {
+          type: blob.type,
+        });
+
+        // Create new file and update user collection document
+        this.storage.store(file).then((collectionFile) => {
+          const data = {
+            storage_file_id: collectionFile.$id,
+            collection_url: collectionFile.name,
+          };
+
+          this.database.collection(appWriteCollections.collection_table);
+          this.database.update(collection.$id, data).then((response) => {
+            this.storage.destroy(collection.file_id).then(() => {
+              useCollectionStore().store({
+                ...response,
+                file: newCollection,
+                file_id: collectionFile.$id,
+              });
+
+              this.$root.$emit("new_message", {
+                responseType: "success",
+                response: "Request created successfully",
+                hasResponse: true,
+              });
+
+              this.isLoading = false;
+            });
+          });
+        });
+      });
     },
   },
   mounted() {
@@ -162,7 +304,55 @@ export default {
         ? payload.alertMessage
         : "Save changes";
 
-      await this.submitCollectionChanges(payload.data);
+      await this.updateCollection(payload.data);
+
+      // Check if payload has elemtn to run after then execute
+      // eslint-disable-next-line no-prototype-builtins
+      payload.hasOwnProperty("after") &&
+      payload.after instanceof Function &&
+      !this.isLoading
+        ? payload.after()
+        : "";
+    });
+
+    this.$root.$on("new_folder", async (payload) => {
+      // Check if payload has element to run before then execute
+      // eslint-disable-next-line no-prototype-builtins
+      payload.hasOwnProperty("before") && payload.before instanceof Function
+        ? payload.before()
+        : "";
+
+      // Check if payload has custom message for alert
+      // eslint-disable-next-line no-prototype-builtins
+      this.response = payload.hasOwnProperty("alertMessage")
+        ? payload.alertMessage
+        : "Save changes";
+
+      await this.saveNewFolderInCollection(payload.data);
+
+      // Check if payload has elemtn to run after then execute
+      // eslint-disable-next-line no-prototype-builtins
+      payload.hasOwnProperty("after") &&
+      payload.after instanceof Function &&
+      !this.isLoading
+        ? payload.after()
+        : "";
+    });
+
+    this.$root.$on("new_request", async (payload) => {
+      // Check if payload has element to run before then execute
+      // eslint-disable-next-line no-prototype-builtins
+      payload.hasOwnProperty("before") && payload.before instanceof Function
+        ? payload.before()
+        : "";
+
+      // Check if payload has custom message for alert
+      // eslint-disable-next-line no-prototype-builtins
+      this.response = payload.hasOwnProperty("alertMessage")
+        ? payload.alertMessage
+        : "Save changes";
+
+      await this.saveNewRequestInFolder(payload.data);
 
       // Check if payload has elemtn to run after then execute
       // eslint-disable-next-line no-prototype-builtins
