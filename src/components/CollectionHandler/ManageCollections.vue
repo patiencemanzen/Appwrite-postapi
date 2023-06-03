@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-    <div class="" v-if="auth && user">
+    <div class="" v-if="auth && user && isDashboard">
         <!-- Breadcrumb -->
         <nav class="px-4 py-3 text-gray-700 border border-gray-200 sm:px-5 bg-gray-50 dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
             <div class="g-padding items-center justify-between sm:flex">
@@ -14,18 +14,6 @@
                                 <div class="text-left font-anek font-bold truncate capitalize">{{ user.name }}</div>
                                 <div class="text-sm text-left font-anek text-gray-500 dark:text-gray-400 truncate">Joined {{ diffFromHuman(user.$createdAt) }}</div>
                             </div>
-                        </div>
-                    </li>
-                    <li aria-current="page">
-                        <div class="flex items-center">
-                        <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                        <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">develop</a>
-                        </div>
-                    </li>
-                    <li aria-current="page">
-                        <div class="flex items-center">
-                        <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                        <span class="mx-1 text-sm font-medium text-gray-500 md:mx-2 dark:text-gray-400">Fix #6597</span><span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 hidden sm:flex">v2.0</span>
                         </div>
                     </li>
                 </ol>
@@ -79,7 +67,7 @@
                 </button>
             </div>
             <div class="border border-gray-200 mt-4 rounded-[10px] bg-clip-border bg-[#f5f7fe] shadow-3xl shadow-shadow-500 p-2 overflow-y-auto h-auto">
-                <ul class="p-0 m-0">
+                <ul v-if="!isEmpty(collections)" class="p-0 m-0">
                     <li class="cursor-pointer mb-2" v-for="collection in collections" :key="collection.$id">
                         <a @click="loadCollection(collection)" class="hover:bg-gray-300 border border-gray-200 flex items-center p-2 text-gray-900 rounded-lg dark:text-white bg-gray-50 dark:hover:bg-gray-700">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -91,6 +79,10 @@
                         </a>
                     </li>
                 </ul>
+
+                <div v-else class="flex items-center grayscale justify-center">
+                  <img class="w-32" src="../../assets/img/folder.png" alt="">
+                </div>
 
                 <div v-if="isLoading" class="flex justify-center items-center">
                     <span class="inline-flex h-6 w-6 animate-spin rounded-full border-4 border-dotted border-indigo-600"></span>
@@ -112,6 +104,7 @@ import { appWriteCollections } from "../../config/services";
 import moment from "moment";
 import { ID, Query } from "appwrite";
 import { Auth } from "../../Services/Auth.js";
+import { isEmpty } from "../../Utils/GeneralUtls";
 
 export default {
   data() {
@@ -129,7 +122,13 @@ export default {
       response: null,
       stringIntials: getInitials,
       uniqueString: ID,
+      isEmpty,
     };
+  },
+  computed: {
+    isDashboard() {
+      return this.$route.name != "dashboard" ? false : true;
+    },
   },
   methods: {
     /**
@@ -375,14 +374,14 @@ export default {
   async mounted() {
     Auth()
       .user()
-      .then((response) => {
+      .then(async (response) => {
         useUserStore().store(response);
         this.user = response;
         this.auth = true;
+        await this.getCollections();
       })
       .catch(() => (this.auth = false));
 
-    await this.getCollections();
     this.$root.$on(
       "reload_collections",
       async () => await this.getCollections()

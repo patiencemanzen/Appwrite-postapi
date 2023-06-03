@@ -23,17 +23,27 @@
                         </button>
                     </div>
                 </div>
+
+                <div v-if="isLoading">
+                  <div class="absolute top-0 right-0 bottom-0 left-0 w-full h-full backdrop-blur-sm z-10 rounded-[10px] flex items-center justify-center">
+                    <span class="relative inset-0 inline-flex h-6 w-6 animate-spin items-center justify-center rounded-full border-2 border-gray-300 after:absolute after:h-8 after:w-8 after:rounded-full after:border-2 after:border-y-indigo-500 after:border-x-transparent"></span>
+                  </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 </template>
 <script setup>
+import { ref } from "vue";
 import { AppwriteService } from "../Services/AppwriteService";
 import { useUserStore } from "../stores/UserStore";
 
+const isLoading = ref(false);
+
 const loginWithGoogle = () => {
   const account = AppwriteService().account();
+  isLoading.value = true;
 
   account.createOAuth2Session(
     "google",
@@ -41,11 +51,15 @@ const loginWithGoogle = () => {
     `${import.meta.env.VITE_BASE_URL}/login?sucusess=false`
   );
 
-  account.get().then((response) => useUserStore().store(response));
+  account.get().then((response) => {
+    useUserStore().store(response);
+    isLoading.value = false;
+  });
 };
 
 const loginWithGitHub = () => {
   const account = AppwriteService().account();
+  isLoading.value = true;
 
   account.createOAuth2Session(
     "github",
@@ -53,6 +67,9 @@ const loginWithGitHub = () => {
     `${import.meta.env.VITE_BASE_URL}/login?sucusess=false`
   );
 
-  account.get().then((response) => useUserStore().store(response));
+  account.get().then((response) => {
+    useUserStore().store(response);
+    isLoading.value = false;
+  });
 };
 </script>

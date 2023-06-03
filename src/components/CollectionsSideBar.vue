@@ -3,7 +3,8 @@
     <ul class="space-y-2 font-medium p-0 m-0 relative">
         <div class="active-collection relative py-2 min-h-20 mb-2">
             <h4 class="mx-2 font-anek text-gray-400 truncate leading-10">
-              {{ activeFile.name }}
+              <span v-if="activeFile.name">{{ activeFile.name }}</span>
+              <span v-else>Active Collection</span>
             </h4>
 
             <button @click="openDropDown('moreCollectionInfo')" class="mt-2 inline-flex ring-1 ring-gray-50 absolute shadow-sm right-0 -top-2 items-center p-2 text-sm font-medium text-center text-gray-400 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
@@ -46,11 +47,17 @@
           </button>
         </div>
 
-        <Placeholder v-if="isEmpty(items) || isEmpty(items.item)" />
-
         <ul class="p-0 m-0">
           <SingleFolder v-for="item in items.item" :key="item.name+Math.random().toString(16).slice(2)" :forlder="item" />
         </ul>
+
+        <div v-if="isEmpty(items) || isEmpty(items.item)" class="h-28"></div>
+        <div v-if="isEmpty(items) || isEmpty(items.item)" class="flex grayscale flex-col items-center justify-center">
+          <img class="w-32" src="../assets/img/folders.png" alt="">
+          <h4 class="mt-4 text-center inline-flex items-center mb-4 text-md font-semibold text-gray-500 dark:text-gray-400">
+            Folders
+          </h4>
+        </div>
     </ul>
 </template>
 <script>
@@ -62,7 +69,6 @@ import { isEmpty } from "../Utils/GeneralUtls";
 
 export default {
   components: {
-    Placeholder: () => import("../components/Common/Placeholder.vue"),
     SingleFolder: () => import("../components/SingleFolder.vue"),
   },
   data: () => ({

@@ -35,13 +35,15 @@ export default {
               })
                 .then((response) => response.json())
                 .then((json) => {
+                  let activeCollection = {
+                    ...collection,
+                    file: json,
+                    file_id: collection.storage_file_id,
+                  };
+
                   this.$root.$emit("autoload_collection", {
                     before: () => this.$root.$emit("set_loader_on"),
-                    collection: {
-                      ...collection,
-                      file: json,
-                      file_id: collection.storage_file_id,
-                    },
+                    collection: activeCollection,
                     after: () => this.$root.$emit("set_loader_off"),
                   });
                 });

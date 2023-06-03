@@ -237,6 +237,7 @@ export default {
 
         let collection = useCollectionStore().get;
         let collectionFile = collection.file;
+        let requestsHandler = data.folderId;
         let newCollection = {};
 
         newCollection.info = collectionFile.info;
@@ -284,6 +285,7 @@ export default {
               });
 
               this.isLoading = false;
+              document.getElementById(requestsHandler).click();
             });
           });
         });

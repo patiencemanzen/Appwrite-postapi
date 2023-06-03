@@ -1,9 +1,9 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-    <aside style="width: 100%" class="top-0 left-0 z-40 p-2 h-[80vh] mb-2 mt-1 transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+    <aside style="width: 100%" class="top-0 left-0 z-40 p-2 h-[72vh] mb-2 mt-1 transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
         <div class="h-full px-3 py-4 overflow-y-auto dark:bg-gray-800 rounded-[10px] border border-gray-200 transition delay-150 duration-700 ease-in-out bg-white bg-clip-border shadow-3xl shadow-shadow-500">
             <div class="flex">
-              <aside class="mb-5" v-if="folderName">
+              <aside class="mb-5">
                 <a class="inline-flex border border-gray-200 items-center justify-between px-1 py-1 pr-4 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
                   <span class="text-xs bg-deep-green-900 rounded-full text-white px-3 py-1.5 mr-3">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
@@ -11,13 +11,23 @@
                     </svg>
                   </span> 
                   <span class="text-sm font-semibold">
-                    {{ folderName }}
+                    <span v-if="folderName">{{ folderName }}</span>
+                    <span v-else>Active Folder</span>
                   </span> 
                 </a>
               </aside>
               <aside v-if="folderId" class="mb-5 ml-2 cursor-pointer" @click="openRequestCreator">
                 <a class="inline-flex border border-gray-200 items-center justify-between px-1 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
                   <span class="text-xs bg-gray-600 rounded-full text-white px-3 py-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                    </svg>                    
+                  </span> 
+                </a>
+              </aside>
+              <aside v-else class="mb-5 ml-2 cursor-pointer disabled">
+                <a class="inline-flex border border-gray-200 items-center justify-between px-1 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
+                  <span class="text-xs bg-gray-400 rounded-full text-white px-3 py-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
                     </svg>                    
@@ -62,7 +72,13 @@
                 </li>
             </ul>
 
-            <Placeholder v-if="!requests" />
+            <div v-if="isEmpty(requests)" class="h-32"></div>
+            <div v-if="isEmpty(requests)" class="flex grayscale flex-col items-center justify-center">
+              <img class="w-32" src="../assets/img/file.png" alt="">
+              <h4 class="mt-4 text-center inline-flex items-center mb-4 text-md font-semibold text-gray-500 dark:text-gray-400">
+                Requests
+              </h4>
+            </div>
 
             <div v-if="isLoading">
                 <span class="inline-flex h-6 w-6 animate-spin rounded-full border-4 border-dotted border-indigo-600"></span>
@@ -75,9 +91,6 @@ import { isEmpty } from "../Utils/GeneralUtls";
 import { urlPushState } from "../Utils/UrlUtils";
 
 export default {
-  components: {
-    Placeholder: () => import("../components/Common/Placeholder.vue"),
-  },
   data() {
     return {
       folderId: null,
@@ -91,6 +104,7 @@ export default {
       },
       isLoading: false,
       model: { requestName: "", requestDescription: "" },
+      isEmpty,
     };
   },
   methods: {
