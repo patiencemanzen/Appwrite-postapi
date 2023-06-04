@@ -1,7 +1,7 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
     <!-- drawer component -->
-    <div v-if="isOpen" class="fixed top-0 right-0 z-50 h-screen p-4 overflow-y-auto transition-transform translate-x-0 bg-white w-[30vw] shadow-lg border border-gray-200 dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-right-label">
+    <div v-if="isOpen" class="fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-0 bg-white w-[30vw] shadow-lg border border-gray-200 dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-right-label">
         <div class="flex items-center justify-center">
             <h3 id="drawer-right-label" class="mt-4 text-center inline-flex items-center mb-4 text-md font-semibold text-gray-500 dark:text-gray-400">
                 Manage Your Collections
@@ -194,7 +194,15 @@ export default {
     },
 
     importFile() {
-      document.getElementById("custom_file").click();
+      if (this.isEmpty(this.activeProject)) {
+        this.$root.$emit("new_message", {
+          responseType: "error",
+          response: "Set Active Porject and Try again",
+          hasResponse: true,
+        });
+      } else {
+        document.getElementById("custom_file").click();
+      }
     },
 
     openCollectionCreator() {
@@ -315,66 +323,76 @@ export default {
      * Create new collection file
      */
     submitNewCollection() {
-      tryCatch(() => {
-        this.isLoading = true;
-        this.$root.$emit("set_loader_on");
+      if (this.isEmpty(this.activeProject)) {
+        this.$root.$emit("new_message", {
+          responseType: "error",
+          response: "Set Active Project and Try again",
+          hasResponse: true,
+        });
+      } else {
+        tryCatch(() => {
+          this.isLoading = true;
+          this.$root.$emit("set_loader_on");
 
-        let fileData = {
-          info: {
-            name: this.model.collectionName,
-          },
-          item: [],
-          auth: {},
-          event: {},
-        };
+          let fileData = {
+            info: {
+              name: this.model.collectionName,
+            },
+            item: [],
+            auth: {},
+            event: {},
+          };
 
-        const blob = new Blob([JSON.stringify(fileData)], {
-          type: "application/json",
+          const blob = new Blob([JSON.stringify(fileData)], {
+            type: "application/json",
+          });
+
+          const newFile = new File(
+            [blob],
+            "patienceman_" + randomId(10) + ".json",
+            {
+              type: blob.type,
+            }
+          );
+
+          this.storage
+            .store(newFile)
+            .then((file) => {
+              const data = {
+                project_id: this.activeProject.$id,
+                slug: slugify(
+                  randomId(10) + " " + this.user.name + "collection"
+                ),
+                storage_file_id: file.$id,
+                collection_url: file.name,
+                published: false,
+                published_at: moment(),
+              };
+
+              this.database.collection(appWriteCollections.collection_table);
+              this.database.create(data).then((collection) => {
+                this.$root.$emit("new_message", {
+                  responseType: "success",
+                  response: "Collection created successfully",
+                  hasResponse: true,
+                });
+
+                this.$root.$emit("refresh_collections", {
+                  ...collection,
+                  file: fileData,
+                  file_id: file.$id,
+                });
+
+                this.$root.$emit("set_loader_off");
+                this.isLoading = false;
+                this.$root.$emit("reload_collections");
+              });
+            })
+            .catch(() => (this.isLoading = false));
         });
 
-        const newFile = new File(
-          [blob],
-          "patienceman_" + randomId(10) + ".json",
-          {
-            type: blob.type,
-          }
-        );
-
-        this.storage
-          .store(newFile)
-          .then((file) => {
-            const data = {
-              project_id: this.activeProject.$id,
-              slug: slugify(randomId(10) + " " + this.user.name + "collection"),
-              storage_file_id: file.$id,
-              collection_url: file.name,
-              published: false,
-              published_at: moment(),
-            };
-
-            this.database.collection(appWriteCollections.collection_table);
-            this.database.create(data).then((collection) => {
-              this.$root.$emit("new_message", {
-                responseType: "success",
-                response: "Collection created successfully",
-                hasResponse: true,
-              });
-
-              this.$root.$emit("refresh_collections", {
-                ...collection,
-                file: fileData,
-                file_id: file.$id,
-              });
-
-              this.$root.$emit("set_loader_off");
-              this.isLoading = false;
-              this.$root.$emit("reload_collections");
-            });
-          })
-          .catch(() => (this.isLoading = false));
-      });
-
-      document.getElementById("collection-form").classList.add("hidden");
+        document.getElementById("collection-form").classList.add("hidden");
+      }
     },
   },
 

@@ -5,7 +5,7 @@
     <div><ScreenLoader /></div>
     <div><CollectionChangeSaver /></div>
 
-    <header class="site-header sticky top-0 z-50 border border-gray-200" :style="backgroundImage">
+    <header class="site-header sticky top-0 z-30 border border-gray-200" :style="backgroundImage">
       <div class="container transition-all">
         <div class="header-inner border border-gray-200 dark:bg-[#0b14374d] flex justify-space-between dark:bg-deep-green-800">
           <div class="flex items-center justify-between w-full px-3 py-3 mx-auto max-w-8xl lg:px-4">

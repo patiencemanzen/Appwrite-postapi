@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-    <div v-if="isOpen" class="translate-x-0 fixed top-0 right-0 z-50 h-screen p-4 overflow-y-auto transition-transform bg-white w-[30vw] shadow-lg border border-gray-200 dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-right-label">
+    <div v-if="isOpen" class="translate-x-0 fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform bg-white w-[30vw] shadow-lg border border-gray-200 dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-right-label">
         <div class="flex items-center justify-center">
             <h3 id="drawer-right-label" class="mt-4 text-center inline-flex items-center mb-4 text-md font-semibold text-gray-500 dark:text-gray-400">
                 Manage Projects
@@ -26,7 +26,7 @@
         <div class="border border-gray-200 mt-4 rounded-[10px] bg-clip-border bg-[#f5f7fe] shadow-3xl shadow-shadow-500 p-2 overflow-y-auto h-auto">
           <ul v-if="!isEmpty(projects) && !isLoading" class="p-0 m-0 mt-3">
             <li class="cursor-pointer mb-2" v-for="project in projects" :key="project.$id">
-                <a @click="setActiveProject(project, project.$id)" :id="project.$id" class="hover:bg-gray-300 border border-gray-200 flex items-center p-2 text-gray-900 rounded-lg dark:text-white bg-gray-50 dark:hover:bg-gray-700">
+                <a @click="setActiveProject(project, project.$id)" class="hover:bg-gray-300 border border-gray-200 flex items-center p-2 text-gray-900 rounded-lg dark:text-white bg-gray-50 dark:hover:bg-gray-700">
                   
                   <div role="ctl-projects" :id="project.$id" :class="isActiveProject(project.$id) ? activeElement.active : activeElement.default">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -130,29 +130,37 @@ export default {
      * then redirect back to dashboard
      */
     async submitProject() {
-      tryCatch(() => {
-        this.isLoading = true;
-        this.$root.$emit("set_loader_on");
+      if (this.isEmpty(this.organization)) {
+        this.$root.$emit("new_message", {
+          responseType: "error",
+          response: "Set active organization and try again",
+          hasResponse: true,
+        });
+      } else {
+        tryCatch(() => {
+          this.isLoading = true;
+          this.$root.$emit("set_loader_on");
 
-        this.database.collection(appWriteCollections.projects_table);
-        this.database
-          .create({
-            organization_id: this.activeOrganization.$id,
-            name: this.model.projectName,
-          })
-          .then(() => {
-            this.$root.$emit("new_message", {
-              responseType: "success",
-              response: "Project Created",
-              hasResponse: true,
-            });
+          this.database.collection(appWriteCollections.projects_table);
+          this.database
+            .create({
+              organization_id: this.activeOrganization.$id,
+              name: this.model.projectName,
+            })
+            .then(() => {
+              this.$root.$emit("new_message", {
+                responseType: "success",
+                response: "Project Created",
+                hasResponse: true,
+              });
 
-            this.$root.$emit("set_loader_off");
-            this.isLoading = false;
-            this.$root.$emit("refresh_projects");
-          })
-          .catch(() => (this.isLoading = false));
-      });
+              this.$root.$emit("set_loader_off");
+              this.isLoading = false;
+              this.$root.$emit("refresh_projects");
+            })
+            .catch(() => (this.isLoading = false));
+        });
+      }
     },
   },
   async mounted() {

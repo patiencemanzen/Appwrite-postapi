@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-    <div v-if="isOpen" class="translate-x-0 fixed top-0 right-0 z-50 h-screen p-4 overflow-y-auto transition-transform bg-white w-[30vw] shadow-lg border border-gray-200 dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-right-label">
+    <div v-if="isOpen" class="translate-x-0 fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform bg-white w-[30vw] shadow-lg border border-gray-200 dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-right-label">
         <div class="flex items-center justify-center">
             <h3 id="drawer-right-label" class="mt-4 text-center inline-flex items-center mb-4 text-md font-semibold text-gray-500 dark:text-gray-400">
                 Manage Organizations

@@ -5,5 +5,5 @@ export const colors = {
 
 export const activeElement = {
   active: `${colors.Cyan} h-10 w-10 rounded-full opacity-75 flex items-center justify-center text-gray-100`,
-  default: `${colors.Teal} h-10 w-10 rounded-full opacity-75 flex items-center justify-center text-gray-900`,
+  default: `${colors.Teal} h-10 w-10 rounded-full opacity-75 flex items-center justify-center text-gray-100`,
 };

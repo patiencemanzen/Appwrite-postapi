@@ -53,7 +53,8 @@
               </button>
             </div>
 
-            <ul class="space-y-2 font-medium p-0 m-0 cursor-pointer" v-if="requests">
+            <div class="" style="margin-top: .7rem">
+              <ul class="space-y-2 font-medium p-0 m-0 cursor-pointer" v-if="requests">
                 <li v-for="request in requests" :key="request.name+Math.random().toString(16).slice(2)">
                     <a @click="viewRequest(request)" :render-request="isActiveTab(request)" :id="request.id" class="border border-gray-200 flex items-center justify-between p-2 text-gray-900 rounded-[10px] bg-clip-border shadow-3xl shadow-shadow-500 dark:text-white bg-gray-100 dark:hover:bg-gray-700">
                         <div class="flex items-center">
@@ -70,7 +71,8 @@
                         </span>
                     </a>
                 </li>
-            </ul>
+              </ul>
+            </div>
 
             <div v-if="isEmpty(requests)" class="h-32"></div>
             <div v-if="isEmpty(requests)" class="flex grayscale flex-col items-center justify-center">

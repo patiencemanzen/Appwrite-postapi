@@ -1,15 +1,17 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
     <ul class="space-y-2 font-medium p-0 m-0 relative">
-        <div class="active-collection relative py-2 min-h-20 mb-2">
-            <h4 class="mx-2 font-anek text-gray-400 truncate leading-10">
+        <div class="active-collection relative min-h-20 mb-2">
+            <h4 class="mx-2 text-gray-500 truncate leading-10">
               <span v-if="activeFile.name">{{ activeFile.name }}</span>
               <span v-else>Active Collection</span>
             </h4>
 
-            <button @click="openDropDown('moreCollectionInfo')" class="mt-2 inline-flex ring-1 ring-gray-50 absolute shadow-sm right-0 -top-2 items-center p-2 text-sm font-medium text-center text-gray-400 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
-                <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg>
-            </button>
+            <div @click="openDropDown('moreCollectionInfo')" class="mt-2 inline-flex border border-gray-200 absolute shadow-sm right-0 -top-2 cursor-pointer items-center p-2 text-sm font-medium text-center text-gray-400 bg-white rounded-[10px] hover:bg-gray-100 focus:outline-none dark:text-white dark:bg-gray-800 dark:hover:bg-gray-700" type="button">
+                <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
+                </svg>
+            </div>
 
             <!-- Dropdown menu -->
             <div id="moreCollectionInfo" class="z-10 absolute right-0 top-11 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
@@ -47,9 +49,11 @@
           </button>
         </div>
 
-        <ul class="p-0 m-0">
-          <SingleFolder v-for="item in items.item" :key="item.name+Math.random().toString(16).slice(2)" :forlder="item" />
-        </ul>
+        <div class="mt-3" style="margin-top: 2rem">
+          <ul class="p-0 m-0">
+            <SingleFolder v-for="item in items.item" :key="item.name+Math.random().toString(16).slice(2)" :forlder="item" />
+          </ul>
+        </div>
 
         <div v-if="isEmpty(items) || isEmpty(items.item)" class="h-28"></div>
         <div v-if="isEmpty(items) || isEmpty(items.item)" class="flex grayscale flex-col items-center justify-center">
