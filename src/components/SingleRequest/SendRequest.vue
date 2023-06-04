@@ -10,7 +10,7 @@
             </select>
         </div>
         <div class="mb-6 w-96 ml-3">
-            <input v-model="url" type="text" id="success" autocomplete="false" class="bg-gray-50 border border-gray-300 text-gray-600 font-anek font-bold dark:text-green-400 placeholder-gray-400 dark:placeholder-green-500 text-md leading-3 rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.8 dark:bg-gray-700 dark:border-green-500" placeholder="https://api.example.com/api">
+          <input v-model="url" type="text" id="success" autocomplete="false" class="bg-gray-50 border border-gray-300 text-gray-600 font-bold dark:text-green-400 placeholder-gray-400 dark:placeholder-green-500 text-md leading-3 rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-green-500" placeholder="https://api.example.com/api">
         </div>
         <div class="ml-3">
             <button @click="sendRequest" :class="'relative cursor-pointer inline-flex h-10 w-12 items-center justify-center rounded-lg border border-transparent text-white bg-gray-800 hover:bg-gray-900 px-2 py-1 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-75'">

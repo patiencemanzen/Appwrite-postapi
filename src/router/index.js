@@ -33,6 +33,10 @@ const routes = [
     name: "published",
     meta: { title: "Published Collections" },
     component: () => import("../views/PublishedView.vue"),
+    beforeEnter: async (to, from, next) => {
+      if (!(await Auth().check())) next({ name: "login" });
+      else next();
+    },
   },
   {
     path: "/collection/:collection",

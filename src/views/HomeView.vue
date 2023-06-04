@@ -26,7 +26,7 @@
               <span class="relative inset-0 inline-flex h-6 w-6 animate-spin items-center justify-center rounded-full border-2 border-gray-300 after:absolute after:h-8 after:w-8 after:rounded-full after:border-2 after:border-y-indigo-500 after:border-x-transparent"></span>
             </div>
           </div>
-          <div class="absolute -right-2 top-7 lg:mt-0 max-w-[700px] lg:col-span-5 lg:flex">
+          <div class="absolute -right-2 top-14 lg:mt-0 max-w-[600px] lg:col-span-5 lg:flex">
               <img src="../assets/img/home-page.png" alt="hero image">
           </div>
       </div>
