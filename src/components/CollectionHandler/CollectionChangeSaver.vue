@@ -163,6 +163,11 @@ export default {
             if (changes.hasOwnProperty("description")) {
               collectionItems["description"] = changes.description;
             }
+
+            // eslint-disable-next-line no-prototype-builtins
+            if (changes.hasOwnProperty("request")) {
+              collectionItems["request"] = changes.request;
+            }
           }
         }
       }

@@ -2,7 +2,7 @@
 <template>
     <div class="p-2 relative" style="width: 100%" v-if="isOpen || request.length > 0">
         <div class="tabnet-content rounded-[10px] border overflow-y-auto border-gray-200 transition delay-150 duration-700 ease-in-out bg-white bg-clip-border shadow-3xl shadow-shadow-500 max-h-[72vh] p-2 mb-2 mt-1">
-            <div><SendRequest :request="request.request" /></div>
+            <div><SendRequest :request="request.request" :id="request.id" /></div>
 
             <div class="mb-4 border-b border-t border-gray-200 py-2 dark:border-gray-700">
                 <ul class="flex flex-wrap text-md font-bold text-left p-0 m-0" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">

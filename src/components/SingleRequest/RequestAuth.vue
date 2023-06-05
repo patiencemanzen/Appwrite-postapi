@@ -37,7 +37,7 @@
             <div :class="(auths && auths.type == 'bearer') ? '' : 'hidden' + ' rounded-lg bg-gray-50 dark:bg-gray-800'" id="bearer-auth-content-tab" role="tree-2-tabs" aria-labelledby="bearer-auth-tab">
                 <div class="mb-6">
                     <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Type: {{auths.type}}</label>
-                    <input :value="auths?.bearer !== undefined ? auths.bearer[0].value : ''" type="text" id="default-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <input v-model="authsToken" type="text" id="default-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 </div>
             </div>
         </div>
@@ -46,6 +46,11 @@
 <script>
 export default {
   props: ["auths"],
+  data() {
+    return {
+      authsToken: "",
+    };
+  },
   methods: {
     openActiveTab(tabId) {
       document.querySelectorAll('[role="tree-2-tabs"]').forEach((Element) => {
@@ -58,9 +63,21 @@ export default {
   watch: {
     auths: {
       handler(auths) {
+        this.authsToken =
+          auths?.bearer !== undefined ? auths.bearer[0].value : "";
+
         this.$root.$emit("new_auth", {
           key: auths.type,
           value: auths?.bearer !== undefined ? auths.bearer[0].value : "",
+        });
+      },
+      immediate: true,
+    },
+    authsToken: {
+      handler(token) {
+        this.$root.$emit("new_auth", {
+          key: "bearer",
+          value: token,
         });
       },
       immediate: true,
