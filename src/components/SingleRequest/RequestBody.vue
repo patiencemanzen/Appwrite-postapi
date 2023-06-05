@@ -54,7 +54,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="formdata in request_body_as_formdata" :key="formdata.key+Math.random().toString(16).slice(2)" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ formdata.key }}
                                 </th>
                                 <td class="px-6 py-4 w-32" style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden !important;">{{ formdata.value  }}</td>
@@ -163,7 +163,7 @@ export default {
               ...this.request_body_as_formdata,
               {
                 key: value.key,
-                value: value.src,
+                value: value.value,
                 type: value.type,
               },
             ];
