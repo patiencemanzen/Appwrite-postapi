@@ -107,7 +107,7 @@ export default {
   data: () => ({
     backgroundImage: `background-image: url('${
       import.meta.env.VITE_BASE_URL
-    }/src/assets/img/space_guy.jpg')`,
+    }/spaceguy.jpg')`,
     user: useUserStore().get,
     auth: false,
     stringIntials: getInitials,
