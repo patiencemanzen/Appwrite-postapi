@@ -1,0 +1,1 @@
+.alert-enter-active{transition:all .3s ease-out}.alert-leave-active{transition:all .8s cubic-bezier(1,.5,.8,1)}.alert-enter-from,.alert-leave-to{transform:translate(20px);opacity:0}
