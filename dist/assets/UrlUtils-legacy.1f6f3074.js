@@ -1,1 +1,0 @@
-System.register([],(function(n,e){"use strict";return{execute:function(){n("u",(function(n,e){var t=new URL(window.location.href);t.searchParams.set(n,e),window.history.pushState(null,null,t)})),n("a",(function(n){var e=new URL(window.location.href);e.searchParams.delete(n),window.history.pushState(null,null,e)}))}}}));

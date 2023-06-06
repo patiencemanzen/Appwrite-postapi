@@ -1,1 +1,0 @@
-System.register(["./index-legacy.1849bda6.js"],(function(e,t){"use strict";var n,c,u;return{setters:[function(e){n=e.d,c=e.a,u=e.c}],execute:function(){e("u",n("collection",(function(){var e=c({}),t=u((function(){return e.value}));return{collection:e,get:t,store:function(t){e.value=t}}})))}}}));
