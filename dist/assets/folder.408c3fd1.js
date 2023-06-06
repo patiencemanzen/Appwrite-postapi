@@ -1,1 +1,0 @@
-const e={Cyan:"bg-[#059669]",Teal:"bg-[#94A3B8]"},t={active:`${e.Cyan} h-10 w-10 rounded-full opacity-75 flex items-center justify-center text-gray-100`,default:`${e.Teal} h-10 w-10 rounded-full opacity-75 flex items-center justify-center text-gray-100`},a="/assets/folder.214b907c.png";export{a as _,t as a,e as c};
