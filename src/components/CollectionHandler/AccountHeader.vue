@@ -70,6 +70,9 @@
 
         <!-- Manage Collections -->
         <div><ManageCollections /></div>
+
+        <!-- Organization Settings -->
+        <OrganizationSettings />
     </div>
 </template>
 <script>
@@ -100,6 +103,7 @@ export default {
     ManageOrganizations: () => import("./ManageOrganizations.vue"),
     ManageProjects: () => import("./ManageProjects.vue"),
     ManageCollections: () => import("./ManageCollections.vue"),
+    OrganizationSettings: () => import("./OrganizationSettings.vue"),
   },
   computed: {
     isDashboard() {
