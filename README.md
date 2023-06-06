@@ -1,6 +1,8 @@
-# PostAPI
+# PostAPI | patienceman
 
-This template should help get you started developing with Vue 3 in Vite.
+Platform that simplifies the process of creating, organizing, and maintaining 
+APIS and postman-apis documentation. It helps teams collaborate effectively, improves documentation consistency, 
+and ensures that information is easily accessible to all devs, project manager and DevOps.
 
 ## Recommended IDE Setup
 

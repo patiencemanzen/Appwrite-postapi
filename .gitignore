@@ -27,3 +27,5 @@ dist-ssr
 *.sw?
 *.notes
 .env
+.env.production
+.env.local
