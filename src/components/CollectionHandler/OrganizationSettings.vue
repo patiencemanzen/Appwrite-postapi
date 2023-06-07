@@ -117,6 +117,7 @@ import { tryCatch } from "../../Utils/GeneralUtls";
 import axios from "axios";
 import { isEmpty, getInitials, diffFromHuman } from "../../Utils/GeneralUtls";
 import { useUserStore } from "../../stores/UserStore";
+import { sendEmail } from "../../Services/Email";
 
 export default {
   data() {
@@ -215,57 +216,99 @@ export default {
         this.search_user_result = [];
       }
     },
-    inviteUser(user) {
+    async inviteUser(user) {
       if (!isEmpty(this.model.role)) {
-        tryCatch(() => {
-          this.isLoading = true;
-          this.$root.$emit("set_loader_on");
+        tryCatch(
+          () => {
+            this.isLoading = true;
+            this.$root.$emit("set_loader_on");
 
-          this.database.collection(
-            appWriteCollections.organization_members_table
-          );
+            this.database.collection(
+              appWriteCollections.organization_members_table
+            );
 
-          this.database
-            .index([Query.equal("organization_id", [this.organization.$id])])
-            .then((data) => {
-              let exist = data.documents.filter(
-                (value) => value.user_id == user.$id
-              );
+            this.database
+              .index([Query.equal("organization_id", [this.organization.$id])])
+              .then((data) => {
+                let exist = data.documents.filter(
+                  (value) => value.user_id == user.$id
+                );
 
-              if (isEmpty(exist)) {
-                this.database
-                  .create({
-                    user_id: user.$id,
-                    organization_id: this.organization.$id,
-                    role_id: this.model.role,
-                    accepted: false,
-                  })
-                  .then(() => {
-                    this.$root.$emit("new_message", {
-                      responseType: "success",
-                      response: "Invitation sent",
-                      hasResponse: true,
-                      subject: "Invitations",
-                      source: "/",
+                if (isEmpty(exist)) {
+                  this.database
+                    .create({
+                      user_id: user.$id,
+                      organization_id: this.organization.$id,
+                      role_id: this.model.role,
+                      accepted: false,
+                    })
+                    .then(() => {
+                      let message = `${this.user.name} invites you to join the organization '${this.organization.name}', to confurm go to your dashboard`;
+
+                      this.database.collection(
+                        appWriteCollections.invitations_table
+                      );
+                      this.database
+                        .create({
+                          sender_id: this.user.$id,
+                          reciever_id: user.$id,
+                          payload: JSON.stringify({
+                            organization_id: this.organization.$id,
+                          }),
+                          active_status: true,
+                        })
+                        .then(() => {
+                          sendEmail(
+                            user.name,
+                            user.email,
+                            `New Invitation From Postapi`,
+                            message
+                          )
+                            .then((response) => {
+                              this.$root.$emit("new_message", {
+                                responseType: "success",
+                                response: response.message,
+                                hasResponse: true,
+                                subject: "Invitations",
+                                source: "/",
+                                shouldSave: true,
+                              });
+
+                              document
+                                .getElementById(`roles_${user.$id}`)
+                                .classList.add("hidden");
+
+                              this.getMembers();
+                            })
+                            .catch((error) => {
+                              this.$root.$emit("new_message", {
+                                responseType: "error",
+                                response: error.message,
+                                hasResponse: true,
+                              });
+                            });
+                        });
                     });
-
-                    document
-                      .getElementById(`roles_${user.$id}`)
-                      .classList.add("hidden");
-
-                    this.getMembers();
+                } else {
+                  this.$root.$emit("new_message", {
+                    responseType: "error",
+                    response: "User already invite",
+                    hasResponse: true,
+                    subject: "Invitation",
+                    source: "/",
                   });
-              } else {
-                this.$root.$emit("new_message", {
-                  responseType: "error",
-                  response: "User already invite",
-                  hasResponse: true,
-                  subject: "Invitation",
-                  source: "/",
-                });
-              }
+                }
+              });
+          },
+          () => {
+            this.isLoading = false;
+            this.$root.$emit("new_message", {
+              responseType: "error",
+              response: "unable to invite user",
+              hasResponse: true,
             });
-        });
+          }
+        );
       } else {
         this.$root.$emit("new_message", {
           responseType: "error",
@@ -277,52 +320,75 @@ export default {
       }
     },
     revokeOrgRoleFromMember(membership) {
-      tryCatch(() => {
-        this.loadingMembers = true;
+      tryCatch(
+        () => {
+          this.loadingMembers = true;
 
-        this.database.collection(
-          appWriteCollections.organization_members_table
-        );
+          this.database.collection(
+            appWriteCollections.organization_members_table
+          );
 
-        this.database
-          .destroy(membership.$id)
-          .then(() => {
-            this.$root.$emit("new_message", {
-              responseType: "success",
-              response: "Membership Revoked",
-              hasResponse: true,
-              subject: "Membership",
-              source: "/",
-            });
+          this.database
+            .destroy(membership.$id)
+            .then(() => {
+              this.$root.$emit("new_message", {
+                responseType: "success",
+                response: "Membership Revoked",
+                hasResponse: true,
+                subject: "Membership",
+                source: "/",
+                shouldSave: true,
+              });
 
-            this.loadingMembers = false;
-            this.getMembers();
-          })
-          .catch(() => (this.loadingMembers = false));
-      });
+              this.loadingMembers = false;
+              this.getMembers();
+            })
+            .catch(() => (this.loadingMembers = false));
+        },
+        () => {
+          this.isLoading = false;
+          this.$root.$emit("new_message", {
+            responseType: "error",
+            response: "unable to revoke role",
+            hasResponse: true,
+          });
+        }
+      );
     },
     updateOrgName() {
       this.roles = [];
       this.savingChanges = true;
 
-      tryCatch(() => {
-        this.database.collection(appWriteCollections.organization_table);
-        this.database
-          .update(this.organization.$id, { name: this.model.organization_name })
-          .then(() => {
-            this.$root.$emit("new_message", {
-              responseType: "success",
-              response: "Changes saved",
-              hasResponse: true,
-              subject: "New Changes",
-              source: "/",
-            });
+      tryCatch(
+        () => {
+          this.database.collection(appWriteCollections.organization_table);
+          this.database
+            .update(this.organization.$id, {
+              name: this.model.organization_name,
+            })
+            .then(() => {
+              this.$root.$emit("new_message", {
+                responseType: "success",
+                response: "Changes saved",
+                hasResponse: true,
+                subject: "New Changes",
+                source: "/",
+              });
 
-            this.savingChanges = false;
-            window.location.reload();
-          })
-          .then(() => (this.savingChanges = false));
-      });
+              this.savingChanges = false;
+              window.location.reload();
+            })
+            .then(() => (this.savingChanges = false));
+        },
+        () => {
+          this.isLoading = false;
+          this.$root.$emit("new_message", {
+            responseType: "error",
+            response: "unable to update organization",
+            hasResponse: true,
+          });
+        }
+      );
     },
   },
   mounted() {

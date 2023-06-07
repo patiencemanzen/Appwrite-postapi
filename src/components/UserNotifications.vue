@@ -9,22 +9,27 @@
             </button>
         </div>
         <div v-if="!isEmpty(notifications)" class="divide-y divide-gray-100 dark:divide-gray-700">
-          <a v-for="notification in notifications" :key="notification.$id" :href="notification.source" class="flex px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700">
+          <a v-for="notification in notifications" :key="notification.$id" :href="notification.source" class="flex px-4 py-3 border border-x-0 border-t-0 border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
             <div class="w-full pl-3">
                 <div class="text-gray-600 text-sm font-bold mb-1.5 dark:text-gray-400">{{ notification.subject }}</div>
                 <div class="text-gray-500 text-sm mb-1.5 dark:text-gray-400">{{ notification.message }}</div>
-                <div class="text-sm font-semibold text-blue-400 dark:text-blue-500">{{ diffFromHuman(notification.$createdAt) }}</div>
+                <div class="flex items-center">
+                  <div class="text-sm font-semibold text-blue-400 dark:text-blue-500">{{ diffFromHuman(notification.$createdAt) }}</div>
+                  <span class="mx-2 text-gray-400">/</span>
+                  <span v-if="notification.type == 'success'" class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">{{ notification.type }}</span>
+                  <span v-if="notification.type == 'error'" class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">{{ notification.type }}</span>
+                </div>
             </div>
           </a>
         </div>
         <div v-if="isEmpty(notifications) && !isLoading" class="flex items-center grayscale justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-40 h-40 text-gray-300">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9.143 17.082a24.248 24.248 0 003.844.148m-3.844-.148a23.856 23.856 0 01-5.455-1.31 8.964 8.964 0 002.3-5.542m3.155 6.852a3 3 0 005.667 1.97m1.965-2.277L21 21m-4.225-4.225a23.81 23.81 0 003.536-1.003A8.967 8.967 0 0118 9.75V9A6 6 0 006.53 6.53m10.245 10.245L6.53 6.53M3 3l3.53 3.53" />
-            </svg>              
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-40 h-40 text-gray-300">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.143 17.082a24.248 24.248 0 003.844.148m-3.844-.148a23.856 23.856 0 01-5.455-1.31 8.964 8.964 0 002.3-5.542m3.155 6.852a3 3 0 005.667 1.97m1.965-2.277L21 21m-4.225-4.225a23.81 23.81 0 003.536-1.003A8.967 8.967 0 0118 9.75V9A6 6 0 006.53 6.53m10.245 10.245L6.53 6.53M3 3l3.53 3.53" />
+          </svg>              
         </div>
 
         <div v-if="isLoading" class="flex justify-center items-center py-7">
-            <span class="inline-flex h-6 w-6 animate-spin rounded-full border-4 border-dotted border-indigo-600"></span>
+          <span class="inline-flex h-6 w-6 animate-spin rounded-full border-4 border-dotted border-indigo-600"></span>
         </div>
     </div>
 </template>

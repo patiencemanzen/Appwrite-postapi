@@ -44,88 +44,103 @@ export default {
      * @param {Object} data
      */
     async updateCollection(data) {
-      tryCatch(() => {
-        this.isLoading = true;
+      tryCatch(
+        () => {
+          this.isLoading = true;
 
-        let collection = useCollectionStore().get;
-        let collectionFile = collection.file;
-        let newCollection = {};
+          let collection = useCollectionStore().get;
+          let collectionFile = collection.file;
+          let newCollection = {};
 
-        if (data.section == "info.name") {
-          collectionFile.info.name = data.name;
-        }
-        if (data.section == "info.description") {
-          collectionFile.info.description = data.description;
-        }
+          if (data.section == "info.name") {
+            collectionFile.info.name = data.name;
+          }
+          if (data.section == "info.description") {
+            collectionFile.info.description = data.description;
+          }
 
-        // eslint-disable-next-line no-prototype-builtins
-        if (collectionFile.hasOwnProperty("info")) {
-          newCollection.info = collectionFile.info;
-        }
+          // eslint-disable-next-line no-prototype-builtins
+          if (collectionFile.hasOwnProperty("info")) {
+            newCollection.info = collectionFile.info;
+          }
 
-        // eslint-disable-next-line no-prototype-builtins
-        if (collectionFile.hasOwnProperty("auth")) {
-          newCollection.auth = collectionFile.auth;
-        }
+          // eslint-disable-next-line no-prototype-builtins
+          if (collectionFile.hasOwnProperty("auth")) {
+            newCollection.auth = collectionFile.auth;
+          }
 
-        // eslint-disable-next-line no-prototype-builtins
-        if (collectionFile.hasOwnProperty("event")) {
-          newCollection.event = collectionFile.event;
-        }
+          // eslint-disable-next-line no-prototype-builtins
+          if (collectionFile.hasOwnProperty("event")) {
+            newCollection.event = collectionFile.event;
+          }
 
-        // eslint-disable-next-line no-prototype-builtins
-        if (collectionFile.hasOwnProperty("item")) {
-          newCollection.item = collectionFile.item;
-        }
+          // eslint-disable-next-line no-prototype-builtins
+          if (collectionFile.hasOwnProperty("item")) {
+            newCollection.item = collectionFile.item;
+          }
 
-        if (data.section == "item") {
-          let collectionItems = this.traverseThroughJSON(
-            collectionFile.item,
-            data.id,
-            this.purposes.update_folder,
-            data
+          if (data.section == "item") {
+            let collectionItems = this.traverseThroughJSON(
+              collectionFile.item,
+              data.id,
+              this.purposes.update_folder,
+              data
+            );
+
+            newCollection.item = collectionItems;
+          }
+
+          const blob = new Blob([JSON.stringify(newCollection)], {
+            type: "application/json",
+          });
+
+          const file = new File(
+            [blob],
+            "patienceman_" + randomId(10) + ".json",
+            {
+              type: blob.type,
+            }
           );
 
-          newCollection.item = collectionItems;
-        }
+          // Create new file and update user collection document
+          this.storage.store(file).then((collectionFile) => {
+            const data = {
+              storage_file_id: collectionFile.$id,
+              collection_url: collectionFile.name,
+            };
 
-        const blob = new Blob([JSON.stringify(newCollection)], {
-          type: "application/json",
-        });
+            this.database.collection(appWriteCollections.collection_table);
+            this.database.update(collection.$id, data).then((response) => {
+              this.storage.destroy(collection.file_id).then(() => {
+                useCollectionStore().store({
+                  ...response,
+                  file: newCollection,
+                  file_id: collectionFile.$id,
+                });
 
-        const file = new File([blob], "patienceman_" + randomId(10) + ".json", {
-          type: blob.type,
-        });
+                this.$root.$emit("new_message", {
+                  hasResponse: true,
+                  responseType: "success",
+                  response: "File updated successfully",
+                  subject: "Updating file",
+                  source: "/",
+                  shouldSave: true,
+                });
 
-        // Create new file and update user collection document
-        this.storage.store(file).then((collectionFile) => {
-          const data = {
-            storage_file_id: collectionFile.$id,
-            collection_url: collectionFile.name,
-          };
-
-          this.database.collection(appWriteCollections.collection_table);
-          this.database.update(collection.$id, data).then((response) => {
-            this.storage.destroy(collection.file_id).then(() => {
-              useCollectionStore().store({
-                ...response,
-                file: newCollection,
-                file_id: collectionFile.$id,
+                this.isLoading = false;
               });
-
-              this.$root.$emit("new_message", {
-                hasResponse: true,
-                responseType: "success",
-                response: "File updated successfully",
-                subject: "Updating file",
-                source: "/",
-              });
-
-              this.isLoading = false;
             });
           });
-        });
-      });
+        },
+        () => {
+          this.isLoading = false;
+          this.$root.$emit("new_message", {
+            responseType: "error",
+            response: "Unable to update file",
+            hasResponse: true,
+          });
+        }
+      );
     },
 
     /**
@@ -183,56 +198,71 @@ export default {
      * @param {Object} data
      */
     async saveNewFolderInCollection(data) {
-      tryCatch(() => {
-        this.isLoading = true;
+      tryCatch(
+        () => {
+          this.isLoading = true;
 
-        let collection = useCollectionStore().get;
-        let collectionFile = collection.file;
-        let newCollection = {};
+          let collection = useCollectionStore().get;
+          let collectionFile = collection.file;
+          let newCollection = {};
 
-        newCollection.info = collectionFile.info;
-        newCollection.auth = collectionFile.auth;
-        newCollection.event = collectionFile.event;
-        newCollection.item = collectionFile.item;
-        newCollection.item.push(data);
+          newCollection.info = collectionFile.info;
+          newCollection.auth = collectionFile.auth;
+          newCollection.event = collectionFile.event;
+          newCollection.item = collectionFile.item;
+          newCollection.item.push(data);
 
-        const blob = new Blob([JSON.stringify(newCollection)], {
-          type: "application/json",
-        });
+          const blob = new Blob([JSON.stringify(newCollection)], {
+            type: "application/json",
+          });
 
-        const file = new File([blob], "patienceman_" + randomId(10) + ".json", {
-          type: blob.type,
-        });
+          const file = new File(
+            [blob],
+            "patienceman_" + randomId(10) + ".json",
+            {
+              type: blob.type,
+            }
+          );
 
-        // Create new file and update user collection document
-        this.storage.store(file).then((collectionFile) => {
-          const data = {
-            storage_file_id: collectionFile.$id,
-            collection_url: collectionFile.name,
-          };
+          // Create new file and update user collection document
+          this.storage.store(file).then((collectionFile) => {
+            const data = {
+              storage_file_id: collectionFile.$id,
+              collection_url: collectionFile.name,
+            };
 
-          this.database.collection(appWriteCollections.collection_table);
-          this.database.update(collection.$id, data).then((response) => {
-            this.storage.destroy(collection.file_id).then(() => {
-              useCollectionStore().store({
-                ...response,
-                file: newCollection,
-                file_id: collectionFile.$id,
+            this.database.collection(appWriteCollections.collection_table);
+            this.database.update(collection.$id, data).then((response) => {
+              this.storage.destroy(collection.file_id).then(() => {
+                useCollectionStore().store({
+                  ...response,
+                  file: newCollection,
+                  file_id: collectionFile.$id,
+                });
+
+                this.$root.$emit("new_message", {
+                  responseType: "success",
+                  response: "Folder created successfully",
+                  hasResponse: true,
+                  subject: "Collection Folder",
+                  source: "/",
+                  shouldSave: true,
+                });
+
+                this.isLoading = false;
               });
-
-              this.$root.$emit("new_message", {
-                responseType: "success",
-                response: "Folder created successfully",
-                hasResponse: true,
-                subject: "Collection Folder",
-                source: "/",
-              });
-
-              this.isLoading = false;
             });
           });
-        });
-      });
+        },
+        () => {
+          this.isLoading = false;
+          this.$root.$emit("new_message", {
+            responseType: "error",
+            response: "Unable to save folder",
+            hasResponse: true,
+          });
+        }
+      );
     },
 
     /**
@@ -241,66 +271,81 @@ export default {
      * @param {Object} data
      */
     async saveNewRequestInFolder(data) {
-      tryCatch(() => {
-        this.isLoading = true;
+      tryCatch(
+        () => {
+          this.isLoading = true;
 
-        let collection = useCollectionStore().get;
-        let collectionFile = collection.file;
-        let requestsHandler = data.folderId;
-        let newCollection = {};
+          let collection = useCollectionStore().get;
+          let collectionFile = collection.file;
+          let requestsHandler = data.folderId;
+          let newCollection = {};
 
-        newCollection.info = collectionFile.info;
-        newCollection.auth = collectionFile.auth;
-        newCollection.event = collectionFile.event;
-        newCollection.item = collectionFile.item;
+          newCollection.info = collectionFile.info;
+          newCollection.auth = collectionFile.auth;
+          newCollection.event = collectionFile.event;
+          newCollection.item = collectionFile.item;
 
-        let collectionItems = this.traverseThroughJSON(
-          collectionFile.item,
-          data.folderId,
-          this.purposes.create_new_item,
-          data
-        );
+          let collectionItems = this.traverseThroughJSON(
+            collectionFile.item,
+            data.folderId,
+            this.purposes.create_new_item,
+            data
+          );
 
-        newCollection.item = collectionItems;
+          newCollection.item = collectionItems;
 
-        const blob = new Blob([JSON.stringify(newCollection)], {
-          type: "application/json",
-        });
+          const blob = new Blob([JSON.stringify(newCollection)], {
+            type: "application/json",
+          });
 
-        const file = new File([blob], "patienceman_" + randomId(10) + ".json", {
-          type: blob.type,
-        });
+          const file = new File(
+            [blob],
+            "patienceman_" + randomId(10) + ".json",
+            {
+              type: blob.type,
+            }
+          );
 
-        // Create new file and update user collection document
-        this.storage.store(file).then((collectionFile) => {
-          const data = {
-            storage_file_id: collectionFile.$id,
-            collection_url: collectionFile.name,
-          };
+          // Create new file and update user collection document
+          this.storage.store(file).then((collectionFile) => {
+            const data = {
+              storage_file_id: collectionFile.$id,
+              collection_url: collectionFile.name,
+            };
 
-          this.database.collection(appWriteCollections.collection_table);
-          this.database.update(collection.$id, data).then((response) => {
-            this.storage.destroy(collection.file_id).then(() => {
-              useCollectionStore().store({
-                ...response,
-                file: newCollection,
-                file_id: collectionFile.$id,
+            this.database.collection(appWriteCollections.collection_table);
+            this.database.update(collection.$id, data).then((response) => {
+              this.storage.destroy(collection.file_id).then(() => {
+                useCollectionStore().store({
+                  ...response,
+                  file: newCollection,
+                  file_id: collectionFile.$id,
+                });
+
+                this.$root.$emit("new_message", {
+                  responseType: "success",
+                  response: "Request created successfully",
+                  hasResponse: true,
+                  subject: "Folder Request",
+                  source: "/",
+                  shouldSave: true,
+                });
+
+                this.isLoading = false;
+                document.getElementById(requestsHandler).click();
               });
-
-              this.$root.$emit("new_message", {
-                responseType: "success",
-                response: "Request created successfully",
-                hasResponse: true,
-                subject: "Folder Request",
-                source: "/",
-              });
-
-              this.isLoading = false;
-              document.getElementById(requestsHandler).click();
             });
           });
-        });
-      });
+        },
+        () => {
+          this.isLoading = false;
+          this.$root.$emit("new_message", {
+            responseType: "error",
+            response: "Unable to create new request file",
+            hasResponse: true,
+          });
+        }
+      );
     },
   },
   mounted() {

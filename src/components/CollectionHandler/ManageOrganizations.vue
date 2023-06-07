@@ -139,32 +139,43 @@ export default {
      */
     async submitOrganization() {
       if (!isEmpty(this.model.organizationName)) {
-        tryCatch(() => {
-          this.isLoading = true;
-          this.$root.$emit("set_loader_on");
+        tryCatch(
+          () => {
+            this.isLoading = true;
+            this.$root.$emit("set_loader_on");
 
-          this.database.collection(appWriteCollections.organization_table);
-          this.database
-            .create({
-              name: this.model.organizationName,
-              user_id: this.user.$id,
-            })
-            .then(() => {
-              this.$root.$emit("new_message", {
-                responseType: "success",
-                response: "Organization Created",
-                hasResponse: true,
-                subject: "New organization",
-                source: "/",
+            this.database.collection(appWriteCollections.organization_table);
+            this.database
+              .create({
+                name: this.model.organizationName,
+                user_id: this.user.$id,
+              })
+              .then(() => {
+                this.$root.$emit("new_message", {
+                  responseType: "success",
+                  response: "Organization Created",
+                  hasResponse: true,
+                  subject: "New organization",
+                  source: "/",
+                  shouldSave: true,
+                });
+
+                this.$root.$emit("set_loader_off");
+                this.isLoading = false;
+                this.$root.$emit("reload_organizations");
               });
 
-              this.$root.$emit("set_loader_off");
-              this.isLoading = false;
-              this.$root.$emit("reload_organizations");
+            this.hasResponse = true;
+          },
+          () => {
+            this.isLoading = false;
+            this.$root.$emit("new_message", {
+              responseType: "error",
+              response: "Unable to create new organization",
+              hasResponse: true,
             });
-
-          this.hasResponse = true;
-        });
+          }
+        );
       } else {
         this.$root.$emit("new_message", {
           responseType: "error",

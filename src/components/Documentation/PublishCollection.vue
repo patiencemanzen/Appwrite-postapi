@@ -34,24 +34,35 @@ export default {
     async publishCollection() {
       this.isLoading = true;
 
-      tryCatch(() => {
-        this.database.collection(appWriteCollections.collection_table);
+      tryCatch(
+        () => {
+          this.database.collection(appWriteCollections.collection_table);
 
-        this.database
-          .update(this.collection.$id, {
-            published: true,
-            published_at: moment(),
-          })
-          .then(() => {
-            this.$root.$emit("new_message", {
-              responseType: "success",
-              response: "Collection published successfully",
-              hasResponse: true,
-              subject: "Published",
-              source: "/",
+          this.database
+            .update(this.collection.$id, {
+              published: true,
+              published_at: moment(),
+            })
+            .then(() => {
+              this.$root.$emit("new_message", {
+                responseType: "success",
+                response: "Collection published successfully",
+                hasResponse: true,
+                subject: "Published",
+                source: "/",
+                shouldSave: true,
+              });
             });
+        },
+        () => {
+          this.isLoading = false;
+          this.$root.$emit("new_message", {
+            responseType: "error",
+            response: "unable to publish collection",
+            hasResponse: true,
           });
-      });
+        }
+      );
 
       this.isLoading = false;
     },

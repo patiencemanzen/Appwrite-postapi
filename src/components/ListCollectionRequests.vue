@@ -119,27 +119,35 @@ export default {
     },
 
     submitNewRequest() {
-      this.closeRequestCreator();
+      if (!isEmpty(this.model.requestName)) {
+        this.closeRequestCreator();
 
-      this.$root.$emit("new_request", {
-        alertMessage: `Submit new request'`,
-        data: {
-          folderId: this.folderId,
-          name: this.model.requestName,
-          description: this.model.requestDescription,
-          id: Math.random().toString(16).slice(2),
-          request: {
-            method: "GET",
-            header: [],
-            url: {
-              raw: "https://example.com/api",
-              host: ["https://example.com"],
-              path: [this.folderName],
+        this.$root.$emit("new_request", {
+          alertMessage: `Submit new request'`,
+          data: {
+            folderId: this.folderId,
+            name: this.model.requestName,
+            description: this.model.requestDescription,
+            id: Math.random().toString(16).slice(2),
+            request: {
+              method: "GET",
+              header: [],
+              url: {
+                raw: "https://example.com/api",
+                host: ["https://example.com"],
+                path: [this.folderName],
+              },
             },
+            response: [],
           },
-          response: [],
-        },
-      });
+        });
+      } else {
+        this.$root.$emit("new_message", {
+          responseType: "error",
+          response: "Folder name required",
+          hasResponse: true,
+        });
+      }
     },
 
     // click to view single request

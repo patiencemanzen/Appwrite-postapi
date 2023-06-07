@@ -115,7 +115,7 @@ export default {
       this.database.collection(appWriteCollections.projects_table);
       this.database
         .index([
-          Query.equal("organization_id", [this.organization.$id]),
+          Query.equal("organization_id", [this.activeOrganization.$id]),
           Query.orderDesc("$createdAt"),
         ])
         .then((data) => {
@@ -130,40 +130,66 @@ export default {
      * then redirect back to dashboard
      */
     async submitProject() {
-      if (this.isEmpty(this.organization)) {
+      if (this.isEmpty(this.activeOrganization)) {
         this.$root.$emit("new_message", {
           responseType: "error",
           response: "Set active organization and try again",
           hasResponse: true,
-          subject: "Active Organization",
-          source: "/",
         });
       } else {
-        tryCatch(() => {
-          this.isLoading = true;
-          this.$root.$emit("set_loader_on");
+        if (!isEmpty(this.model.projectName)) {
+          tryCatch(
+            () => {
+              this.isLoading = true;
+              this.$root.$emit("set_loader_on");
 
-          this.database.collection(appWriteCollections.projects_table);
-          this.database
-            .create({
-              organization_id: this.activeOrganization.$id,
-              name: this.model.projectName,
-            })
-            .then(() => {
-              this.$root.$emit("new_message", {
-                responseType: "success",
-                response: "Project Created",
-                hasResponse: true,
-                subject: "New Project",
-                source: "/",
-              });
+              this.database.collection(appWriteCollections.projects_table);
+              this.database
+                .create({
+                  organization_id: this.activeOrganization.$id,
+                  name: this.model.projectName,
+                })
+                .then(() => {
+                  this.$root.$emit("new_message", {
+                    responseType: "success",
+                    response: "Project Created",
+                    hasResponse: true,
+                    subject: "New Project",
+                    source: "/",
+                    shouldSave: true,
+                  });
 
-              this.$root.$emit("set_loader_off");
+                  this.$root.$emit("set_loader_off");
+                  this.isLoading = false;
+                  this.$root.$emit("refresh_projects");
+                })
+                .catch(() => {
+                  this.isLoading = false;
+                  this.$root.$emit("set_loader_off");
+                  this.$root.$emit("new_message", {
+                    responseType: "error",
+                    response: "Unable to create new project",
+                    hasResponse: true,
+                  });
+                });
+            },
+            () => {
               this.isLoading = false;
-              this.$root.$emit("refresh_projects");
-            })
-            .catch(() => (this.isLoading = false));
-        });
+              this.$root.$emit("set_loader_off");
+              this.$root.$emit("new_message", {
+                responseType: "error",
+                response: "Unable to create new project",
+                hasResponse: true,
+              });
+            }
+          );
+        } else {
+          this.$root.$emit("new_message", {
+            responseType: "error",
+            response: "Project name is required",
+            hasResponse: true,
+          });
+        }
       }
     },
   },
@@ -177,12 +203,12 @@ export default {
       });
 
     this.$root.$on("refresh_projects", async () => {
-      this.organization = useOrganizationStore().get;
+      this.activeOrganization = useOrganizationStore().get;
       await this.getProjects();
     });
 
     this.$root.$on("open-projects", async () => {
-      this.organization = useOrganizationStore().get;
+      this.activeOrganization = useOrganizationStore().get;
       this.isOpen = true;
       await this.getProjects();
     });

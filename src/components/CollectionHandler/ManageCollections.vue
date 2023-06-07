@@ -224,77 +224,88 @@ export default {
      * Store imported custom collection
      */
     async submitImportedCollection() {
-      tryCatch(() => {
-        this.isLoading = true;
-        this.$root.$emit("set_loader_on");
+      tryCatch(
+        () => {
+          this.isLoading = true;
+          this.$root.$emit("set_loader_on");
 
-        const blob = new Blob([this.model.importedCollection], {
-          type: "application/json",
-        });
-
-        blob.text().then((data) => {
-          const jsonData = JSON.parse(data);
-
-          this.newCollection["info"] = jsonData.info;
-          this.newCollection["event"] = jsonData.event;
-          this.newCollection["auth"] = jsonData.auth;
-
-          const items = this.recursiveMap(jsonData.item, (val) => ({
-            ...val,
-            id: Math.random().toString(16).slice(2),
-            description: val?.description ? val.description : "",
-          }));
-
-          this.newCollection["item"] = items;
-
-          const mappedBlob = new Blob([JSON.stringify(this.newCollection)], {
+          const blob = new Blob([this.model.importedCollection], {
             type: "application/json",
           });
 
-          const mappedFile = new File(
-            [mappedBlob],
-            "patienceman_" + randomId(10) + ".json",
-            {
-              type: mappedBlob.type,
-            }
-          );
+          blob.text().then((data) => {
+            const jsonData = JSON.parse(data);
 
-          this.storage
-            .store(mappedFile)
-            .then((collectionFile) => {
-              const data = {
-                project_id: this.activeProject.$id,
-                slug: slugify(
-                  randomId(10) + " " + this.user.name + "collection"
-                ),
-                storage_file_id: collectionFile.$id,
-                collection_url: collectionFile.name,
-                published: false,
-                published_at: moment(),
-              };
+            this.newCollection["info"] = jsonData.info;
+            this.newCollection["event"] = jsonData.event;
+            this.newCollection["auth"] = jsonData.auth;
 
-              this.database.collection(appWriteCollections.collection_table);
-              this.database.create(data).then((collection) => {
-                this.$root.$emit("new_message", {
-                  responseType: "success",
-                  response: "File imported successfully",
-                  hasResponse: true,
-                  subject: "Import File",
-                  source: "/",
+            const items = this.recursiveMap(jsonData.item, (val) => ({
+              ...val,
+              id: Math.random().toString(16).slice(2),
+              description: val?.description ? val.description : "",
+            }));
+
+            this.newCollection["item"] = items;
+
+            const mappedBlob = new Blob([JSON.stringify(this.newCollection)], {
+              type: "application/json",
+            });
+
+            const mappedFile = new File(
+              [mappedBlob],
+              "patienceman_" + randomId(10) + ".json",
+              {
+                type: mappedBlob.type,
+              }
+            );
+
+            this.storage
+              .store(mappedFile)
+              .then((collectionFile) => {
+                const data = {
+                  project_id: this.activeProject.$id,
+                  slug: slugify(
+                    randomId(10) + " " + this.user.name + "collection"
+                  ),
+                  storage_file_id: collectionFile.$id,
+                  collection_url: collectionFile.name,
+                  published: false,
+                  published_at: moment(),
+                };
+
+                this.database.collection(appWriteCollections.collection_table);
+                this.database.create(data).then((collection) => {
+                  this.$root.$emit("new_message", {
+                    responseType: "success",
+                    response: "File imported successfully",
+                    hasResponse: true,
+                    subject: "Import File",
+                    source: "/",
+                    shouldSave: true,
+                  });
+
+                  this.$root.$emit("set_loader_off");
+                  this.isLoading = false;
+                  this.$root.$emit("refresh_collections", {
+                    ...collection,
+                    file: this.newCollection,
+                    file_id: collectionFile.$id,
+                  });
                 });
-
-                this.$root.$emit("set_loader_off");
-                this.isLoading = false;
-                this.$root.$emit("refresh_collections", {
-                  ...collection,
-                  file: this.newCollection,
-                  file_id: collectionFile.$id,
-                });
-              });
-            })
-            .catch(() => (this.isLoading = false));
-        });
-      });
+              })
+              .catch(() => (this.isLoading = false));
+          });
+        },
+        () => {
+          this.isLoading = false;
+          this.$root.$emit("new_message", {
+            responseType: "error",
+            response: "unable to import file",
+            hasResponse: true,
+          });
+        }
+      );
     },
 
     /**
@@ -336,68 +347,91 @@ export default {
           source: "/",
         });
       } else {
-        tryCatch(() => {
-          this.isLoading = true;
-          this.$root.$emit("set_loader_on");
+        if (!isEmpty(this.model.collectionName)) {
+          tryCatch(
+            () => {
+              this.isLoading = true;
+              this.$root.$emit("set_loader_on");
 
-          let fileData = {
-            info: {
-              name: this.model.collectionName,
+              let fileData = {
+                info: {
+                  name: this.model.collectionName,
+                },
+                item: [],
+                auth: {},
+                event: {},
+              };
+
+              const blob = new Blob([JSON.stringify(fileData)], {
+                type: "application/json",
+              });
+
+              const newFile = new File(
+                [blob],
+                "patienceman_" + randomId(10) + ".json",
+                {
+                  type: blob.type,
+                }
+              );
+
+              this.storage
+                .store(newFile)
+                .then((file) => {
+                  const data = {
+                    project_id: this.activeProject.$id,
+                    slug: slugify(
+                      randomId(10) + " " + this.user.name + "collection"
+                    ),
+                    storage_file_id: file.$id,
+                    collection_url: file.name,
+                    published: false,
+                    published_at: moment(),
+                  };
+
+                  this.database.collection(
+                    appWriteCollections.collection_table
+                  );
+                  this.database.create(data).then((collection) => {
+                    this.$root.$emit("new_message", {
+                      responseType: "success",
+                      response: "Collection created successfully",
+                      hasResponse: true,
+                      subject: "New collection",
+                      source: "/",
+                      shouldSave: true,
+                    });
+
+                    this.$root.$emit("refresh_collections", {
+                      ...collection,
+                      file: fileData,
+                      file_id: file.$id,
+                    });
+
+                    this.$root.$emit("set_loader_off");
+                    this.isLoading = false;
+                    this.$root.$emit("reload_collections");
+                  });
+                })
+                .catch(() => (this.isLoading = false));
             },
-            item: [],
-            auth: {},
-            event: {},
-          };
-
-          const blob = new Blob([JSON.stringify(fileData)], {
-            type: "application/json",
-          });
-
-          const newFile = new File(
-            [blob],
-            "patienceman_" + randomId(10) + ".json",
-            {
-              type: blob.type,
+            () => {
+              this.isLoading = false;
+              this.$root.$emit("new_message", {
+                responseType: "error",
+                response: "unable to create collection",
+                hasResponse: true,
+              });
             }
           );
 
-          this.storage
-            .store(newFile)
-            .then((file) => {
-              const data = {
-                project_id: this.activeProject.$id,
-                slug: slugify(
-                  randomId(10) + " " + this.user.name + "collection"
-                ),
-                storage_file_id: file.$id,
-                collection_url: file.name,
-                published: false,
-                published_at: moment(),
-              };
-
-              this.database.collection(appWriteCollections.collection_table);
-              this.database.create(data).then((collection) => {
-                this.$root.$emit("new_message", {
-                  responseType: "success",
-                  response: "Collection created successfully",
-                  hasResponse: true,
-                });
-
-                this.$root.$emit("refresh_collections", {
-                  ...collection,
-                  file: fileData,
-                  file_id: file.$id,
-                });
-
-                this.$root.$emit("set_loader_off");
-                this.isLoading = false;
-                this.$root.$emit("reload_collections");
-              });
-            })
-            .catch(() => (this.isLoading = false));
-        });
-
-        document.getElementById("collection-form").classList.add("hidden");
+          document.getElementById("collection-form").classList.add("hidden");
+        } else {
+          this.$root.$emit("new_message", {
+            responseType: "error",
+            response: "Collection name is required",
+            hasResponse: true,
+          });
+        }
       }
     },
   },

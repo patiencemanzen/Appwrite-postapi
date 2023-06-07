@@ -131,17 +131,25 @@ export default {
     },
 
     submitNewFolder() {
-      document.getElementById("folder-name-form").classList.add("hidden");
-      this.$root.$emit("new_folder", {
-        alertMessage: `Submit new folder'`,
-        data: {
-          name: this.model.folderName,
-          description: this.model.folderDescription,
-          id: Math.random().toString(16).slice(2),
-          item: [],
-        },
-        after: () => this.$root.$emit("refresh_collection"),
-      });
+      if (!isEmpty(this.model.folderName)) {
+        document.getElementById("folder-name-form").classList.add("hidden");
+        this.$root.$emit("new_folder", {
+          alertMessage: `Submit new folder'`,
+          data: {
+            name: this.model.folderName,
+            description: this.model.folderDescription,
+            id: Math.random().toString(16).slice(2),
+            item: [],
+          },
+          after: () => this.$root.$emit("refresh_collection"),
+        });
+      } else {
+        this.$root.$emit("new_message", {
+          responseType: "error",
+          response: "Folder name required",
+          hasResponse: true,
+        });
+      }
     },
   },
   async mounted() {
