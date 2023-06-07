@@ -41,7 +41,7 @@
                             <input @keyup="searchUsers($event.target.value)" autocomplete="false" type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Users...">
                         </div>
                         <div v-if="!isEmpty(search_user_result)" class="w-full border mb-2 border-gray-100 rounded-b-[5px] bg-white px-3 py-2.5 shadow-sm shadow-shadow-200 dark:!bg-navy-800 dark:shadow-none md:flex-grow-0 md:gap-1 xl:gap-2">
-                            <div v-for="user in search_user_result" :key="user.$id" class="border cursor-pointer border-gray-200 p-2 rounded-[10px] mt-3 relative hover:bg-gray-100 relative">
+                            <div v-for="user in search_user_result" :key="user.$id" class="border cursor-pointer border-gray-200 p-2 rounded-[10px] mt-3 hover:bg-gray-100 relative">
                                 <div class="flex items-center space-x-4" @click="openRoleOptions(user.$id)">
                                     <div class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-deep-green-700 rounded-full dark:bg-gray-600">
                                         <span class="font-medium text-gray-100 dark:text-gray-300">{{ getInitials(user.name) }}</span>
@@ -115,8 +115,7 @@ import { appAPIConfigs, appWriteCollections } from "../../config/services";
 import { AppwriteService } from "../../Services/AppwriteService";
 import { tryCatch } from "../../Utils/GeneralUtls";
 import axios from "axios";
-import moment from "moment";
-import { isEmpty, getInitials } from "../../Utils/GeneralUtls";
+import { isEmpty, getInitials, diffFromHuman } from "../../Utils/GeneralUtls";
 import { useUserStore } from "../../stores/UserStore";
 
 export default {
@@ -140,6 +139,7 @@ export default {
       isEmpty,
       chosen_role: "",
       getInitials,
+      diffFromHuman,
     };
   },
   watch: {
@@ -156,9 +156,6 @@ export default {
     },
     openRoleOptions(elementId) {
       document.getElementById(`roles_${elementId}`).classList.remove("hidden");
-    },
-    diffFromHuman(date) {
-      return moment(date).fromNow();
     },
     async getMembers() {
       this.loadingMembers = true;
@@ -248,6 +245,8 @@ export default {
                       responseType: "success",
                       response: "Invitation sent",
                       hasResponse: true,
+                      subject: "Invitations",
+                      source: "/",
                     });
 
                     document
@@ -261,6 +260,8 @@ export default {
                   responseType: "error",
                   response: "User already invite",
                   hasResponse: true,
+                  subject: "Invitation",
+                  source: "/",
                 });
               }
             });
@@ -270,6 +271,8 @@ export default {
           responseType: "error",
           response: "Select role to assign",
           hasResponse: true,
+          subject: "Membership",
+          source: "/",
         });
       }
     },
@@ -288,6 +291,8 @@ export default {
               responseType: "success",
               response: "Membership Revoked",
               hasResponse: true,
+              subject: "Membership",
+              source: "/",
             });
 
             this.loadingMembers = false;
@@ -309,6 +314,8 @@ export default {
               responseType: "success",
               response: "Changes saved",
               hasResponse: true,
+              subject: "New Changes",
+              source: "/",
             });
 
             this.savingChanges = false;

@@ -121,6 +121,8 @@ export default {
               responseType: "error",
               response: "Unable to fetch request",
               hasResponse: true,
+              subject: "Failed Request",
+              source: "/",
             });
           });
 
@@ -135,6 +137,8 @@ export default {
           responseType: "error",
           response: error.message,
           hasResponse: true,
+          subject: "Failed Request",
+          source: "/",
         });
       }
 

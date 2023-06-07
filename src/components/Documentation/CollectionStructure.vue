@@ -375,6 +375,8 @@ export default {
         responseType: "success",
         response: "Body Copied",
         hasResponse: true,
+        subject: "Copied",
+        source: "/",
       });
     },
   },

@@ -135,6 +135,8 @@ export default {
           responseType: "error",
           response: "Set active organization and try again",
           hasResponse: true,
+          subject: "Active Organization",
+          source: "/",
         });
       } else {
         tryCatch(() => {
@@ -152,6 +154,8 @@ export default {
                 responseType: "success",
                 response: "Project Created",
                 hasResponse: true,
+                subject: "New Project",
+                source: "/",
               });
 
               this.$root.$emit("set_loader_off");

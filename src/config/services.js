@@ -3,7 +3,8 @@ export const appWriteCollections = {
   organization_table: "647b8f363006c3b089cd",
   projects_table: "647b8f3eeadb714d7327",
   organization_roles_table: "64763158a667d0415fc3",
-  organization_members_table: "647f3335e602454e7dc9"
+  organization_members_table: "647f3335e602454e7dc9",
+  notifications_table: "64801dd4045b0e2ee454",
 };
 
 export const appAPIConfigs = {

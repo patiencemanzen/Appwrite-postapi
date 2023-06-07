@@ -47,6 +47,8 @@ export default {
               responseType: "success",
               response: "Collection published successfully",
               hasResponse: true,
+              subject: "Published",
+              source: "/",
             });
           });
       });

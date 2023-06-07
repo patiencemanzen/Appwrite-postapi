@@ -72,6 +72,18 @@
                 </router-link>
               </ul>
 
+              <div v-if="auth && user" @click="openNotifications" class="flex items-center cursor-pointer justify-center bg-gray-100 ml-3 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-md p-2.5">
+                <button class="relative text-gray-500 hover:text-gray-900" type="button"> 
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                  </svg>                  
+                  <div class="absolute w-3 h-3 bg-red-500 border-2 border-white rounded-full -top-0 right-0 dark:border-gray-900"></div>
+                </button> 
+              </div>
+
+              <!-- Notifications -->
+              <Notifications />
+
               <router-link v-if="auth && user" to="/dashboard">
                 <div class="ml-3 cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-deep-green-700 rounded-full dark:bg-gray-600">
                   <span class="font-medium text-gray-100 dark:text-gray-300">{{ stringIntials(user.name) }}</span>
@@ -122,6 +134,7 @@ export default {
       import("./components/CollectionHandler/ReadURLAndRefresh.vue"),
     ManageCollection: () =>
       import("./components/CollectionHandler/AccountHeader.vue"),
+    Notifications: () => import("./components/UserNotifications.vue"),
   },
   methods: {
     async logout() {
@@ -137,6 +150,9 @@ export default {
           });
         }
       });
+    },
+    openNotifications() {
+      this.$root.$emit("open_notifications");
     },
   },
   mounted() {

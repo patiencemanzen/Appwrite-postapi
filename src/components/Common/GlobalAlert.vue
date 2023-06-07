@@ -38,6 +38,11 @@
 </style>
 
 <script>
+import { appWriteCollections } from "../../config/services";
+import { AppwriteService } from "../../Services/AppwriteService";
+import { useUserStore } from "../../stores/UserStore";
+import { tryCatch } from "../../Utils/GeneralUtls";
+
 export default {
   name: "GlobalAlert",
   data() {
@@ -45,6 +50,8 @@ export default {
       hasResponse: false,
       response: null,
       responseType: null,
+      user: useUserStore().get,
+      database: AppwriteService().database(),
     };
   },
   methods: {
@@ -54,9 +61,22 @@ export default {
   },
   mounted() {
     this.$root.$on("new_message", (payload) => {
-      this.hasResponse = payload.hasResponse;
-      this.response = payload.response;
-      this.responseType = payload.responseType;
+      tryCatch(() => {
+        this.database.collection(appWriteCollections.notifications_table);
+        this.database
+          .create({
+            user_id: this.user.$id,
+            subject: payload.subject,
+            message: payload.response,
+            type: payload.responseType,
+            source: payload.source,
+          })
+          .then(() => {
+            this.hasResponse = payload.hasResponse;
+            this.response = payload.response;
+            this.responseType = payload.responseType;
+          });
+      });
     });
   },
 };

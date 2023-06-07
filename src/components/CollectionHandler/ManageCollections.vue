@@ -197,8 +197,10 @@ export default {
       if (this.isEmpty(this.activeProject)) {
         this.$root.$emit("new_message", {
           responseType: "error",
-          response: "Set Active Porject and Try again",
+          response: "Set Active Project and Try again",
           hasResponse: true,
+          subject: "Active project",
+          source: "/",
         });
       } else {
         document.getElementById("custom_file").click();
@@ -277,6 +279,8 @@ export default {
                   responseType: "success",
                   response: "File imported successfully",
                   hasResponse: true,
+                  subject: "Import File",
+                  source: "/",
                 });
 
                 this.$root.$emit("set_loader_off");
@@ -328,6 +332,8 @@ export default {
           responseType: "error",
           response: "Set Active Project and Try again",
           hasResponse: true,
+          subject: "Active project",
+          source: "/",
         });
       } else {
         tryCatch(() => {

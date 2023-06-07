@@ -77,10 +77,8 @@
 </template>
 <script>
 import { useUserStore } from "../../stores/UserStore";
-import { getInitials } from "../../Utils/GeneralUtls";
 import { Auth } from "../../Services/Auth.js";
-import { isEmpty } from "../../Utils/GeneralUtls";
-import moment from "moment";
+import { isEmpty, diffFromHuman, getInitials } from "../../Utils/GeneralUtls";
 import { useOrganizationStore } from "../../stores/OrganizationStore";
 import { useProjectStore } from "../../stores/ProjectStore";
 import { urlPushState, urlRemoveState } from "../../Utils/UrlUtils";
@@ -95,6 +93,7 @@ export default {
       response: null,
       getInitials,
       isEmpty,
+      diffFromHuman,
       active_organization: {},
       active_project: {},
     };
@@ -119,9 +118,6 @@ export default {
     },
     openCollections() {
       this.$root.$emit("open-collections");
-    },
-    diffFromHuman(date) {
-      return moment(date).fromNow();
     },
   },
   async mounted() {

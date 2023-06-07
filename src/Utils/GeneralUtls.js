@@ -1,3 +1,5 @@
+import moment from "moment";
+
 /**
  * Creating a random ID
  *
@@ -42,11 +44,7 @@ export const tryCatch = (tryer) => {
   try {
     return tryer();
   } catch (error) {
-    this.$root.$emit("new_message", {
-      responseType: "error",
-      response: error.message,
-      hasResponse: true,
-    });
+    console.log(error)
   }
 };
 
@@ -65,4 +63,8 @@ export const getInitials = (string) => {
 
 export const isEmpty = (obj) => {
   return Object.entries(obj).length === 0 ? true : false;
+};
+
+export const diffFromHuman = (date) => {
+  return moment(date).fromNow();
 };

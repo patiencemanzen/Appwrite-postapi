@@ -138,27 +138,42 @@ export default {
      * then redirect back to dashboard
      */
     async submitOrganization() {
-      tryCatch(() => {
-        this.isLoading = true;
-        this.$root.$emit("set_loader_on");
+      if (!isEmpty(this.model.organizationName)) {
+        tryCatch(() => {
+          this.isLoading = true;
+          this.$root.$emit("set_loader_on");
 
-        this.database.collection(appWriteCollections.organization_table);
-        this.database
-          .create({ name: this.model.organizationName, user_id: this.user.$id })
-          .then(() => {
-            this.$root.$emit("new_message", {
-              responseType: "success",
-              response: "Organization Created",
-              hasResponse: true,
+          this.database.collection(appWriteCollections.organization_table);
+          this.database
+            .create({
+              name: this.model.organizationName,
+              user_id: this.user.$id,
+            })
+            .then(() => {
+              this.$root.$emit("new_message", {
+                responseType: "success",
+                response: "Organization Created",
+                hasResponse: true,
+                subject: "New organization",
+                source: "/",
+              });
+
+              this.$root.$emit("set_loader_off");
+              this.isLoading = false;
+              this.$root.$emit("reload_organizations");
             });
 
-            this.$root.$emit("set_loader_off");
-            this.isLoading = false;
-            this.$root.$emit("reload_organizations");
-          });
-
-        this.hasResponse = true;
-      });
+          this.hasResponse = true;
+        });
+      } else {
+        this.$root.$emit("new_message", {
+          responseType: "error",
+          response: "Organization name required",
+          hasResponse: true,
+          subject: "Required field",
+          source: "/",
+        });
+      }
     },
     openOrgSettings(organization) {
       this.$root.$emit("open_org_settings", organization);

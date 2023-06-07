@@ -114,9 +114,11 @@ export default {
               });
 
               this.$root.$emit("new_message", {
+                hasResponse: true,
                 responseType: "success",
                 response: "File updated successfully",
-                hasResponse: true,
+                subject: "Updating file",
+                source: "/",
               });
 
               this.isLoading = false;
@@ -222,6 +224,8 @@ export default {
                 responseType: "success",
                 response: "Folder created successfully",
                 hasResponse: true,
+                subject: "Collection Folder",
+                source: "/",
               });
 
               this.isLoading = false;
@@ -287,6 +291,8 @@ export default {
                 responseType: "success",
                 response: "Request created successfully",
                 hasResponse: true,
+                subject: "Folder Request",
+                source: "/",
               });
 
               this.isLoading = false;
