@@ -25,8 +25,8 @@
 </template>
 <script>
 import { Query } from "appwrite";
-import { appWriteCollections } from "../config/services";
-import { tryCatch, isEmpty } from "../Utils/GeneralUtls";
+import { appwriteCollections } from "../configs/services";
+import { tryCatch, isEmpty } from "../utils/GeneralUtils";
 import { useUserStore } from "../stores/UserStore";
 
 export default {
@@ -42,7 +42,7 @@ export default {
       this.invitations = [];
 
       tryCatch(() => {
-        this.database.collection(appWriteCollections.invitations_table);
+        this.database.collection(appwriteCollections.invitations_table);
         this.database
           .index([
             Query.equal("sender_id", [this.user.$id]),
@@ -59,7 +59,7 @@ export default {
     },
     confurmInvitation(invitationId) {
       tryCatch(() => {
-        this.database.collection(appWriteCollections.invitations_table);
+        this.database.collection(appwriteCollections.invitations_table);
         this.database
           .update(invitationId, { active_status: false })
           .then(async () => {

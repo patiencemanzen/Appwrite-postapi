@@ -15,11 +15,11 @@
     </div>
 </template>
 <script>
-import { appWriteCollections } from "../../config/services";
-import { AppwriteService } from "../../Services/AppwriteService";
+import { appwriteCollections } from "../../configs/services";
+import { AppwriteService } from "../../resources/AppwriteService";
 import { useCollectionStore } from "../../stores/CollectionStore";
 import { useUserStore } from "../../stores/UserStore";
-import { tryCatch } from "../../Utils/GeneralUtls";
+import { tryCatch } from "../../utils/GeneralUtils";
 import moment from "moment";
 
 export default {
@@ -32,11 +32,10 @@ export default {
   }),
   methods: {
     async publishCollection() {
-      this.isLoading = true;
-
       tryCatch(
         () => {
-          this.database.collection(appWriteCollections.collection_table);
+          this.isLoading = true;
+          this.database.collection(appwriteCollections.collection_table);
 
           this.database
             .update(this.collection.$id, {
@@ -52,7 +51,10 @@ export default {
                 source: "/",
                 shouldSave: true,
               });
-            });
+
+              this.isLoading = false;
+            })
+            .catch(() => (this.isLoading = false));
         },
         () => {
           this.isLoading = false;
@@ -63,8 +65,6 @@ export default {
           });
         }
       );
-
-      this.isLoading = false;
     },
   },
 };

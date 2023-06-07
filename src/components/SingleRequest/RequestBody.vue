@@ -43,25 +43,25 @@
                         </div>
                     </div>
                 </div>
-                <div class="overflow-x-auto sm:rounded-lg">
-                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">Key</th>
-                                <th scope="col" class="px-6 py-3">Value</th>
-                                <th scope="col" class="px-6 py-3">Type</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="formdata in request_body_as_formdata" :key="formdata.key+Math.random().toString(16).slice(2)" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{ formdata.key }}
-                                </th>
-                                <td class="px-6 py-4 w-32" style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden !important;">{{ formdata.value  }}</td>
-                                <td class="px-6 py-4">{{ formdata.type }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="overflow-x-auto shadow-md bg sm:rounded-lg mt-2">
+                  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                          <tr>
+                              <th scope="col" class="px-6 py-3">Key</th>
+                              <th scope="col" class="px-6 py-3">Value</th>
+                              <th scope="col" class="px-6 py-3">Type</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr v-for="formdata in request_body_as_formdata" :key="formdata.key+Math.random().toString(16).slice(2)" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                  {{ formdata.key }}
+                              </th>
+                              <td class="px-6 py-4 w-32" style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden !important;">{{ formdata.value  }}</td>
+                              <td class="px-6 py-4">{{ formdata.type }}</td>
+                          </tr>
+                      </tbody>
+                  </table>
                 </div>
             </div>
             <div class="hidden rounded-lg bg-gray-50 dark:bg-gray-800 text-sm" id="json-content" role="tree-3-tabs" aria-labelledby="raw-data-tab">

@@ -6,15 +6,17 @@
         </div>
     </div>
 </template>
+
 <style>
 @import "../assets/css/documentation.css";
 </style>
+
 <script>
 import { Query } from "appwrite";
-import { appWriteCollections } from "../config/services";
-import { tryCatch } from "../Utils/GeneralUtls";
+import { appwriteCollections } from "../configs/services";
+import { tryCatch } from "../utils/GeneralUtils";
 import { useUserStore } from "../stores/UserStore";
-import { AppwriteService } from "../Services/AppwriteService";
+import { AppwriteService } from "../resources/AppwriteService";
 import { useCollectionStore } from "../stores/CollectionStore";
 
 export default {
@@ -45,7 +47,7 @@ export default {
     this.$root.$emit("set_loader_on");
 
     tryCatch(() => {
-      this.database.collection(appWriteCollections.collection_table);
+      this.database.collection(appwriteCollections.collection_table);
 
       this.database
         .index([Query.equal("$id", [collectionId])])

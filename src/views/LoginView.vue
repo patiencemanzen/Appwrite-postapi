@@ -36,7 +36,7 @@
 </template>
 <script setup>
 import { ref } from "vue";
-import { AppwriteService } from "../Services/AppwriteService";
+import { AppwriteService } from "../resources/AppwriteService";
 import { useUserStore } from "../stores/UserStore";
 
 const isLoading = ref(false);

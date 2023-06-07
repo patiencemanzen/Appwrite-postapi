@@ -9,11 +9,6 @@
                     </button>
                 </li>
                 <li class="mr-2" role="presentation">
-                    <button class="inline-block py-2 px-4 rounded" id="basic-auth-tab" data-tabs-target="#basic-auth" type="button" @click="openActiveTab('basic-auth-content-tab')" role="tab" aria-controls="basic-auth" aria-selected="false">
-                        Basic Auth
-                    </button>
-                </li>
-                <li class="mr-2" role="presentation">
                     <button class="inline-block p-3 py-2 px-4 rounded hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" @click="openActiveTab('bearer-auth-content-tab')" id="bearer-auth-tab" data-tabs-target="#bearer-auth" type="button" role="tab" aria-controls="bearer-auth" aria-selected="false">
                         Bearer Token
                     </button>
@@ -23,16 +18,6 @@
         <div id="myTabContent">
             <div :class="(!auths) ? '' : 'hidden' + ' rounded-lg bg-gray-50 dark:bg-gray-800'" id="none-auth-content-tab" role="tree-2-tabs" aria-labelledby="none-auth-tab">
                 <span class="text-gray-300">No authorization was set for this request.</span>
-            </div>
-            <div :class="(auths && auths.type == 'basic') ? '' : 'hidden' + ' rounded-lg bg-gray-50 dark:bg-gray-800'" id="basic-auth-content-tab" role="tree-2-tabs" aria-labelledby="basic-auth-tab">
-                <div class="mb-6">
-                    <label for="success" class="block mb-2 text-sm font-medium text-green-700 dark:text-green-500">Username</label>
-                    <input type="text" id="success" class="bg-green-50 border border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-green-500">
-                </div>
-                <div class="mb-6">
-                    <label for="success" class="block mb-2 text-sm font-medium text-green-700 dark:text-green-500">Password</label>
-                    <input type="text" id="success" class="bg-green-50 border border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-green-500">
-                </div>
             </div>
             <div :class="(auths && auths.type == 'bearer') ? '' : 'hidden' + ' rounded-lg bg-gray-50 dark:bg-gray-800'" id="bearer-auth-content-tab" role="tree-2-tabs" aria-labelledby="bearer-auth-tab">
                 <div class="mb-6">

@@ -57,7 +57,7 @@
 
         <div v-if="isEmpty(items) || isEmpty(items.item)" class="h-28"></div>
         <div v-if="isEmpty(items) || isEmpty(items.item)" class="flex grayscale flex-col items-center justify-center">
-          <img class="w-32" src="../assets/img/folders.png" alt="">
+          <img class="w-32" src="../../assets/img/folders.png" alt="">
           <h4 class="mt-4 text-center inline-flex items-center mb-4 text-md font-semibold text-gray-500 dark:text-gray-400">
             Folders
           </h4>
@@ -65,15 +65,15 @@
     </ul>
 </template>
 <script>
-import { urlPushState, urlRemoveState } from "../Utils/UrlUtils";
-import { useUserStore } from "../stores/UserStore";
-import { getInitials } from "../Utils/GeneralUtls";
-import { useCollectionStore } from "../stores/CollectionStore";
-import { isEmpty } from "../Utils/GeneralUtls";
+import { urlPushState, urlRemoveState } from "../../utils/UrlUtils";
+import { useUserStore } from "../../stores/UserStore";
+import { getInitials } from "../../utils/GeneralUtils";
+import { useCollectionStore } from "../../stores/CollectionStore";
+import { isEmpty } from "../../utils/GeneralUtils";
 
 export default {
   components: {
-    SingleFolder: () => import("../components/SingleFolder.vue"),
+    SingleFolder: () => import("../CollectionItems/SingleFolder.vue"),
   },
   data: () => ({
     items: {},

@@ -52,15 +52,15 @@
     </div>
 </template>
 <script>
-import { AppwriteService } from "../../Services/AppwriteService.js";
+import { AppwriteService } from "../../resources/AppwriteService.js";
 import { useUserStore } from "../../stores/UserStore";
-import { tryCatch } from "../../Utils/GeneralUtls";
-import { appWriteCollections } from "../../config/services";
+import { tryCatch } from "../../utils/GeneralUtils";
+import { appwriteCollections } from "../../configs/services";
 import { Query } from "appwrite";
-import { Auth } from "../../Services/Auth.js";
-import { isEmpty } from "../../Utils/GeneralUtls";
+import { Auth } from "../../resources/AuthService.js";
+import { isEmpty } from "../../utils/GeneralUtils";
 import { useOrganizationStore } from "../../stores/OrganizationStore.js";
-import { activeElement, colors } from "../../config/colors";
+import { activeElement, colors } from "../../configs/colors";
 
 export default {
   data() {
@@ -97,14 +97,14 @@ export default {
       });
 
       document.querySelectorAll('[role="ctl-projects"]').forEach((Element) => {
-        Element.classList.remove(this.colors.Cyan);
-        Element.classList.add(this.colors.Teal);
+        Element.classList.remove(this.colors.bg_cyan);
+        Element.classList.add(this.colors.bg_teal);
         Element.classList.remove("text-gray-100");
         Element.classList.add("text-gray-900");
       });
 
-      document.getElementById(id).classList.remove(this.colors.Teal);
-      document.getElementById(id).classList.add(this.colors.Cyan);
+      document.getElementById(id).classList.remove(this.colors.bg_teal);
+      document.getElementById(id).classList.add(this.colors.bg_cyan);
       document.getElementById(id).classList.add("text-gray-100");
       document.getElementById(id).classList.remove("text-gray-900");
     },
@@ -112,7 +112,7 @@ export default {
     async getProjects() {
       this.isLoading = true;
 
-      this.database.collection(appWriteCollections.projects_table);
+      this.database.collection(appwriteCollections.projects_table);
       this.database
         .index([
           Query.equal("organization_id", [this.activeOrganization.$id]),
@@ -143,7 +143,7 @@ export default {
               this.isLoading = true;
               this.$root.$emit("set_loader_on");
 
-              this.database.collection(appWriteCollections.projects_table);
+              this.database.collection(appwriteCollections.projects_table);
               this.database
                 .create({
                   organization_id: this.activeOrganization.$id,

@@ -75,15 +75,15 @@
     </div>
 </template>
 <script>
-import { AppwriteService } from "../../Services/AppwriteService.js";
+import { AppwriteService } from "../../resources/AppwriteService.js";
 import { useUserStore } from "../../stores/UserStore";
-import { randomId, slugify, tryCatch } from "../../Utils/GeneralUtls";
-import { appWriteCollections } from "../../config/services";
+import { randomId, slugify, tryCatch } from "../../utils/GeneralUtils";
+import { appwriteCollections } from "../../configs/services";
 import { Query } from "appwrite";
-import { Auth } from "../../Services/Auth.js";
-import { isEmpty } from "../../Utils/GeneralUtls";
+import { Auth } from "../../resources/AuthService.js";
+import { isEmpty } from "../../utils/GeneralUtils";
 import { useProjectStore } from "../../stores/ProjectStore.js";
-import { activeElement, colors } from "../../config/colors";
+import { activeElement, colors } from "../../configs/colors";
 import moment from "moment";
 
 export default {
@@ -122,7 +122,7 @@ export default {
       this.collections = [];
 
       tryCatch(() => {
-        this.database.collection(appWriteCollections.collection_table);
+        this.database.collection(appwriteCollections.collection_table);
         this.database
           .index([
             Query.equal("project_id", [this.activeProject.$id]),
@@ -178,8 +178,8 @@ export default {
       document
         .querySelectorAll('[role="ctl-collection"]')
         .forEach((Element) => {
-          Element.classList.remove(this.colors.Cyan);
-          Element.classList.add(this.colors.Teal);
+          Element.classList.remove(this.colors.bg_cyan);
+          Element.classList.add(this.colors.bg_teal);
           Element.classList.remove("text-gray-100");
           Element.classList.add("text-gray-900");
         });
@@ -187,8 +187,8 @@ export default {
       /**
        * Add proper color to active organization
        */
-      document.getElementById(id).classList.remove(this.colors.Teal);
-      document.getElementById(id).classList.add(this.colors.Cyan);
+      document.getElementById(id).classList.remove(this.colors.bg_teal);
+      document.getElementById(id).classList.add(this.colors.bg_cyan);
       document.getElementById(id).classList.add("text-gray-100");
       document.getElementById(id).classList.remove("text-gray-900");
     },
@@ -274,7 +274,7 @@ export default {
                   published_at: moment(),
                 };
 
-                this.database.collection(appWriteCollections.collection_table);
+                this.database.collection(appwriteCollections.collection_table);
                 this.database.create(data).then((collection) => {
                   this.$root.$emit("new_message", {
                     responseType: "success",
@@ -389,7 +389,7 @@ export default {
                   };
 
                   this.database.collection(
-                    appWriteCollections.collection_table
+                    appwriteCollections.collection_table
                   );
                   this.database.create(data).then((collection) => {
                     this.$root.$emit("new_message", {

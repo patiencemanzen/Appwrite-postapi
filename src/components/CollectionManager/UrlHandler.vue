@@ -1,10 +1,10 @@
 <!-- eslint-disable-next-line vue/valid-template-root -->
 <template></template>
 <script>
-import { appWriteCollections } from "../../config/services";
-import { AppwriteService } from "../../Services/AppwriteService";
+import { appwriteCollections } from "../../configs/services";
+import { AppwriteService } from "../../resources/AppwriteService";
 import { useUserStore } from "../../stores/UserStore";
-import { tryCatch } from "../../Utils/GeneralUtls";
+import { tryCatch } from "../../utils/GeneralUtils";
 
 export default {
   data() {
@@ -29,7 +29,7 @@ export default {
 
     async loadOrganization(orgId) {
       tryCatch(() => {
-        this.database.collection(appWriteCollections.organization_table);
+        this.database.collection(appwriteCollections.organization_table);
         this.database.show(orgId).then(async (organization) => {
           this.$root.$emit("set_active_organization", {
             organization,
@@ -41,7 +41,7 @@ export default {
 
     async loadProject(projectId) {
       tryCatch(() => {
-        this.database.collection(appWriteCollections.projects_table);
+        this.database.collection(appwriteCollections.projects_table);
         this.database.show(projectId).then(async (project) => {
           this.$root.$emit("set_active_project", {
             project,
@@ -53,7 +53,7 @@ export default {
 
     async loadCollection(collectionId) {
       tryCatch(() => {
-        this.database.collection(appWriteCollections.collection_table);
+        this.database.collection(appwriteCollections.collection_table);
         this.database.show(collectionId).then(async (collection) => {
           const file = this.storage.view(collection.storage_file_id);
 

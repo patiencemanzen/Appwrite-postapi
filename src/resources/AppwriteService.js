@@ -1,6 +1,6 @@
 import { Account, Client, Databases, Storage } from "appwrite";
-import { Storage as StorageFile } from "./Storage";
-import { Database as Schema } from "./Database";
+import { Storage as StorageFile } from "./StorageService";
+import { Database as Schema } from "./DatabaseService";
 
 export const AppwriteService = () => {
   const client = new Client();

@@ -3,7 +3,7 @@
   <div id="app">
     <div><GlobalAlert /></div>
     <div><ScreenLoader /></div>
-    <div><CollectionChangeSaver /></div>
+    <div><CollectionChanges /></div>
     <div><UserInvitation /></div>
 
     <header class="site-header sticky top-0 z-30 border border-gray-200" :style="backgroundImage">
@@ -106,15 +106,15 @@
     <ManageCollection />
 
     <router-view />
-    <div><ReadURLAndRefresh /></div>
+    <div><UrlHandler /></div>
   </div>
 </template>
 <script>
 import { useUserStore } from "./stores/UserStore";
-import { AppwriteService } from "./Services/AppwriteService";
-import { getInitials } from "./Utils/GeneralUtls";
+import { AppwriteService } from "./resources/AppwriteService";
+import { getInitials } from "./utils/GeneralUtils";
 import router from "./router";
-import { Auth } from "./Services/Auth";
+import { Auth } from "./resources/AuthService";
 
 export default {
   data: () => ({
@@ -127,14 +127,13 @@ export default {
     isLoading: false,
   }),
   components: {
-    GlobalAlert: () => import("./components/Common/GlobalAlert.vue"),
-    ScreenLoader: () => import("./components/Common/ScreenLoader.vue"),
-    CollectionChangeSaver: () =>
-      import("./components/CollectionHandler/CollectionChangeSaver.vue"),
-    ReadURLAndRefresh: () =>
-      import("./components/CollectionHandler/ReadURLAndRefresh.vue"),
+    GlobalAlert: () => import("./components/Utilities/PublicAlert.vue"),
+    ScreenLoader: () => import("./components/Utilities/OpenSpinner.vue"),
+    CollectionChanges: () =>
+      import("./components/CollectionManager/CollectionChanges.vue"),
+    UrlHandler: () => import("./components/CollectionManager/UrlHandler.vue"),
     ManageCollection: () =>
-      import("./components/CollectionHandler/AccountHeader.vue"),
+      import("./components/CollectionManager/AccountManager.vue"),
     Notifications: () => import("./components/UserNotifications.vue"),
     UserInvitation: () => import("./components/UserInvitation.vue"),
   },

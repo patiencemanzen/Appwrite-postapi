@@ -4,7 +4,7 @@
     <div v-if="opened" id="authentication-modal" tabindex="-1" aria-hidden="true" class="fixed top-0 bg-gray-50/75 flex items-center justify-center left-0 bottom-0 right-0 z-40 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative w-full max-w-md max-h-full">
             <!-- Modal content -->
-            <div class="relative bg-white rounded-[15px] shadow dark:bg-gray-700">
+            <div class="relative bg-white rounded-[15px] shadow-lg dark:bg-gray-700">
                 <button @click="closeSettings" type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-hide="authentication-modal">
                     <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                     <span class="sr-only">Close modal</span>
@@ -111,13 +111,13 @@
 </template>
 <script>
 import { Query } from "appwrite";
-import { appAPIConfigs, appWriteCollections } from "../../config/services";
-import { AppwriteService } from "../../Services/AppwriteService";
-import { tryCatch } from "../../Utils/GeneralUtls";
+import { appwriteAuthHeader, appwriteCollections } from "../../configs/services";
+import { AppwriteService } from "../../resources/AppwriteService";
+import { tryCatch } from "../../utils/GeneralUtils";
 import axios from "axios";
-import { isEmpty, getInitials, diffFromHuman } from "../../Utils/GeneralUtls";
+import { isEmpty, getInitials, diffFromHuman } from "../../utils/GeneralUtils";
 import { useUserStore } from "../../stores/UserStore";
-import { sendEmail } from "../../Services/Email";
+import { sendEmail } from "../../resources/EmailService";
 
 export default {
   data() {
@@ -164,7 +164,7 @@ export default {
 
       tryCatch(() => {
         this.database.collection(
-          appWriteCollections.organization_members_table
+          appwriteCollections.organization_members_table
         );
         this.database
           .index([
@@ -178,7 +178,7 @@ export default {
                   `${import.meta.env.VITE_APPWRITE_CLIENT_ENDPOINT}/users/${
                     value.user_id
                   }`,
-                  { headers: appAPIConfigs.headers }
+                  { headers: appwriteAuthHeader.headers }
                 ).then((user) => {
                   this.members.push({ ...value, user: user.data });
                   this.loadingMembers = false;
@@ -195,7 +195,7 @@ export default {
       this.roles = [];
 
       tryCatch(() => {
-        this.database.collection(appWriteCollections.organization_roles_table);
+        this.database.collection(appwriteCollections.organization_roles_table);
         this.database.index().then(async (data) => {
           this.roles = data.documents;
         });
@@ -203,7 +203,7 @@ export default {
     },
     async getUsers() {
       axios(`${import.meta.env.VITE_APPWRITE_CLIENT_ENDPOINT}/users`, {
-        headers: appAPIConfigs.headers,
+        headers: appwriteAuthHeader.headers,
       }).then((user) => (this.users = user.data.users));
     },
     searchUsers(search) {
@@ -224,7 +224,7 @@ export default {
             this.$root.$emit("set_loader_on");
 
             this.database.collection(
-              appWriteCollections.organization_members_table
+              appwriteCollections.organization_members_table
             );
 
             this.database
@@ -246,7 +246,7 @@ export default {
                       let message = `${this.user.name} invites you to join the organization '${this.organization.name}', to confurm go to your dashboard`;
 
                       this.database.collection(
-                        appWriteCollections.invitations_table
+                        appwriteCollections.invitations_table
                       );
                       this.database
                         .create({
@@ -325,7 +325,7 @@ export default {
           this.loadingMembers = true;
 
           this.database.collection(
-            appWriteCollections.organization_members_table
+            appwriteCollections.organization_members_table
           );
 
           this.database
@@ -361,7 +361,7 @@ export default {
 
       tryCatch(
         () => {
-          this.database.collection(appWriteCollections.organization_table);
+          this.database.collection(appwriteCollections.organization_table);
           this.database
             .update(this.organization.$id, {
               name: this.model.organization_name,

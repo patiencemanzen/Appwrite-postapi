@@ -14,12 +14,12 @@
     </li>
 </template>
 <script>
-import { urlPushState } from "../Utils/UrlUtils";
+import { urlPushState } from "../../utils/UrlUtils";
 
 export default {
   props: ["forlder"],
   components: {
-    SingleFolder: () => import("../components/SingleFolder.vue"),
+    SingleFolder: () => import("./SingleFolder.vue"),
   },
   data() {
     return {

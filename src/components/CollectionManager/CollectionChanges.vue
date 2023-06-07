@@ -19,10 +19,10 @@
 </transition>
 </template>
 <script>
-import { appWriteCollections } from "../../config/services";
-import { AppwriteService } from "../../Services/AppwriteService";
+import { appwriteCollections } from "../../configs/services";
+import { AppwriteService } from "../../resources/AppwriteService";
 import { useCollectionStore } from "../../stores/CollectionStore";
-import { randomId, tryCatch } from "../../Utils/GeneralUtls";
+import { randomId, tryCatch } from "../../utils/GeneralUtils";
 
 export default {
   data() {
@@ -109,7 +109,7 @@ export default {
               collection_url: collectionFile.name,
             };
 
-            this.database.collection(appWriteCollections.collection_table);
+            this.database.collection(appwriteCollections.collection_table);
             this.database.update(collection.$id, data).then((response) => {
               this.storage.destroy(collection.file_id).then(() => {
                 useCollectionStore().store({
@@ -231,7 +231,7 @@ export default {
               collection_url: collectionFile.name,
             };
 
-            this.database.collection(appWriteCollections.collection_table);
+            this.database.collection(appwriteCollections.collection_table);
             this.database.update(collection.$id, data).then((response) => {
               this.storage.destroy(collection.file_id).then(() => {
                 useCollectionStore().store({
@@ -313,7 +313,7 @@ export default {
               collection_url: collectionFile.name,
             };
 
-            this.database.collection(appWriteCollections.collection_table);
+            this.database.collection(appwriteCollections.collection_table);
             this.database.update(collection.$id, data).then((response) => {
               this.storage.destroy(collection.file_id).then(() => {
                 useCollectionStore().store({

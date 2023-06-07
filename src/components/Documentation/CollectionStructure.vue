@@ -295,7 +295,7 @@ pre.ssh-pre {
 </style>
 <script>
 import "simple-syntax-highlighter/dist/sshpre.css";
-import { slugify } from "../../Utils/GeneralUtls";
+import { slugify } from "../../utils/GeneralUtils";
 
 export default {
   props: ["folder", "owner"],

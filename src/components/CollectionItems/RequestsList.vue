@@ -76,7 +76,7 @@
 
             <div v-if="isEmpty(requests)" class="h-32"></div>
             <div v-if="isEmpty(requests)" class="flex grayscale flex-col items-center justify-center">
-              <img class="w-32" src="../assets/img/file.png" alt="">
+              <img class="w-32" src="../../assets/img/file.png" alt="">
               <h4 class="mt-4 text-center inline-flex items-center mb-4 text-md font-semibold text-gray-500 dark:text-gray-400">
                 Requests
               </h4>
@@ -89,8 +89,8 @@
     </aside>
 </template>
 <script>
-import { isEmpty } from "../Utils/GeneralUtls";
-import { urlPushState } from "../Utils/UrlUtils";
+import { isEmpty } from "../../utils/GeneralUtils";
+import { urlPushState } from "../../utils/UrlUtils";
 
 export default {
   data() {

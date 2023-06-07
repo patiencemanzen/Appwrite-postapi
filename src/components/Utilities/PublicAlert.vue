@@ -40,10 +40,10 @@
 </style>
 
 <script>
-import { appWriteCollections } from "../../config/services";
-import { AppwriteService } from "../../Services/AppwriteService";
+import { appwriteCollections } from "../../configs/services";
+import { AppwriteService } from "../../resources/AppwriteService";
 import { useUserStore } from "../../stores/UserStore";
-import { tryCatch } from "../../Utils/GeneralUtls";
+import { tryCatch } from "../../utils/GeneralUtils";
 
 export default {
   name: "GlobalAlert",
@@ -76,7 +76,7 @@ export default {
       // eslint-disable-next-line no-prototype-builtins
       if (payload.hasOwnProperty("shouldSave") && payload.shouldSave) {
         tryCatch(() => {
-          this.database.collection(appWriteCollections.notifications_table);
+          this.database.collection(appwriteCollections.notifications_table);
           this.database
             .create({
               user_id: this.user.$id,

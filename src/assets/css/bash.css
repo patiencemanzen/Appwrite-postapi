@@ -182,7 +182,7 @@ body .is-partial-color:not(.is-partial-dark) {
 .loop-section {
     background-color: rgba(245, 245, 245, 1);
     border-top: var(--border) var(--color-border-one);
-    height: 100%;
+    height: 80vh;
 }
 .loop-wrap {
     -webkit-animation: slideTop 0.8s ease;

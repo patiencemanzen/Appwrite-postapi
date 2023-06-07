@@ -37,7 +37,7 @@
     </div>
 </template>
 <script>
-import { isEmpty } from "../../Utils/GeneralUtls";
+import { isEmpty } from "../../utils/GeneralUtils";
 
 export default {
   props: {

@@ -35,10 +35,10 @@
 </template>
 <script>
 import { Query } from "appwrite";
-import { appWriteCollections } from "../config/services";
-import { tryCatch, isEmpty, diffFromHuman } from "../Utils/GeneralUtls";
+import { appwriteCollections } from "../configs/services";
+import { tryCatch, isEmpty, diffFromHuman } from "../utils/GeneralUtils";
 import { useUserStore } from "../stores/UserStore";
-import { AppwriteService } from "../Services/AppwriteService";
+import { AppwriteService } from "../resources/AppwriteService";
 
 export default {
   data() {
@@ -61,7 +61,7 @@ export default {
       this.notifications = [];
 
       tryCatch(() => {
-        this.database.collection(appWriteCollections.notifications_table);
+        this.database.collection(appwriteCollections.notifications_table);
         this.database
           .index([
             Query.equal("user_id", [this.user.$id]),

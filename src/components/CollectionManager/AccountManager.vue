@@ -77,11 +77,11 @@
 </template>
 <script>
 import { useUserStore } from "../../stores/UserStore";
-import { Auth } from "../../Services/Auth.js";
-import { isEmpty, diffFromHuman, getInitials } from "../../Utils/GeneralUtls";
+import { Auth } from "../../resources/AuthService.js";
+import { isEmpty, diffFromHuman, getInitials } from "../../utils/GeneralUtils";
 import { useOrganizationStore } from "../../stores/OrganizationStore";
 import { useProjectStore } from "../../stores/ProjectStore";
-import { urlPushState, urlRemoveState } from "../../Utils/UrlUtils";
+import { urlPushState, urlRemoveState } from "../../utils/UrlUtils";
 
 export default {
   data() {
