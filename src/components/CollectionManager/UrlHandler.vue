@@ -27,6 +27,10 @@ export default {
         await this.loadCollection(this.urlParams.get("collection"));
     },
 
+    /**
+     * Get url organization id and rerender
+     * the full organization contents to active
+     */
     async loadOrganization(orgId) {
       tryCatch(() => {
         this.database.collection(appwriteCollections.organization_table);
@@ -39,6 +43,10 @@ export default {
       });
     },
 
+    /**
+     * Get url project id and rerender
+     * the full project contents to active
+     */
     async loadProject(projectId) {
       tryCatch(() => {
         this.database.collection(appwriteCollections.projects_table);
@@ -51,6 +59,10 @@ export default {
       });
     },
 
+    /**
+     * Get url collection id and rerender
+     * the full collection contents
+     */
     async loadCollection(collectionId) {
       tryCatch(() => {
         this.database.collection(appwriteCollections.collection_table);

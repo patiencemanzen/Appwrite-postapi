@@ -145,7 +145,6 @@ export default {
         this.$root.$emit("new_message", {
           responseType: "error",
           response: "Folder name required",
-          hasResponse: true,
         });
       }
     },

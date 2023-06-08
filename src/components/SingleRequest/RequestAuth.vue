@@ -37,6 +37,7 @@ export default {
     };
   },
   methods: {
+    // Open new tab on-each-tab-click
     openActiveTab(tabId) {
       document.querySelectorAll('[role="tree-2-tabs"]').forEach((Element) => {
         Element.classList.add("hidden");

@@ -1,6 +1,7 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
     <div class="" v-if="auth && user && isDashboard">
+
         <!-- Breadcrumb -->
         <nav class="px-4 py-3 text-gray-700 border border-gray-200 sm:px-5 bg-gray-50 dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
             <div class="g-padding items-center justify-between sm:flex">
@@ -145,7 +146,7 @@ export default {
       localStorage.setItem(storageId, storageValue);
 
       if (payload.shouldReload) {
-        // Update url states and reset the stack
+        // Update url states and reset the URL stack structure
         urlPushState("org", payload.organization.$id);
         urlRemoveState("project");
         urlRemoveState("collection");

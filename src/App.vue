@@ -1,9 +1,16 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
   <div id="app">
-    <div><GlobalAlert /></div>
-    <div><ScreenLoader /></div>
+    <!-- Global messages alert -->
+    <div><PublicAlert /></div>
+
+    <!-- Screen Wide Spinner -->
+    <div><OpenSpinner /></div>
+
+    <!-- Handle all collection changes and save -->
     <div><CollectionChanges /></div>
+
+    <!-- User Invitation banner -->
     <div><UserInvitation /></div>
 
     <header class="site-header sticky top-0 z-30 border border-gray-200" :style="backgroundImage">
@@ -83,7 +90,7 @@
               </div>
 
               <!-- Notifications -->
-              <Notifications />
+              <UserNotifications />
 
               <router-link v-if="auth && user" to="/dashboard">
                 <div class="ml-3 cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-deep-green-700 rounded-full dark:bg-gray-600">
@@ -103,6 +110,7 @@
       </div>
     </div>
     
+    <!-- Collection manager navbar -->
     <ManageCollection />
 
     <router-view />
@@ -127,14 +135,14 @@ export default {
     isLoading: false,
   }),
   components: {
-    GlobalAlert: () => import("./components/Utilities/PublicAlert.vue"),
-    ScreenLoader: () => import("./components/Utilities/OpenSpinner.vue"),
+    PublicAlert: () => import("./components/Utilities/PublicAlert.vue"),
+    OpenSpinner: () => import("./components/Utilities/OpenSpinner.vue"),
     CollectionChanges: () =>
       import("./components/CollectionManager/CollectionChanges.vue"),
     UrlHandler: () => import("./components/CollectionManager/UrlHandler.vue"),
     ManageCollection: () =>
       import("./components/CollectionManager/AccountManager.vue"),
-    Notifications: () => import("./components/UserNotifications.vue"),
+    UserNotifications: () => import("./components/UserNotifications.vue"),
     UserInvitation: () => import("./components/UserInvitation.vue"),
   },
   methods: {
@@ -152,6 +160,10 @@ export default {
         }
       });
     },
+
+    /**
+     * Open Notification dropdown
+     */
     openNotifications() {
       this.$root.$emit("open_notifications");
     },

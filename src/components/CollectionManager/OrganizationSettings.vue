@@ -3,6 +3,7 @@
     <!-- Main modal -->
     <div v-if="opened" id="authentication-modal" tabindex="-1" aria-hidden="true" class="fixed top-0 bg-gray-50/75 flex items-center justify-center left-0 bottom-0 right-0 z-40 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative w-full max-w-md max-h-full">
+
             <!-- Modal content -->
             <div class="relative bg-white rounded-[15px] shadow-lg dark:bg-gray-700">
                 <button @click="closeSettings" type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-hide="authentication-modal">
@@ -109,9 +110,13 @@
         </div>
     </div>
 </template>
+
 <script>
 import { Query } from "appwrite";
-import { appwriteAuthHeader, appwriteCollections } from "../../configs/services";
+import {
+  appwriteAuthHeader,
+  appwriteCollections,
+} from "../../configs/services";
 import { AppwriteService } from "../../resources/AppwriteService";
 import { tryCatch } from "../../utils/GeneralUtils";
 import axios from "axios";
@@ -137,8 +142,8 @@ export default {
       user: useUserStore().get,
       loadingMembers: false,
       savingChanges: false,
-      isEmpty,
       chosen_role: "",
+      isEmpty,
       getInitials,
       diffFromHuman,
     };
@@ -152,12 +157,23 @@ export default {
     },
   },
   methods: {
+    /**
+     * Close settings model
+     */
     closeSettings() {
       this.opened = false;
     },
+
+    /**
+     * Open role popover on each member
+     */
     openRoleOptions(elementId) {
       document.getElementById(`roles_${elementId}`).classList.remove("hidden");
     },
+
+    /**
+     * Get all member from this org
+     */
     async getMembers() {
       this.loadingMembers = true;
       this.members = [];
@@ -191,6 +207,10 @@ export default {
           .catch(() => (this.loadingMembers = false));
       });
     },
+
+    /**
+     * Get all avaliable roles
+     */
     async getRoles() {
       this.roles = [];
 
@@ -201,11 +221,21 @@ export default {
         });
       });
     },
+
+    /**
+     * Get all avaliable roles
+     */
     async getUsers() {
       axios(`${import.meta.env.VITE_APPWRITE_CLIENT_ENDPOINT}/users`, {
         headers: appwriteAuthHeader.headers,
       }).then((user) => (this.users = user.data.users));
     },
+
+    /**
+     * Search single user
+     * in returned users
+     * and exclude auth user
+     */
     searchUsers(search) {
       if (!isEmpty(search)) {
         let authUser = this.user.$id;
@@ -216,6 +246,19 @@ export default {
         this.search_user_result = [];
       }
     },
+
+    invitationError() {
+      this.isLoading = false;
+      this.$root.$emit("new_message", {
+        responseType: "error",
+        response: "unable to invite user",
+      });
+    },
+
+    /**
+     * Register user in organizatio membership
+     * and send the envitation email
+     */
     async inviteUser(user) {
       if (!isEmpty(this.model.role)) {
         tryCatch(
@@ -223,102 +266,90 @@ export default {
             this.isLoading = true;
             this.$root.$emit("set_loader_on");
 
-            this.database.collection(
-              appwriteCollections.organization_members_table
-            );
+            let org = appwriteCollections.organization_members_table;
+            let query = [
+              Query.equal("organization_id", [this.organization.$id]),
+            ];
 
-            this.database
-              .index([Query.equal("organization_id", [this.organization.$id])])
-              .then((data) => {
-                let exist = data.documents.filter(
-                  (value) => value.user_id == user.$id
-                );
+            this.database.collection(org);
+            this.database.index(query).then((data) => {
+              // check if user exist in organizations
+              let exist = data.documents.filter(
+                (value) => value.user_id == user.$id
+              );
 
-                if (isEmpty(exist)) {
-                  this.database
-                    .create({
-                      user_id: user.$id,
-                      organization_id: this.organization.$id,
-                      role_id: this.model.role,
-                      accepted: false,
-                    })
-                    .then(() => {
-                      let message = `${this.user.name} invites you to join the organization '${this.organization.name}', to confurm go to your dashboard`;
-
-                      this.database.collection(
-                        appwriteCollections.invitations_table
-                      );
-                      this.database
-                        .create({
-                          sender_id: this.user.$id,
-                          reciever_id: user.$id,
-                          payload: JSON.stringify({
-                            organization_id: this.organization.$id,
-                          }),
-                          active_status: true,
-                        })
-                        .then(() => {
-                          sendEmail(
-                            user.name,
-                            user.email,
-                            `New Invitation From Postapi`,
-                            message
-                          )
-                            .then((response) => {
-                              this.$root.$emit("new_message", {
-                                responseType: "success",
-                                response: response.message,
-                                hasResponse: true,
-                                subject: "Invitations",
-                                source: "/",
-                                shouldSave: true,
-                              });
-
-                              document
-                                .getElementById(`roles_${user.$id}`)
-                                .classList.add("hidden");
-
-                              this.getMembers();
-                            })
-                            .catch((error) => {
-                              this.$root.$emit("new_message", {
-                                responseType: "error",
-                                response: error.message,
-                                hasResponse: true,
-                              });
-                            });
-                        });
-                    });
-                } else {
-                  this.$root.$emit("new_message", {
-                    responseType: "error",
-                    response: "User already invite",
-                    hasResponse: true,
-                    subject: "Invitation",
-                    source: "/",
-                  });
-                }
-              });
-          },
-          () => {
-            this.isLoading = false;
-            this.$root.$emit("new_message", {
-              responseType: "error",
-              response: "unable to invite user",
-              hasResponse: true,
+              if (isEmpty(exist)) {
+                this.database
+                  .create({
+                    user_id: user.$id,
+                    organization_id: this.organization.$id,
+                    role_id: this.model.role,
+                    accepted: false,
+                  })
+                  .then(() => this.registerInvitation(user));
+              } else {
+                this.isLoading = false;
+                this.$root.$emit("new_message", {
+                  responseType: "error",
+                  response: "User already invite",
+                });
+              }
             });
-          }
+          },
+          () => this.invitationError()
         );
       } else {
         this.$root.$emit("new_message", {
           responseType: "error",
           response: "Select role to assign",
-          hasResponse: true,
-          subject: "Membership",
-          source: "/",
         });
       }
     },
+
+    /**
+     * Register invitation in DB
+     */
+    registerInvitation(user) {
+      this.database.collection(appwriteCollections.invitations_table);
+      this.database
+        .create({
+          sender_id: this.user.$id,
+          reciever_id: user.$id,
+          payload: JSON.stringify({
+            organization_id: this.organization.$id,
+          }),
+          active_status: true,
+        })
+        .then(() => this.sendInvitationEmail(user))
+        .catch(() => this.invitationError());
+    },
+
+    /**
+     * Send email to invited user
+     */
+    sendInvitationEmail(user) {
+      let message = `${this.user.name} invites you to join the organization '${this.organization.name}', to confurm go to your dashboard`;
+
+      sendEmail(user.name, user.email, `New Invitation From Postapi`, message)
+        .then((response) => {
+          this.$root.$emit("new_message", {
+            responseType: "success",
+            response: response.message,
+            subject: "Invitations",
+            source: "/",
+            shouldSave: true,
+          });
+
+          this.isLoading = false;
+          document.getElementById(`roles_${user.$id}`).classList.add("hidden");
+          this.getMembers();
+        })
+        .catch(() => this.invitationError());
+    },
+
+    /**
+     * Remove organization membership to user
+     */
     revokeOrgRoleFromMember(membership) {
       tryCatch(
         () => {
@@ -334,7 +365,6 @@ export default {
               this.$root.$emit("new_message", {
                 responseType: "success",
                 response: "Membership Revoked",
-                hasResponse: true,
                 subject: "Membership",
                 source: "/",
                 shouldSave: true,
@@ -350,11 +380,11 @@ export default {
           this.$root.$emit("new_message", {
             responseType: "error",
             response: "unable to revoke role",
-            hasResponse: true,
           });
         }
       );
     },
+
     updateOrgName() {
       this.roles = [];
       this.savingChanges = true;
@@ -370,7 +400,6 @@ export default {
               this.$root.$emit("new_message", {
                 responseType: "success",
                 response: "Changes saved",
-                hasResponse: true,
                 subject: "New Changes",
                 source: "/",
               });
@@ -385,12 +414,12 @@ export default {
           this.$root.$emit("new_message", {
             responseType: "error",
             response: "unable to update organization",
-            hasResponse: true,
           });
         }
       );
     },
   },
+
   mounted() {
     this.$root.$on("open_org_settings", (org) => {
       this.organization = org;

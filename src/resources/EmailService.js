@@ -1,8 +1,8 @@
 import {
   sender_email,
   sender_name,
-  mailjet_api_key,
-  mailjet_secret_key,
+  mailer_api_key,
+  mailer_secret_key,
 } from "../configs/email";
 
 export const sendEmail = async (name, email, subject, message) => {
@@ -10,7 +10,7 @@ export const sendEmail = async (name, email, subject, message) => {
   myHeaders.append("Content-Type", "application/json");
   myHeaders.set(
     "Authorization",
-    "Basic " + btoa(mailjet_api_key + ":" + mailjet_secret_key)
+    "Basic " + btoa(mailer_api_key + ":" + mailer_secret_key)
   );
 
   const data = JSON.stringify({

@@ -270,6 +270,10 @@ export default {
     },
   },
   async mounted() {
+    /**
+     * Listen to collection refresh request
+     * and register updated collectiom
+     */
     this.$root.$on("refresh_collection", () => {
       const collection = useCollectionStore().get;
 
@@ -277,10 +281,12 @@ export default {
         collection.file.info?.name !== undefined
           ? collection.file.info.name
           : "";
+
       this.data.description =
         collection.file.info?.description !== undefined
           ? collection.file.info.description
           : "";
+
       this.info = collection.file.info;
       this.items = collection.file.item;
     });

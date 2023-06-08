@@ -46,7 +46,6 @@ export default {
               this.$root.$emit("new_message", {
                 responseType: "success",
                 response: "Collection published successfully",
-                hasResponse: true,
                 subject: "Published",
                 source: "/",
                 shouldSave: true,
@@ -61,7 +60,6 @@ export default {
           this.$root.$emit("new_message", {
             responseType: "error",
             response: "unable to publish collection",
-            hasResponse: true,
           });
         }
       );

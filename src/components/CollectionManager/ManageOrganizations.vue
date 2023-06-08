@@ -41,7 +41,7 @@
                 </li>
             </ul>
 
-            <div v-else class="flex items-center grayscale justify-center">
+            <div v-if="isEmpty(organizations) && !isLoading" class="flex items-center grayscale justify-center">
               <img class="w-32" src="../../assets/img/folder.png" alt="">
             </div>
 
@@ -58,7 +58,6 @@ import { useUserStore } from "../../stores/UserStore";
 import { tryCatch } from "../../utils/GeneralUtils";
 import { appwriteCollections } from "../../configs/services";
 import { Query } from "appwrite";
-import { Auth } from "../../resources/AuthService.js";
 import { isEmpty } from "../../utils/GeneralUtils";
 import { activeElement, colors } from "../../configs/colors";
 
@@ -71,11 +70,11 @@ export default {
       storage: AppwriteService().storage(),
       database: AppwriteService().database(),
       organizations: {},
-      isEmpty,
       isLoading: false,
       urlParams: new URLSearchParams(window.location.search),
       activeElement,
       colors,
+      isEmpty,
     };
   },
   methods: {
@@ -120,17 +119,22 @@ export default {
       this.isLoading = true;
       this.organizations = [];
 
-      tryCatch(() => {
-        this.database.collection(appwriteCollections.organization_table);
-        this.database
-          .index([
-            Query.equal("user_id", [this.user.$id]),
-            Query.orderDesc("$createdAt"),
-          ])
-          .then(async (data) => (this.organizations = data.documents));
-      });
-
-      this.isLoading = false;
+      tryCatch(
+        () => {
+          this.database.collection(appwriteCollections.organization_table);
+          this.database
+            .index([
+              Query.equal("user_id", [this.user.$id]),
+              Query.orderDesc("$createdAt"),
+            ])
+            .then(async (data) => {
+              this.organizations = data.documents;
+              this.isLoading = false;
+            })
+            .catch(() => (this.isLoading = false));
+        },
+        () => (this.isLoading = false)
+      );
     },
 
     /**
@@ -154,7 +158,6 @@ export default {
                 this.$root.$emit("new_message", {
                   responseType: "success",
                   response: "Organization Created",
-                  hasResponse: true,
                   subject: "New organization",
                   source: "/",
                   shouldSave: true,
@@ -164,15 +167,12 @@ export default {
                 this.isLoading = false;
                 this.$root.$emit("reload_organizations");
               });
-
-            this.hasResponse = true;
           },
           () => {
             this.isLoading = false;
             this.$root.$emit("new_message", {
               responseType: "error",
               response: "Unable to create new organization",
-              hasResponse: true,
             });
           }
         );
@@ -180,32 +180,26 @@ export default {
         this.$root.$emit("new_message", {
           responseType: "error",
           response: "Organization name required",
-          hasResponse: true,
           subject: "Required field",
           source: "/",
         });
       }
     },
+
+    /**
+     * Open organization settings model
+     */
     openOrgSettings(organization) {
       this.$root.$emit("open_org_settings", organization);
     },
   },
   async mounted() {
-    Auth()
-      .user()
-      .then(async (response) => {
-        useUserStore().store(response);
-        this.user = response;
-        this.auth = true;
-        await this.getOrganizations();
-      });
+    this.$root.$on("reload_organizations", () => this.getOrganizations());
 
-    this.$root.$on(
-      "reload_organizations",
-      async () => await this.getOrganizations()
-    );
-
-    this.$root.$on("open-organizations", () => (this.isOpen = true));
+    this.$root.$on("open-organizations", () => {
+      this.isOpen = true;
+      this.getOrganizations();
+    });
   },
 };
 </script>

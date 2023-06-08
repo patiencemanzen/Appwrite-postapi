@@ -57,7 +57,6 @@ import { useUserStore } from "../../stores/UserStore";
 import { tryCatch } from "../../utils/GeneralUtils";
 import { appwriteCollections } from "../../configs/services";
 import { Query } from "appwrite";
-import { Auth } from "../../resources/AuthService.js";
 import { isEmpty } from "../../utils/GeneralUtils";
 import { useOrganizationStore } from "../../stores/OrganizationStore.js";
 import { activeElement, colors } from "../../configs/colors";
@@ -84,12 +83,19 @@ export default {
       this.isOpen = false;
     },
 
+    /**
+     * Check if given project ID is active in URL
+     */
     isActiveProject(projectId) {
       if (this.urlParams.has("project"))
         return this.urlParams.get("project") == projectId;
       else return false;
     },
 
+    /**
+     * Set active project in URL
+     * and mark project with active colors
+     */
     setActiveProject(project, id) {
       this.$root.$emit("set_active_project", {
         project,
@@ -134,7 +140,6 @@ export default {
         this.$root.$emit("new_message", {
           responseType: "error",
           response: "Set active organization and try again",
-          hasResponse: true,
         });
       } else {
         if (!isEmpty(this.model.projectName)) {
@@ -153,7 +158,6 @@ export default {
                   this.$root.$emit("new_message", {
                     responseType: "success",
                     response: "Project Created",
-                    hasResponse: true,
                     subject: "New Project",
                     source: "/",
                     shouldSave: true,
@@ -169,7 +173,6 @@ export default {
                   this.$root.$emit("new_message", {
                     responseType: "error",
                     response: "Unable to create new project",
-                    hasResponse: true,
                   });
                 });
             },
@@ -179,7 +182,6 @@ export default {
               this.$root.$emit("new_message", {
                 responseType: "error",
                 response: "Unable to create new project",
-                hasResponse: true,
               });
             }
           );
@@ -187,26 +189,25 @@ export default {
           this.$root.$emit("new_message", {
             responseType: "error",
             response: "Project name is required",
-            hasResponse: true,
           });
         }
       }
     },
   },
   async mounted() {
-    Auth()
-      .user()
-      .then(async (response) => {
-        useUserStore().store(response);
-        this.user = response;
-        this.auth = true;
-      });
-
+    /**
+     * Listen to refresh-project request and refetch all project
+     * associated to active organization and set active
+     */
     this.$root.$on("refresh_projects", async () => {
       this.activeOrganization = useOrganizationStore().get;
       await this.getProjects();
     });
 
+    /**
+     * Listen to open-project request and fetch all project
+     * associated to active organization
+     */
     this.$root.$on("open-projects", async () => {
       this.activeOrganization = useOrganizationStore().get;
       this.isOpen = true;

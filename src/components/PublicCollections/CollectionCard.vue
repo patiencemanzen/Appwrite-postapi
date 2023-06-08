@@ -3,12 +3,8 @@
     <article class="item is-loop is-image" key="doc.id">
         <div class="item-image global-image global-image-orientation global-radius is-landscape bg-gray-300">
             <a :href="'/collection/'+preparedCollection.$id" class="global-link" :aria-label="collection_name"></a>
-            <img src="https://images.unsplash.com/photo-1683349767621-21e880ef6bb1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80"
-                loading="lazy"
-                :alt="collection_name"
-                srcset="https://images.unsplash.com/photo-1683349767621-21e880ef6bb1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80 300w,
-                        https://images.unsplash.com/photo-1683349767621-21e880ef6bb1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80 600w,
-                        https://images.unsplash.com/photo-1683349767621-21e880ef6bb1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80 1200w'"
+            <img :src="backgroundImg" loading="lazy" :alt="collection_name"
+                :srcset="backgroundImg + ' 300w,' + backgroundImg + ' 600w,' + backgroundImg + ' 1200w'"
                 sizes="(max-width:480px) 300px, (max-width:768px) 600px, 1200px">
         </div>
 
@@ -63,6 +59,8 @@ export default {
     uniqueIdentifier: Math.random().toString(16).slice(2),
     database: AppwriteService().database(),
     user: useUserStore().get,
+    backgroundImg:
+      "https://images.unsplash.com/photo-1683349767621-21e880ef6bb1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
   }),
   methods: {
     format(date) {

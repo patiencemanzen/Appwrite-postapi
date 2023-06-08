@@ -374,7 +374,6 @@ export default {
       this.$root.$emit("new_message", {
         responseType: "success",
         response: "Body Copied",
-        hasResponse: true,
         subject: "Copied",
         source: "/",
       });

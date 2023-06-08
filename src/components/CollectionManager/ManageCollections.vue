@@ -78,9 +78,11 @@
 import { AppwriteService } from "../../resources/AppwriteService.js";
 import { useUserStore } from "../../stores/UserStore";
 import { randomId, slugify, tryCatch } from "../../utils/GeneralUtils";
-import { appwriteCollections } from "../../configs/services";
+import {
+  appwriteAuthHeader,
+  appwriteCollections,
+} from "../../configs/services";
 import { Query } from "appwrite";
-import { Auth } from "../../resources/AuthService.js";
 import { isEmpty } from "../../utils/GeneralUtils";
 import { useProjectStore } from "../../stores/ProjectStore.js";
 import { activeElement, colors } from "../../configs/colors";
@@ -89,8 +91,8 @@ import moment from "moment";
 export default {
   data() {
     return {
-      isOpen: false,
       auth: false,
+      isOpen: false,
       newCollection: {},
       model: { importedCollection: "", collectionName: "" },
       user: useUserStore().get,
@@ -99,11 +101,11 @@ export default {
       items: {},
       collections: {},
       isLoading: false,
-      isEmpty,
       activeProject: {},
       urlParams: new URLSearchParams(window.location.search),
       activeElement,
       colors,
+      isEmpty,
     };
   },
   methods: {
@@ -122,25 +124,22 @@ export default {
       this.collections = [];
 
       tryCatch(() => {
+        let queries = [
+          Query.equal("project_id", [this.activeProject.$id]),
+          Query.orderDesc("$createdAt"),
+        ];
+
         this.database.collection(appwriteCollections.collection_table);
         this.database
-          .index([
-            Query.equal("project_id", [this.activeProject.$id]),
-            Query.orderDesc("$createdAt"),
-          ])
-          .then(async (data) => {
+          .index(queries)
+          .then((data) => {
             if (!this.isEmpty(data.documents)) {
-              await data.documents.map(async (value) => {
+              data.documents.map(async (value) => {
                 const file = this.storage.view(value.storage_file_id);
 
                 fetch(file.href, {
                   method: "GET",
-                  headers: {
-                    "X-Appwrite-Project": import.meta.env
-                      .VITE_APPWRITE_CLIENT_ID,
-                    "Content-Type": "application/json",
-                    "X-Appwrite-Key": import.meta.env.VITE_APPWRITE_API_KEY,
-                  },
+                  headers: appwriteAuthHeader.headers,
                 })
                   .then((response) => response.json())
                   .then((json) => {
@@ -193,14 +192,16 @@ export default {
       document.getElementById(id).classList.remove("text-gray-900");
     },
 
+    /**
+     * Listen to import btn and
+     * click input file while
+     * there is active project
+     */
     importFile() {
       if (this.isEmpty(this.activeProject)) {
         this.$root.$emit("new_message", {
           responseType: "error",
           response: "Set Active Project and Try again",
-          hasResponse: true,
-          subject: "Active project",
-          source: "/",
         });
       } else {
         document.getElementById("custom_file").click();
@@ -229,10 +230,12 @@ export default {
           this.isLoading = true;
           this.$root.$emit("set_loader_on");
 
+          // create blob with imported collection
           const blob = new Blob([this.model.importedCollection], {
             type: "application/json",
           });
 
+          // read blob data as text and create some changes
           blob.text().then((data) => {
             const jsonData = JSON.parse(data);
 
@@ -248,10 +251,12 @@ export default {
 
             this.newCollection["item"] = items;
 
+            // get changes and create new blob
             const mappedBlob = new Blob([JSON.stringify(this.newCollection)], {
               type: "application/json",
             });
 
+            // create a json file with blob data
             const mappedFile = new File(
               [mappedBlob],
               "patienceman_" + randomId(10) + ".json",
@@ -260,6 +265,7 @@ export default {
               }
             );
 
+            // Upload created file to bucket ID
             this.storage
               .store(mappedFile)
               .then((collectionFile) => {
@@ -274,12 +280,12 @@ export default {
                   published_at: moment(),
                 };
 
+                // register new collection with uploaded file ID
                 this.database.collection(appwriteCollections.collection_table);
                 this.database.create(data).then((collection) => {
                   this.$root.$emit("new_message", {
                     responseType: "success",
                     response: "File imported successfully",
-                    hasResponse: true,
                     subject: "Import File",
                     source: "/",
                     shouldSave: true,
@@ -287,6 +293,8 @@ export default {
 
                   this.$root.$emit("set_loader_off");
                   this.isLoading = false;
+
+                  // Refresh collection and set active
                   this.$root.$emit("refresh_collections", {
                     ...collection,
                     file: this.newCollection,
@@ -302,7 +310,6 @@ export default {
           this.$root.$emit("new_message", {
             responseType: "error",
             response: "unable to import file",
-            hasResponse: true,
           });
         }
       );
@@ -342,9 +349,6 @@ export default {
         this.$root.$emit("new_message", {
           responseType: "error",
           response: "Set Active Project and Try again",
-          hasResponse: true,
-          subject: "Active project",
-          source: "/",
         });
       } else {
         if (!isEmpty(this.model.collectionName)) {
@@ -353,6 +357,7 @@ export default {
               this.isLoading = true;
               this.$root.$emit("set_loader_on");
 
+              // Collection File struture
               let fileData = {
                 info: {
                   name: this.model.collectionName,
@@ -362,10 +367,12 @@ export default {
                 event: {},
               };
 
+              // get changes and create new blob
               const blob = new Blob([JSON.stringify(fileData)], {
                 type: "application/json",
               });
 
+              // create a json file with blob data
               const newFile = new File(
                 [blob],
                 "patienceman_" + randomId(10) + ".json",
@@ -374,6 +381,7 @@ export default {
                 }
               );
 
+              // Upload created file
               this.storage
                 .store(newFile)
                 .then((file) => {
@@ -388,6 +396,7 @@ export default {
                     published_at: moment(),
                   };
 
+                  // Create new collection with uploaded file
                   this.database.collection(
                     appwriteCollections.collection_table
                   );
@@ -395,7 +404,6 @@ export default {
                     this.$root.$emit("new_message", {
                       responseType: "success",
                       response: "Collection created successfully",
-                      hasResponse: true,
                       subject: "New collection",
                       source: "/",
                       shouldSave: true,
@@ -419,7 +427,6 @@ export default {
               this.$root.$emit("new_message", {
                 responseType: "error",
                 response: "unable to create collection",
-                hasResponse: true,
               });
             }
           );
@@ -429,7 +436,6 @@ export default {
           this.$root.$emit("new_message", {
             responseType: "error",
             response: "Collection name is required",
-            hasResponse: true,
           });
         }
       }
@@ -437,15 +443,6 @@ export default {
   },
 
   async mounted() {
-    Auth()
-      .user()
-      .then(async (response) => {
-        useUserStore().store(response);
-        this.user = response;
-        this.auth = true;
-      })
-      .catch(() => (this.auth = false));
-
     this.$root.$on("reload_collections", async () => {
       this.activeProject = useProjectStore().get;
       await this.getCollections();

@@ -3,21 +3,22 @@
   <transition name="alert" v-if="isLoading">
     <div id="toast-success" class="flex fixed z-30 bottom-2 right-5 items-center p-4 mb-4 max-w-md text-gray-500 bg-white rounded-xl shadow dark:text-gray-400 dark:bg-gray-800" role="alert" style="font-size: 15px">
 
-        <div class="inline-flex flex-shrink-0 justify-center items-center w-8 h-8">
-          <div>
-            <span class="relative inset-0 inline-flex h-6 w-6 animate-spin items-center justify-center rounded-full border-2 border-gray-300 after:absolute after:h-8 after:w-8 after:rounded-full after:border-2 after:border-y-indigo-500 after:border-x-transparent"></span>
-          </div>
+      <div class="inline-flex flex-shrink-0 justify-center items-center w-8 h-8">
+        <div>
+          <span class="relative inset-0 inline-flex h-6 w-6 animate-spin items-center justify-center rounded-full border-2 border-gray-300 after:absolute after:h-8 after:w-8 after:rounded-full after:border-2 after:border-y-indigo-500 after:border-x-transparent"></span>
         </div>
+      </div>
 
-        <div class="ml-3 font-normal" style="font-size: 15px !important">{{ response }}</div>
+      <div class="ml-3 font-normal" style="font-size: 15px !important">{{ response }}</div>
 
-        <button @click="diableAlert()" type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
-            <span class="sr-only">Close</span>
-            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-        </button>
+      <button @click="diableAlert()" type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
+        <span class="sr-only">Close</span>
+        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+      </button>
     </div>
-</transition>
+  </transition>
 </template>
+
 <script>
 import { appwriteCollections } from "../../configs/services";
 import { AppwriteService } from "../../resources/AppwriteService";
@@ -40,6 +41,15 @@ export default {
   methods: {
     /**
      * Submit newly changes to user collection
+     *
+     * **** 1. Get current collection data
+     * **** 2. Find the target instance to update
+     * **** 3. iterate over and change by it id
+     * **** 4. Create new blob with new changes
+     * **** 5. Create new file and upload it
+     * **** 6. Delete the previous file and update DB document by id
+     * **** 7. Update Collection store (PINIA) with new changes
+     * **** 8. Push new notification
      *
      * @param {Object} data
      */
@@ -119,7 +129,6 @@ export default {
                 });
 
                 this.$root.$emit("new_message", {
-                  hasResponse: true,
                   responseType: "success",
                   response: "File updated successfully",
                   subject: "Updating file",
@@ -137,7 +146,6 @@ export default {
           this.$root.$emit("new_message", {
             responseType: "error",
             response: "Unable to update file",
-            hasResponse: true,
           });
         }
       );
@@ -243,7 +251,6 @@ export default {
                 this.$root.$emit("new_message", {
                   responseType: "success",
                   response: "Folder created successfully",
-                  hasResponse: true,
                   subject: "Collection Folder",
                   source: "/",
                   shouldSave: true,
@@ -259,7 +266,6 @@ export default {
           this.$root.$emit("new_message", {
             responseType: "error",
             response: "Unable to save folder",
-            hasResponse: true,
           });
         }
       );
@@ -325,7 +331,6 @@ export default {
                 this.$root.$emit("new_message", {
                   responseType: "success",
                   response: "Request created successfully",
-                  hasResponse: true,
                   subject: "Folder Request",
                   source: "/",
                   shouldSave: true,
@@ -342,13 +347,16 @@ export default {
           this.$root.$emit("new_message", {
             responseType: "error",
             response: "Unable to create new request file",
-            hasResponse: true,
           });
         }
       );
     },
   },
   mounted() {
+    /**
+     * Listen to save collection request
+     * and update given file generally
+     */
     this.$root.$on("save_collection_changes", async (payload) => {
       // Check if payload has element to run before then execute
       // eslint-disable-next-line no-prototype-builtins
@@ -373,6 +381,10 @@ export default {
         : "";
     });
 
+    /**
+     * Listen to save collection new folder request
+     * and add new item in collection file
+     */
     this.$root.$on("new_folder", async (payload) => {
       // Check if payload has element to run before then execute
       // eslint-disable-next-line no-prototype-builtins
@@ -397,6 +409,10 @@ export default {
         : "";
     });
 
+    /**
+     * Listen to save folder request
+     * and add new request in given collection folder
+     */
     this.$root.$on("new_request", async (payload) => {
       // Check if payload has element to run before then execute
       // eslint-disable-next-line no-prototype-builtins
@@ -423,4 +439,3 @@ export default {
   },
 };
 </script>
-scrip

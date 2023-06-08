@@ -22,7 +22,7 @@
 
 <script>
 import { Query } from "appwrite";
-import { appwriteCollections } from "../configs/services";
+import { appwriteAuthHeader, appwriteCollections } from "../configs/services";
 import { AppwriteService } from "../resources/AppwriteService";
 import { useUserStore } from "../stores/UserStore";
 import { tryCatch, isEmpty } from "../utils/GeneralUtils";
@@ -40,6 +40,9 @@ export default {
     isEmpty,
   }),
   mounted() {
+    /**
+     * Select all published Collections
+     */
     tryCatch(() => {
       this.database.collection(appwriteCollections.collection_table);
       this.collections = [];
@@ -52,11 +55,7 @@ export default {
 
             fetch(file.href, {
               method: "GET",
-              headers: {
-                "X-Appwrite-Project": import.meta.env.VITE_APPWRITE_CLIENT_ID,
-                "Content-Type": "application/json",
-                "X-Appwrite-Key": import.meta.env.VITE_APPWRITE_API_KEY,
-              },
+              headers: appwriteAuthHeader.headers,
             })
               .then((response) => response.json())
               .then((json) =>

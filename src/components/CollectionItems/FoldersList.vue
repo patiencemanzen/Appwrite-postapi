@@ -51,7 +51,7 @@
 
         <div class="mt-3" style="margin-top: 2rem">
           <ul class="p-0 m-0">
-            <SingleFolder v-for="item in items.item" :key="item.name+Math.random().toString(16).slice(2)" :forlder="item" />
+            <SingleFolder v-for="item in items.item" :key="item.name+Math.random().toString(16).slice(2)" :folder="item" />
           </ul>
         </div>
 
@@ -147,7 +147,6 @@ export default {
         this.$root.$emit("new_message", {
           responseType: "error",
           response: "Folder name required",
-          hasResponse: true,
         });
       }
     },
