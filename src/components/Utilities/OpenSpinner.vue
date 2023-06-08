@@ -6,6 +6,7 @@
         </div>
     </div>
 </template>
+
 <script>
 export default {
   data: () => ({ isLoading: false }),
@@ -15,6 +16,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .animated-loader {
   -webkit-animation-duration: 1s;

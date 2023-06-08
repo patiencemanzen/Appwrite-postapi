@@ -1,3 +1,5 @@
+import moment from "moment";
+
 /**
  * Creating a random ID
  *
@@ -38,18 +40,21 @@ export const slugify = (string, separator = "-") => {
  * @param tryer
  * @returns {Array}
  */
-export const tryCatch = (tryer) => {
+export const tryCatch = (tryer, fallback) => {
   try {
     return tryer();
   } catch (error) {
-    this.$root.$emit("new_message", {
-      responseType: "error",
-      response: error.message,
-      hasResponse: true,
-    });
+    if (fallback !== undefined && fallback instanceof Function)
+      return fallback(error);
   }
 };
 
+/**
+ * Get string and return First Charactor on each
+ *
+ * @param {String} string
+ * @returns {String}
+ */
 export const getInitials = (string) => {
   if (string) {
     var names = string.split(" "),
@@ -63,6 +68,22 @@ export const getInitials = (string) => {
   }
 };
 
+/**
+ * Check if given obj is null|empty
+ *
+ * @param {Object} obj
+ * @returns {Boolean}
+ */
 export const isEmpty = (obj) => {
   return Object.entries(obj).length === 0 ? true : false;
+};
+
+/**
+ * Format the date in human readable diff format
+ *
+ * @param {String} date
+ * @returns {String}
+ */
+export const diffFromHuman = (date) => {
+  return moment(date).fromNow();
 };

@@ -58,21 +58,18 @@
         </div>
     </div>
 </template>
+
 <script>
 export default {
   components: {
-    SendRequest: () => import("../components/SingleRequest/SendRequest.vue"),
-    ResponseHandler: () =>
-      import("../components/SingleRequest/ResponseHandler.vue"),
-    RequestAuth: () => import("../components/SingleRequest/RequestAuth.vue"),
-    RequestHeaders: () =>
-      import("../components/SingleRequest/RequestHeaders.vue"),
-    RequestBody: () => import("../components/SingleRequest/RequestBody.vue"),
-    RequestParams: () =>
-      import("../components/SingleRequest/RequestParams.vue"),
-    GetResponse: () => import("../components/SingleRequest/GetResponse.vue"),
-    RequestDescription: () =>
-      import("../components/SingleRequest/RequestDescription.vue"),
+    SendRequest: () => import("../SingleRequest/SendRequest.vue"),
+    ResponseHandler: () => import("../SingleRequest/ResponseHandler.vue"),
+    RequestAuth: () => import("../SingleRequest/RequestAuth.vue"),
+    RequestHeaders: () => import("../SingleRequest/RequestHeaders.vue"),
+    RequestBody: () => import("../SingleRequest/RequestBody.vue"),
+    RequestParams: () => import("../SingleRequest/RequestParams.vue"),
+    GetResponse: () => import("../SingleRequest/GetResponse.vue"),
+    RequestDescription: () => import("../SingleRequest/RequestDescription.vue"),
   },
   data() {
     return {

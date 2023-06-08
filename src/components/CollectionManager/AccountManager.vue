@@ -1,6 +1,7 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
     <div class="" v-if="auth && user && isDashboard">
+
         <!-- Breadcrumb -->
         <nav class="px-4 py-3 text-gray-700 border border-gray-200 sm:px-5 bg-gray-50 dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
             <div class="g-padding items-center justify-between sm:flex">
@@ -70,17 +71,18 @@
 
         <!-- Manage Collections -->
         <div><ManageCollections /></div>
+
+        <!-- Organization Settings -->
+        <OrganizationSettings />
     </div>
 </template>
 <script>
 import { useUserStore } from "../../stores/UserStore";
-import { getInitials } from "../../Utils/GeneralUtls";
-import { Auth } from "../../Services/Auth.js";
-import { isEmpty } from "../../Utils/GeneralUtls";
-import moment from "moment";
+import { Auth } from "../../resources/AuthService.js";
+import { isEmpty, diffFromHuman, getInitials } from "../../utils/GeneralUtils";
 import { useOrganizationStore } from "../../stores/OrganizationStore";
 import { useProjectStore } from "../../stores/ProjectStore";
-import { urlPushState, urlRemoveState } from "../../Utils/UrlUtils";
+import { urlPushState, urlRemoveState } from "../../utils/UrlUtils";
 
 export default {
   data() {
@@ -92,6 +94,7 @@ export default {
       response: null,
       getInitials,
       isEmpty,
+      diffFromHuman,
       active_organization: {},
       active_project: {},
     };
@@ -100,6 +103,7 @@ export default {
     ManageOrganizations: () => import("./ManageOrganizations.vue"),
     ManageProjects: () => import("./ManageProjects.vue"),
     ManageCollections: () => import("./ManageCollections.vue"),
+    OrganizationSettings: () => import("./OrganizationSettings.vue"),
   },
   computed: {
     isDashboard() {
@@ -115,9 +119,6 @@ export default {
     },
     openCollections() {
       this.$root.$emit("open-collections");
-    },
-    diffFromHuman(date) {
-      return moment(date).fromNow();
     },
   },
   async mounted() {
@@ -145,7 +146,7 @@ export default {
       localStorage.setItem(storageId, storageValue);
 
       if (payload.shouldReload) {
-        // Update url states and reset the stack
+        // Update url states and reset the URL stack structure
         urlPushState("org", payload.organization.$id);
         urlRemoveState("project");
         urlRemoveState("collection");

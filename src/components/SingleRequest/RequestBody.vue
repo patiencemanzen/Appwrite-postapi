@@ -34,7 +34,7 @@
                                 <div v-if="newFormKeyPaired.type == 'file'"><input @change="onFileChange" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file"></div>
                             </div>
                             <div class="ml-3">
-                                <button @click="addNewKePair" class="relative cursor-pointer inline-flex h-10 w-10 items-center justify-center rounded-lg border border-transparent text-white bg-gray-800 hover:bg-gray-900 px-2 py-1 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-75">
+                                <button @click="registerFormdata" class="relative cursor-pointer inline-flex h-10 w-10 items-center justify-center rounded-lg border border-transparent text-white bg-gray-800 hover:bg-gray-900 px-2 py-1 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-75">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
                                     </svg>
@@ -43,25 +43,25 @@
                         </div>
                     </div>
                 </div>
-                <div class="overflow-x-auto sm:rounded-lg">
-                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">Key</th>
-                                <th scope="col" class="px-6 py-3">Value</th>
-                                <th scope="col" class="px-6 py-3">Type</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="formdata in request_body_as_formdata" :key="formdata.key+Math.random().toString(16).slice(2)" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{ formdata.key }}
-                                </th>
-                                <td class="px-6 py-4 w-32" style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden !important;">{{ formdata.value  }}</td>
-                                <td class="px-6 py-4">{{ formdata.type }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="overflow-x-auto shadow-md bg sm:rounded-lg mt-2">
+                  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                          <tr>
+                              <th scope="col" class="px-6 py-3">Key</th>
+                              <th scope="col" class="px-6 py-3">Value</th>
+                              <th scope="col" class="px-6 py-3">Type</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr v-for="formdata in request_body_as_formdata" :key="formdata.key+Math.random().toString(16).slice(2)" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                  {{ formdata.key }}
+                              </th>
+                              <td class="px-6 py-4 w-32" style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden !important;">{{ formdata.value  }}</td>
+                              <td class="px-6 py-4">{{ formdata.type }}</td>
+                          </tr>
+                      </tbody>
+                  </table>
                 </div>
             </div>
             <div class="hidden rounded-lg bg-gray-50 dark:bg-gray-800 text-sm" id="json-content" role="tree-3-tabs" aria-labelledby="raw-data-tab">
@@ -130,10 +130,11 @@ export default {
       this.$root.$emit("new_message", {
         responseType: "success",
         response: "Body Copied",
-        hasResponse: true,
+        subject: "Copied",
+        source: "/",
       });
     },
-    addNewKePair() {
+    registerFormdata() {
       this.request_body_as_formdata = [
         ...this.request_body_as_formdata,
         {
@@ -145,7 +146,7 @@ export default {
     },
 
     /**
-     * listern to inputfile change
+     * listern to input-file change
      * and keep image in data handler
      */
     onFileChange(e) {
@@ -153,6 +154,7 @@ export default {
     },
   },
   watch: {
+    // Watch Current file request body and register
     body: {
       handler(body) {
         let newBody = null;
@@ -186,6 +188,8 @@ export default {
       },
       immediate: true,
     },
+
+    // Watch new json data and register
     request_body_as_json: {
       handler(body) {
         this.$root.$emit("new_body", {
@@ -195,6 +199,8 @@ export default {
       },
       immediate: true,
     },
+
+    // Watch new formdata and register
     request_body_as_formdata: {
       handler(body) {
         this.$root.$emit("new_body", {

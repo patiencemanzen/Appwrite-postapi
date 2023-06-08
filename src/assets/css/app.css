@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.slide-top {
+    -webkit-animation: slideTop 0.8s ease;
+    animation: slideTop 0.8s ease;
+}
+
+@-webkit-keyframes slideTop {
+    0% {
+        transform: translateY(40px);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+@keyframes slideTop {
+    0% {
+        transform: translateY(40px);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+

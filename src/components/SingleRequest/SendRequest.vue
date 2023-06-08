@@ -37,7 +37,7 @@
     </div>
 </template>
 <script>
-import { isEmpty } from "../../Utils/GeneralUtls";
+import { isEmpty, tryCatch } from "../../utils/GeneralUtils";
 
 export default {
   props: {
@@ -66,6 +66,13 @@ export default {
     },
   },
   methods: {
+    /**
+     * Correct all headers, auths and bodies
+     * and send a request with given url to test
+     *
+     * *** when response come - emit response component
+     * *** to display the response
+     */
     async testRequest() {
       this.isLoading = true;
 
@@ -96,52 +103,64 @@ export default {
       let customResponse = {};
       let customheaders = [];
 
-      try {
-        const url = new URL(this.url);
-        const params = new URLSearchParams(url.search);
+      tryCatch(
+        async () => {
+          const url = new URL(this.url);
+          const params = new URLSearchParams(url.search);
 
-        await fetch(url.href + "?" + params, RequestSettings)
-          .then(async (response) => {
-            customheaders.push(...response.headers);
-            customResponse.body = await response.text();
-            customResponse.bodyUsed = response.bodyUsed;
-            customResponse.headers = response.headers;
-            customResponse.ok = response.ok;
-            customResponse.status = response.status;
-            customResponse.statusText = response.statusText;
-            customResponse.type = response.type;
-            customResponse.url = response.url;
-            customResponse.redirected = response.redirected;
-            customResponse.params = new URLSearchParams(
-              new URL(response.url).search
-            ).entries();
-          })
-          .catch(() => {
-            this.$root.$emit("new_message", {
-              responseType: "error",
-              response: "Unable to fetch request",
-              hasResponse: true,
+          await fetch(url.href + "?" + params, RequestSettings)
+            .then(async (response) => {
+              customheaders.push(...response.headers);
+              customResponse.body = await response.text();
+              customResponse.bodyUsed = response.bodyUsed;
+              customResponse.headers = response.headers;
+              customResponse.ok = response.ok;
+              customResponse.status = response.status;
+              customResponse.statusText = response.statusText;
+              customResponse.type = response.type;
+              customResponse.url = response.url;
+              customResponse.redirected = response.redirected;
+              customResponse.params = new URLSearchParams(
+                new URL(response.url).search
+              ).entries();
+            })
+            .catch(() => {
+              this.$root.$emit("new_message", {
+                responseType: "error",
+                response: "Unable to fetch request",
+                subject: "Failed Request",
+                source: "/",
+              });
             });
+
+          customResponse.headers = customheaders;
+
+          this.$root.$emit("responses", {
+            tab: "response-content-tab",
+            contents: customResponse,
           });
 
-        customResponse.headers = customheaders;
+          this.isLoading = false;
+        },
+        (error) => {
+          this.$root.$emit("new_message", {
+            responseType: "error",
+            response: error.message,
+            subject: "Failed Request",
+            source: "/",
+          });
 
-        this.$root.$emit("responses", {
-          tab: "response-content-tab",
-          contents: customResponse,
-        });
-      } catch (error) {
-        this.$root.$emit("new_message", {
-          responseType: "error",
-          response: error.message,
-          hasResponse: true,
-        });
-      }
-
-      this.isLoading = false;
+          this.isLoading = false;
+        }
+      );
     },
 
+    /**
+     * Send and save request changes
+     * to collection file
+     */
     async saveRequest() {
+      // Request Auth tokens
       let authToken = {
         type: "bearer",
         bearer: [
@@ -153,11 +172,13 @@ export default {
         ],
       };
 
+      // Request Body contents as Formdata
       let body_formdata = {
         mode: this.body.body_type,
         formdata: this.body.data,
       };
 
+      // Request Body contents as json
       let body_json = {
         mode: this.body.body_type,
         raw: JSON.stringify(this.body.data),
@@ -168,7 +189,8 @@ export default {
         },
       };
 
-      // Save the changes
+      // Emit global collection changes saver
+      // to handler the incoming request change
       this.$root.$emit("save_collection_changes", {
         data: {
           id: this.id,
@@ -185,18 +207,34 @@ export default {
     },
   },
   mounted() {
+    /**
+     * Listen to request auths component
+     * and register the auths contents
+     */
     this.$root.$on("new_auth", (auth) => {
       this.auths = auth;
     });
 
+    /**
+     * Listen to request headers component
+     * and register the headers contents
+     */
     this.$root.$on("new_headers", (headers) => {
       this.headers = headers;
     });
 
+    /**
+     * Listen to request body component
+     * and register the body contents
+     */
     this.$root.$on("new_body", (body) => {
       this.body = body;
     });
 
+    /**
+     * Listen to URL param component
+     * and register the params
+     */
     this.$root.$on("new_params", (params) => {
       if (!this.isEmpty(params)) {
         params.forEach((value) => {

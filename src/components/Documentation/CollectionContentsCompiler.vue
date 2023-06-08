@@ -113,7 +113,7 @@
                     <ol class="relative border-l ml-3 border-gray-200 dark:border-gray-700">
                         <CollectionStructure
                           v-for="item in items"
-                          :key="slugfi(item.name + id.unique())"
+                          :key="slugify(item.name + id.unique())"
                           :folder="item"
                           :owner="owner"
                         />
@@ -127,10 +127,14 @@
 import moment from "moment";
 import { useCollectionStore } from "../../stores/CollectionStore";
 import axios from "axios";
-import { appAPIConfigs } from "../../config/services";
+import {
+  appwriteAuthHeader,
+  appwriteCollections,
+} from "../../configs/services";
 import { useUserStore } from "../../stores/UserStore";
 import { ID } from "appwrite";
-import { slugify } from "../../Utils/GeneralUtls";
+import { slugify } from "../../utils/GeneralUtils";
+import { AppwriteService } from "../../resources/AppwriteService";
 
 export default {
   props: {
@@ -144,18 +148,19 @@ export default {
   data: () => ({
     info: {},
     items: {},
+    author: {},
     preparedCollection: {},
-    isLoading: false,
     uniqueIdentifier: Math.random().toString(16).slice(2),
+    database: AppwriteService().database(),
+    user: useUserStore().get,
     data: {
       name: "",
       description: "",
     },
-    author: {},
     owner: false,
-    user: useUserStore().get,
+    isLoading: false,
     id: ID,
-    slugfi: slugify,
+    slugify,
   }),
   methods: {
     /**
@@ -237,18 +242,27 @@ export default {
          * If Collection loaded then get the author
          * and check if auth user is the owner
          */
-        if (newCollection.user_id) {
-          // eslint-disable-next-line prettier/prettier
-          const getUser = axios(`${import.meta.env.VITE_APPWRITE_CLIENT_ENDPOINT}/users/${newCollection.user_id}`,
-            { headers: appAPIConfigs.headers }
-          );
+        if (newCollection.project_id) {
+          // Get project by ID
+          this.database.collection(appwriteCollections.projects_table);
+          this.database.show(newCollection.project_id).then((project) => {
+            // Get organization by project ID
+            this.database.collection(appwriteCollections.organization_table);
+            this.database.show(project.organization_id).then((organization) => {
+              // Get user by user_id from organization
+              // eslint-disable-next-line prettier/prettier
+              const getUser = axios(`${import.meta.env.VITE_APPWRITE_CLIENT_ENDPOINT}/users/${organization.user_id}`,
+                { headers: appwriteAuthHeader.headers }
+              );
 
-          getUser.then((user) => {
-            this.author = user.data;
+              getUser.then((user) => {
+                this.author = user.data;
 
-            user.data.$id == this.user.$id
-              ? (this.owner = true)
-              : (this.owner = false);
+                user.data.$id == this.user.$id
+                  ? (this.owner = true)
+                  : (this.owner = false);
+              });
+            });
           });
         }
       },
@@ -256,6 +270,10 @@ export default {
     },
   },
   async mounted() {
+    /**
+     * Listen to collection refresh request
+     * and register updated collectiom
+     */
     this.$root.$on("refresh_collection", () => {
       const collection = useCollectionStore().get;
 
@@ -263,10 +281,12 @@ export default {
         collection.file.info?.name !== undefined
           ? collection.file.info.name
           : "";
+
       this.data.description =
         collection.file.info?.description !== undefined
           ? collection.file.info.description
           : "";
+
       this.info = collection.file.info;
       this.items = collection.file.item;
     });

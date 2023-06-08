@@ -295,7 +295,7 @@ pre.ssh-pre {
 </style>
 <script>
 import "simple-syntax-highlighter/dist/sshpre.css";
-import { slugify } from "../../Utils/GeneralUtls";
+import { slugify } from "../../utils/GeneralUtils";
 
 export default {
   props: ["folder", "owner"],
@@ -374,7 +374,8 @@ export default {
       this.$root.$emit("new_message", {
         responseType: "success",
         response: "Body Copied",
-        hasResponse: true,
+        subject: "Copied",
+        source: "/",
       });
     },
   },

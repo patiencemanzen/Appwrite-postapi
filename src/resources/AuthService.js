@@ -21,5 +21,19 @@ export const Auth = () => {
       .catch(() => false);
   };
 
-  return { user, check };
+  const guard = async (to, from, next) => {
+    return AppwriteService()
+      .account()
+      .get()
+      .then(() => next())
+      .catch(() => {
+        if (to.name == "home") {
+          next({ name: "home" });
+        } else {
+          next({ name: "login" });
+        }
+      });
+  };
+
+  return { user, check, guard };
 };

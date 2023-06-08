@@ -15,11 +15,11 @@
     </div>
 </template>
 <script>
-import { appWriteCollections } from "../../config/services";
-import { AppwriteService } from "../../Services/AppwriteService";
+import { appwriteCollections } from "../../configs/services";
+import { AppwriteService } from "../../resources/AppwriteService";
 import { useCollectionStore } from "../../stores/CollectionStore";
 import { useUserStore } from "../../stores/UserStore";
-import { tryCatch } from "../../Utils/GeneralUtls";
+import { tryCatch } from "../../utils/GeneralUtils";
 import moment from "moment";
 
 export default {
@@ -32,26 +32,37 @@ export default {
   }),
   methods: {
     async publishCollection() {
-      this.isLoading = true;
+      tryCatch(
+        () => {
+          this.isLoading = true;
+          this.database.collection(appwriteCollections.collection_table);
 
-      tryCatch(() => {
-        this.database.collection(appWriteCollections.collection_table);
+          this.database
+            .update(this.collection.$id, {
+              published: true,
+              published_at: moment(),
+            })
+            .then(() => {
+              this.$root.$emit("new_message", {
+                responseType: "success",
+                response: "Collection published successfully",
+                subject: "Published",
+                source: "/",
+                shouldSave: true,
+              });
 
-        this.database
-          .update(this.collection.$id, {
-            published: true,
-            published_at: moment(),
-          })
-          .then(() => {
-            this.$root.$emit("new_message", {
-              responseType: "success",
-              response: "Collection published successfully",
-              hasResponse: true,
-            });
+              this.isLoading = false;
+            })
+            .catch(() => (this.isLoading = false));
+        },
+        () => {
+          this.isLoading = false;
+          this.$root.$emit("new_message", {
+            responseType: "error",
+            response: "unable to publish collection",
           });
-      });
-
-      this.isLoading = false;
+        }
+      );
     },
   },
 };
