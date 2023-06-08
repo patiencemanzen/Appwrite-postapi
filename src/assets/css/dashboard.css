@@ -52,23 +52,3 @@
     --opacity-two: 1;
     color-scheme: light dark;
 }
-
-.g-padding {
-    max-width: var(--max-width-global-wrap);
-    margin-right: auto;
-    margin-left: auto;
-    padding-right: var(--margin-wrap-left-right);
-    padding-left: var(--margin-wrap-left-right);
-}
-
-.g-padding #sidebar-multi-level-sidebar {
-    width: 25% !important;
-}
-
-.g-padding .diff-requests-container {
-    width: 25% !important;
-}
-
-.g-padding .single-request-container {
-    width: 50% !important;
-}
