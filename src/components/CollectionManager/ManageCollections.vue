@@ -291,15 +291,16 @@ export default {
                     shouldSave: true,
                   });
 
-                  this.$root.$emit("set_loader_off");
-                  this.isLoading = false;
-
                   // Refresh collection and set active
                   this.$root.$emit("refresh_collections", {
                     ...collection,
                     file: this.newCollection,
                     file_id: collectionFile.$id,
                   });
+
+                  this.$root.$emit("set_loader_off");
+                  this.isLoading = false;
+                  this.$root.$emit("reload_collections");
                 });
               })
               .catch(() => (this.isLoading = false));
