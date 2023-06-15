@@ -7,10 +7,6 @@ and ensures that information is easily accessible to all devs, project manager a
 ## Export postman collection guide:
 To work with postapi and postman, you need to first export your custom collection from postman:
 
-![Screenshot 2023-06-15 at 8 46 59 AM](https://github.com/manirabona-programer/Appwrite-postapi/assets/55847682/8a56259f-52b8-4fbc-8c17-3ad2b16f7850)
-
-![Screenshot 2023-06-15 at 8 47 19 AM](https://github.com/manirabona-programer/Appwrite-postapi/assets/55847682/da630f6c-46db-4323-8838-f494a3700229)
-
 ![Screenshot 2023-06-15 at 8 47 33 AM](https://github.com/manirabona-programer/Appwrite-postapi/assets/55847682/0104de61-9704-406b-9404-4f34d66819f5)
 
 ![Screenshot 2023-06-15 at 8 48 19 AM](https://github.com/manirabona-programer/Appwrite-postapi/assets/55847682/7758c1bd-0cb3-411b-bee3-61a9e7df3de6)
