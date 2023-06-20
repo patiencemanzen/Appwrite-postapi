@@ -12,6 +12,7 @@ const colors = {
     "deep-text": {
       900: "#72acfe",
     },
+    "github": "#10172a",
   },
 };
 

@@ -1,83 +1,79 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-    <div class="relative sm:invisible xs:invisible xl:visible sm:hidden xs:hidden xl:block">
-        <div>
-            <div style="padding-bottom: 583px"></div>
-            <div class="opacity-100 border border-gray-100 rounded-lg bg-white px-3 py-2.5 shadow-md shadow-shadow-200" style="position: fixed; top: 23vh; left: 100px; width: 220px; transform: translateZ(0px);">
-                <div class="sticky top-10 left-0">
-                    <div class="pb-0 mt-6 hidden sm:block z-0">
-                        <div class="relative w-full block z-10">
-                            <div class="text-gray-900 text-base font-bold font-anek leading-22 bg-transparent">
-                              <h4>Table of Contents</h4>
-                            </div>
-                        </div>
-                        <div class="p-3 mt-2 relative transition-all border border-gray-100 rounded-[10px] duration-700 max-h-[20rem] overflow-y-auto false false">
-                            <div class="TocListItems__Container-sc-1d5rso8-0 jXaJbH">
-                                <ol class="overflow-hidden list-decimal list-inside pl-0 transition-all duration-700 align-top customized-scrollbar overflow-x-hidden overflow-y-auto marker:text-sm marker:leading-19 max-h-272">
-                                    <li v-for="item in collection_items" :key="item.id" class="mb-3 last:mb-0 pr-1 text-sm leading-19">
-                                        <a :href="'#'+item.name" class="cursor-pointer break-word text-sm leading-19">
-                                            <span class="text-sm leading-19 break-word text-gray-5">
-                                                {{ item.name }}
-                                            </span>
-                                        </a>
-                                    </li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex gap-x-4 mt-6 flex-wrap">
-                        <div class="text-sm leading-21 text-gray-16 capitalize -tracking-tight w-full flex mb-3 font-bold">
-                            Share This doc
-                        </div>
-                        <div class="flex flex-grow items-center gap-2">
-                            <div class="novashare-buttons novashare-floating novashare-no-print">
-                                <vue-goodshare-twitter
-                                    :page_url="page_url"
-                                    :page_title="page_title"
-                                    :page-description="page_description"
-                                    has_icon
-                                >
-                                </vue-goodshare-twitter>
-                                <vue-goodshare-facebook
-                                    :page_url="page_url"
-                                    :page_title="page_title"
-                                    :page-description="page_description"
-                                    has_icon
-                                >
-                                </vue-goodshare-facebook>
-                                <vue-goodshare-linkedIn
-                                    :page_url="page_url"
-                                    :page_title="page_title"
-                                    :page-description="page_description"
-                                    has_icon
-                                >
-                                </vue-goodshare-linkedIn>
-                            </div>
-                            <div class="share__action" data-interface="DownloadPostForm">
-                                <button @click="exportInPDF" type="button" class="justify-center text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9.75v6.75m0 0l-3-3m3 3l3-3m-8.25 6a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
-                                    </svg>
-                                    <span class="ml-2">PDF</span>
-                                </button>
-                                <button @click="exportInDOCX" type="button" class="justify-center text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9.75v6.75m0 0l-3-3m3 3l3-3m-8.25 6a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
-                                    </svg>
-                                    <span class="ml-2">DOCX</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <header class="contents lg:pointer-events-none lg:z-40">
+    <div class="h-[90vh] contents lg:pointer-events-auto lg:block lg:w-60 lg:overflow-y-auto lg:border-r lg:border-zinc-900/10 lg:px-6 lg:pb-8 lg:pt-28 lg:dark:border-white/10 xl:w-70">
+      
+      <div class="hidden lg:flex">
+        <a aria-label="Home" href="/" class="font-bold">
+          Table of Contents
+        </a>
+      </div>
+      
+      <nav class="hidden lg:mt-5 lg:block">
+        <ul role="list">
+          <li class="md:hidden">
+            <a
+              class="block py-1 text-sm text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+              href="/"
+              >API</a
+            >
+          </li>
+
+          <li class="md:hidden">
+            <a
+              class="block py-1 text-sm text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+              href="/#"
+              >Documentation</a
+            >
+          </li>
+
+          <li class="md:hidden">
+            <a
+              class="block py-1 text-sm text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+              href="/#"
+              >Support</a
+            >
+          </li>
+
+          <li class="relative mt-6 md:mt-0" v-for="item in collection_items" :key="item.id">
+            <h2 class="text-xs font-bold text-zinc-900 dark:text-white">
+              {{ item.name }}
+            </h2>
+            <div class="relative mt-3 pl-2">
+              <div class="absolute inset-x-0 top-0 bg-zinc-800/2.5 will-change-transform dark:bg-white/2.5" style="height: 32px; top: 0px; opacity: 1; border-radius: 8px; transform: none; transform-origin: 50% 50% 0px;"></div>
+              <div class="absolute inset-y-0 left-2 w-px bg-zinc-900/10 dark:bg-white/5" style="transform: none; transform-origin: 50% 50% 0px"></div>
+              <div class="absolute left-2 h-6 w-px bg-emerald-500" style="top: 4px;opacity: 1; transform: none; transform-origin: 50% 50% 0px;"></div>
+              <ul role="list" class="border-l border-transparent">
+                <li class="relative" v-for="nextItem in item.item" :key="nextItem.id">
+                  <a class="flex justify-between gap-2 py-1 pr-3 text-sm transition pl-4 text-zinc-900 dark:text-white" href="/" aria-current="page">
+                    <span class="truncate w-28"> {{ nextItem.name }} </span>
+                    <span v-if="nextItem.hasOwnProperty('request')" :class="methodsSymbols[nextItem.request.method]+' font-mono text-[0.625rem] font-semibold leading-6 dark:text-zinc-500'">
+                      {{ nextItem.request.method }}
+                    </span>
+                    <span v-else class="font-mono text-[0.625rem] font-semibold leading-6 dark:text-zinc-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-yellow-500 mt-1">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+                      </svg>
+                    </span>
+                  </a>
+                </li>
+              </ul>
             </div>
-        </div>
+          </li>
+
+          
+          <li class="sticky bottom-0 z-10 mt-6 min-[416px]:hidden">
+            <a class="inline-flex gap-0.5 justify-center overflow-hidden text-sm font-medium transition rounded-full bg-zinc-900 py-1 px-3 text-white hover:bg-zinc-700 dark:bg-emerald-500 dark:text-white dark:hover:bg-emerald-400 w-full" href="/#">
+              Sign in
+            </a>
+          </li>
+        </ul>
+      </nav>
+
     </div>
+  </header>
 </template>
 <script>
-import VueGoodshareFacebook from "vue-goodshare/src/providers/Facebook.vue";
-import VueGoodshareTwitter from "vue-goodshare/src/providers/Twitter.vue";
-import VueGoodshareLinkedIn from "vue-goodshare/src/providers/LinkedIn.vue";
 import html2pdf from "html2pdf.js";
 
 export default {
@@ -98,12 +94,13 @@ export default {
   },
   data: () => ({
     source: "downloadable",
+    methodsSymbols: {
+      POST: "text-sky-500",
+      GET: "text-emerald-500",
+      PUT: "text-amber-500",
+      DELETE: "text-red-500",
+    },
   }),
-  components: {
-    VueGoodshareFacebook,
-    VueGoodshareTwitter,
-    VueGoodshareLinkedIn,
-  },
   methods: {
     /**
      * Export the doc as PDF file

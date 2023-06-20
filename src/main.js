@@ -7,6 +7,7 @@ import router from "./router";
 import "./assets/css/app.css";
 import "./assets/css/neon.css";
 import "./assets/css/section.css";
+import "./assets/css/customized_tail.css";
 
 Vue.use(PiniaVuePlugin);
 

@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div class="loop-section global-padding dark:bg-deep-green-800 pt-10">
+  <div class="loop-section global-padding dark:bg-deep-green-800 h-[100vh] pt-28">
     <div v-if="!isEmpty(collections)" class="loop-wrap">
       <div v-for="collection in collections" :key="collection.$id">
         <CollectionCard :collection="collection" />

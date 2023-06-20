@@ -1,10 +1,8 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
     <div id="downloadable">
-        <div class="section no-bottom-padding wf-section">
-            <!-- Get collection file and compile to readable UI -->
-            <CollectionContentsCompiler :collection="loadedCollection" :owner="owner" :author="author" />
-        </div>
+      <!-- Get collection file and compile to readable UI -->
+      <CollectionContentsCompiler :collection="loadedCollection" :owner="owner" :author="author" />
     </div>
 </template>
 
