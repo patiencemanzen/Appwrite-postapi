@@ -1,7 +1,7 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
     <!-- drawer component -->
-    <div v-if="isOpen" class="fixed top-5 right-5 bottom-5 rounded-2xl z-40 p-4 overflow-y-auto transition-transform translate-x-0 bg-white w-[30vw] shadow-lg border border-gray-200 dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-right-label">
+    <div v-if="isOpen" class="fixed top-5 right-5 bottom-5 rounded-2xl z-40 p-4 overflow-y-auto transition-transform translate-x-0 bg-white w-[30vw] shadow-lg ring-1 ring-zinc-900/10 dark:bg-[#17202e] hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20">
       <div class="flex items-center gap-2.5 rounded-2xl border border-emerald-500/20 bg-deep-green-900/10 p-4 leading-6 text-emerald-900 dark:border-emerald-500/30 dark:bg-emerald-500/5 dark:text-emerald-200 dark:[--tw-prose-links-hover:theme(colors.emerald.300)] dark:[--tw-prose-links:theme(colors.white)]">
         <svg viewBox="0 0 16 16" aria-hidden="true" class="mt-1 h-4 w-4 flex-none fill-emerald-500 stroke-white dark:fill-emerald-200/20 dark:stroke-emerald-200">
           <circle cx="8" cy="8" r="8" stroke-width="0"></circle>
@@ -50,10 +50,10 @@
         </button>
       </div>
 
-      <div class="border border-gray-200 mt-4 rounded-[10px] bg-clip-border bg-[#f5f7fe] shadow-3xl shadow-shadow-500 p-2 overflow-y-auto h-auto">
+      <div class="ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 mt-4 rounded-[10px] bg-clip-border bg-[#f5f7fe] shadow-3xl shadow-shadow-500 p-2 overflow-y-auto h-auto dark:bg-white/5">
           <ul v-if="!isEmpty(collections) && !isLoading" class="p-0 m-0">
               <li class="cursor-pointer mb-2" v-for="collection in collections" :key="collection.$id">
-                  <a @click="loadCollection(collection, collection.$id)" class="hover:bg-gray-300 border border-gray-200 flex items-center p-2 text-gray-900 rounded-lg dark:text-white bg-gray-50 dark:hover:bg-gray-700">
+                  <a @click="loadCollection(collection, collection.$id)" class="hover:bg-gray-300 ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 flex items-center p-2 text-gray-900 rounded-lg dark:text-white bg-gray-50 dark:hover:bg-gray-700 dark:bg-white/5">
                     
                     <div role="ctl-collection" :id="collection.$id" :class="isActiveCollection(collection.$id) ? activeElement.active : activeElement.default">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

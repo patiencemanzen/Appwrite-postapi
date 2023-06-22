@@ -2,15 +2,15 @@
 <template>
     <div class="request-input flex items-center justify-between pt-4 px-2 pb-0 mb-5">
         <div class="">
-            <select v-model="method" id="countries" class="bg-gray-50 font-bold border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-auto p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option value="GET" class="text-green-800">GET</option>
-                <option value="POST" class="text-indigo-800">POST</option>
-                <option value="DELETE" class="text-red-800">DELETE</option>
-                <option value="PUT" class="text-gray-800">PUT</option>
+            <select v-model="method" id="countries" class="bg-gray-50 border-none ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 font-bold text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-auto py-2 px-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:bg-white/5">
+              <option value="GET" class="text-green-800">GET</option>
+              <option value="POST" class="text-indigo-800">POST</option>
+              <option value="DELETE" class="text-red-800">DELETE</option>
+              <option value="PUT" class="text-gray-800">PUT</option>
             </select>
         </div>
         <div class="ml-3 xl:w-80">
-          <input v-model="url" type="text" id="success" autocomplete="false" class="w-full bg-gray-50 border border-gray-300 text-gray-600 font-bold dark:text-green-400 placeholder-gray-400 dark:placeholder-green-500 text-md leading-3 rounded-lg focus:ring-gray-500 focus:border-gray-500 block p-2.5 dark:bg-gray-700 dark:border-green-500" placeholder="https://api.example.com/api">
+          <input v-model="url" type="text" id="success" autocomplete="false" class="w-full border-none ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 bg-gray-50 text-gray-600 font-bold dark:text-white placeholder-gray-400 text-md leading-3 rounded-lg focus:ring-gray-500 focus:border-none block px-2.5 py-2.5 dark:bg-white/5" placeholder="https://api.example.com/api">
         </div>
         <div class="ml-3 flex">
             <button @click="testRequest" class="relative cursor-pointer inline-flex h-10 w-12 items-center justify-center rounded-lg border border-transparent text-white bg-[#334155] hover:bg-gray-900 px-2 py-1 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-75">

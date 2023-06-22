@@ -1,9 +1,9 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div v-if="isOpen || request.length > 0" class="w-full h-full relative tabnet-content rounded-[10px] border overflow-y-auto border-gray-200 transition delay-150 duration-700 ease-in-out bg-white bg-clip-border shadow-3xl shadow-shadow-500 p-2">
+  <div v-if="isOpen || request.length > 0" class="w-full h-full relative tabnet-content rounded-[10px] overflow-y-auto ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 delay-150 duration-700 ease-in-out bg-white bg-clip-border shadow-3xl shadow-shadow-500 p-2 dark:bg-white/5">
     <div><SendRequest :request="request.request" :id="request.id" /></div>
 
-    <div class="mb-4 border-b border-t border-gray-200 py-2 dark:border-gray-700">
+    <div class="mb-4 mx-2 ring-1 rounded-[10px] ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 py-2 dark:border-gray-700">
         <ul class="flex flex-wrap text-md font-bold text-left p-0 m-0" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
             <li class="mr-2" role="presentation">
                 <button class="inline-block py-2 px-4 rounded hover:border-gray-300 dark:hover:text-gray-300" id="auth-tab" @click="openActiveTab('auth-content-tab', 'auth-tab')" control-tab="tab-controller" data-tabs-target="#auth" type="button" role="tab" aria-controls="auth" aria-selected="false">
@@ -32,23 +32,23 @@
             </li>
         </ul>
     </div>
-    <div id="myTabContent">
-        <div class="hidden p-4 rounded-lg border border-gray-200 bg-gray-50 dark:bg-gray-800" id="auth-content-tab" role="tree-1-tabs" aria-labelledby="auth-tab">
+    <div id="myTabContent" class="mx-2">
+        <div class="hidden p-4 rounded-lg ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 bg-gray-50 dark:bg-white/5" id="auth-content-tab" role="tree-1-tabs" aria-labelledby="auth-tab">
             <RequestAuth :auths="request.request?.auth !== undefined ? request.request.auth : {} " />
         </div>
-        <div class="hidden p-4 rounded-lg border border-gray-200 bg-gray-50 dark:bg-gray-800" id="headers-content-tab" role="tree-1-tabs" aria-labelledby="headers-tab">
+        <div class="hidden p-4 rounded-lg ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 bg-gray-50 dark:bg-white/5" id="headers-content-tab" role="tree-1-tabs" aria-labelledby="headers-tab">
             <RequestHeaders :headers="request.request?.header !== undefined ? request.request.header : {} " />
         </div>
-        <div class="hidden p-4 rounded-lg border border-gray-200 bg-gray-50 dark:bg-gray-800" id="body-content-tab" role="tree-1-tabs" aria-labelledby="body-tab">
+        <div class="hidden p-4 rounded-lg ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 bg-gray-50 dark:bg-white/5" id="body-content-tab" role="tree-1-tabs" aria-labelledby="body-tab">
             <RequestBody :body="request.request?.body !== undefined ? request.request.body : {} " />
         </div>
-        <div class="hidden p-4 rounded-lg border border-gray-200 bg-gray-50 dark:bg-gray-800" id="params-content-tab" role="tree-1-tabs" aria-labelledby="params-tab">
+        <div class="hidden p-4 rounded-lg ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 bg-gray-50 dark:bg-white/5" id="params-content-tab" role="tree-1-tabs" aria-labelledby="params-tab">
             <RequestParams :url="request.request?.url !== undefined ?  request.request.url : {}" />
         </div>
-        <div class="p-4 rounded-lg border border-gray-200 bg-gray-50 dark:bg-gray-800" id="description-content-tab" role="tree-1-tabs" aria-labelledby="Description-tab">
+        <div class="p-4 rounded-lg ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 bg-gray-50 dark:bg-white/5" id="description-content-tab" role="tree-1-tabs" aria-labelledby="Description-tab">
             <RequestDescription :name="request.name" :desc="request?.description !== undefined ? request.description : '' " :id="request.id" />
         </div>
-        <div class="hidden p-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800" id="response-content-tab" role="tree-1-tabs" aria-labelledby="response-tab">
+        <div class="hidden p-4 ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 rounded-lg bg-gray-50 dark:bg-white/5" id="response-content-tab" role="tree-1-tabs" aria-labelledby="response-tab">
             <GetResponse :response="response" />
         </div>
     </div>

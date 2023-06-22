@@ -4,7 +4,7 @@
     <div class="h-[90vh] contents lg:pointer-events-auto lg:block lg:w-60 lg:overflow-y-auto lg:border-r lg:border-zinc-900/10 lg:px-6 lg:pb-8 lg:pt-28 lg:dark:border-white/10 xl:w-70">
       
       <div class="hidden lg:flex">
-        <a aria-label="Home" href="/" class="font-bold">
+        <a aria-label="Home" href="/" class="font-bold dark:text-white">
           Table of Contents
         </a>
       </div>
@@ -12,27 +12,21 @@
       <nav class="hidden lg:mt-5 lg:block">
         <ul role="list">
           <li class="md:hidden">
-            <a
-              class="block py-1 text-sm text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
-              href="/"
-              >API</a
-            >
+            <a class="block py-1 text-sm text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white" href="/">
+              API
+            </a>
           </li>
 
           <li class="md:hidden">
-            <a
-              class="block py-1 text-sm text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
-              href="/#"
-              >Documentation</a
-            >
+            <a class="block py-1 text-sm text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white" href="/#">
+              Documentation
+            </a>
           </li>
 
           <li class="md:hidden">
-            <a
-              class="block py-1 text-sm text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
-              href="/#"
-              >Support</a
-            >
+            <a class="block py-1 text-sm text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white" href="/#">
+              Support
+            </a>
           </li>
 
           <li class="relative mt-6 md:mt-0" v-for="item in collection_items" :key="item.id">
@@ -44,8 +38,8 @@
               <div class="absolute inset-y-0 left-2 w-px bg-zinc-900/10 dark:bg-white/5" style="transform: none; transform-origin: 50% 50% 0px"></div>
               <div class="absolute left-2 h-6 w-px bg-emerald-500" style="top: 4px;opacity: 1; transform: none; transform-origin: 50% 50% 0px;"></div>
               <ul role="list" class="border-l border-transparent">
-                <li class="relative" v-for="nextItem in item.item" :key="nextItem.id">
-                  <a class="flex justify-between gap-2 py-1 pr-3 text-sm transition pl-4 text-zinc-900 dark:text-white" href="/" aria-current="page">
+                <li class="relative cursor-pointer" v-for="nextItem in item.item" :key="nextItem.id" @click="renderContent(nextItem)">
+                  <div class="flex justify-between gap-2 py-1 pr-3 text-sm transition pl-4 text-zinc-900 dark:text-white">
                     <span class="truncate w-28"> {{ nextItem.name }} </span>
                     <span v-if="nextItem.hasOwnProperty('request')" :class="methodsSymbols[nextItem.request.method]+' font-mono text-[0.625rem] font-semibold leading-6 dark:text-zinc-500'">
                       {{ nextItem.request.method }}
@@ -55,7 +49,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
                       </svg>
                     </span>
-                  </a>
+                  </div>
                 </li>
               </ul>
             </div>
@@ -140,6 +134,10 @@ export default {
       fileDownload.download = "document.docx";
       fileDownload.click();
       document.body.removeChild(fileDownload);
+    },
+
+    renderContent(content) {
+      this.$root.$emit("new_dyno_content", content);
     },
   },
 };

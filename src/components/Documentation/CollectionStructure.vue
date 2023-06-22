@@ -210,77 +210,68 @@
                 <!-- Request -->
                 <div class="not-prose my-6 overflow-hidden rounded-2xl bg-zinc-900 shadow-md dark:ring-1 dark:ring-white/10">
                     <div class="flex min-h-[calc(theme(spacing.12)+1px)] flex-wrap items-center gap-x-4 border-b border-zinc-700 bg-zinc-800 px-4 dark:border-zinc-800 dark:bg-transparent">
-                    <h3 class="mr-auto text-xs font-semibold text-white">
-                        Request
-                    </h3>
-                    <div class="-mb-px flex gap-4 text-xs font-medium" role="tablist" aria-orientation="horizontal">
-                        <button
-                        class="border-b py-3 transition focus:[&amp;:not(:focus-visible)]:outline-none border-transparent text-zinc-400 hover:text-zinc-300"
-                        id="headlessui-tabs-tab-:ri:"
-                        role="tab"
-                        type="button"
-                        aria-selected="false"
-                        tabindex="-1"
-                        data-headlessui-state=""
-                        aria-controls="headlessui-tabs-panel-:rm:">
-                        JavaScript
-                        </button>
-                        <button
-                        class="border-b py-3 transition focus:[&amp;:not(:focus-visible)]:outline-none border-transparent text-zinc-400 hover:text-zinc-300"
-                        id="headlessui-tabs-tab-:rk:"
-                        role="tab"
-                        type="button"
-                        aria-selected="false"
-                        tabindex="-1"
-                        data-headlessui-state=""
-                        aria-controls="headlessui-tabs-panel-:ro:">
-                        PHP
-                        </button>
-                    </div>
+                        <h3 class="mr-auto text-xs font-semibold text-white">
+                            Request
+                        </h3>
+                        <div class="-mb-px flex gap-4 text-xs font-medium" role="tablist" aria-orientation="horizontal">
+                            <button @click="openActiveTab('js-tab')" class="border-b py-3 transition focus:[&amp;:not(:focus-visible)]:outline-none border-transparent text-zinc-400 hover:text-zinc-300" id="headlessui-tabs-tab-:ri:">
+                                JavaScript
+                            </button>
+                            <button @click="openActiveTab('php-tab')" class="border-b py-3 transition focus:[&amp;:not(:focus-visible)]:outline-none border-transparent text-zinc-400 hover:text-zinc-300" id="headlessui-tabs-tab-:rk:">
+                                PHP
+                            </button>
+                        </div>
                     </div>
                     <div>
-                    <div id="headlessui-tabs-panel-:rl:" role="tabpanel" tabindex="0" data-headlessui-state="selected" aria-labelledby="headlessui-tabs-tab-:rh:">
-                        <div class="group dark:bg-white/2.5">
-                        <div class="flex h-9 items-center gap-2 border-y border-b-white/7.5 border-t-transparent bg-white/2.5 bg-zinc-900 px-4 dark:border-b-white/5 dark:bg-white/1">
-                            <div class="dark flex">
-                            <span class="font-mono text-[0.625rem] font-semibold leading-6 text-sky-500">
-                                {{ folder.request?.method !== undefined ? folder.request?.method : '' }}
-                            </span>
+                        <div id="headlessui-tabs-panel-:rl:" role="tabpanel" tabindex="0" data-headlessui-state="selected" aria-labelledby="headlessui-tabs-tab-:rh:">
+                            <div class="group dark:bg-white/2.5">
+                                <div class="flex h-9 items-center gap-2 border-y border-b-white/7.5 border-t-transparent bg-white/2.5 bg-zinc-900 px-4 dark:border-b-white/5 dark:bg-white/1">
+                                    <div class="dark flex">
+                                        <span class="font-mono text-[0.625rem] font-semibold leading-6 text-sky-500">
+                                            {{ folder.request?.method !== undefined ? folder.request?.method : '' }}
+                                        </span>
+                                    </div>
+                                    <span class="h-0.5 w-0.5 rounded-full bg-zinc-500"></span>
+                                    <span class="font-mono text-xs text-zinc-400">
+                                        {{ folder.request.url?.raw !== undefined ? folder.request.url.raw : '' }}
+                                    </span>
+                                </div>
+                                <div class="relative">
+<pre class="overflow-x-auto p-2 text-xs text-white text-left" id="js-tab" role="request-lang-tabs">
+    <span style="color: var(--shiki-token-keyword)">const</span> <span style="color: var(--shiki-token-string-expression)">request_instance</span> = <span style="color: var(--shiki-token-keyword)">axios</span>.create({
+        <span style="color: var(--shiki-token-string-expression)">method:</span> {{ folder.request?.method !== undefined ? folder.request?.method : '' }},
+        <span style="color: var(--shiki-token-string-expression)">baseURL:</span> {{ folder.request.url?.raw !== undefined ? folder.request.url.raw : '' }},
+        <span style="color: var(--shiki-token-string-expression)">timeout:</span> 1000,
+        <span style="color: var(--shiki-token-string-expression)">headers:</span> {<span v-for="head in folder.request.header" :key="head.key">'{{head.key}}': '{{ head.value }}'</span>}
+        <span v-if="folder.request.body?.raw !== undefined"><span style="color: var(--shiki-token-string-expression)">data:</span> <span class="whitespace-nowrap">{{ folder.request.body.raw }}</span></span>
+        <span style="color: var(--shiki-token-string-expression)">auth:</span> { <span v-if="folder.request?.auth !== undefined && folder.request.auth.type == 'bearer'"><span v-for="auth in folder.request.auth.bearer" :key="auth.type">'{{ folder.request.auth.type }}': '{{ auth.value }}'</span></span> }
+        <span v-if="folder.request.body?.formdata !== undefined" style="color: var(--shiki-token-string-expression)">data:</span><span v-if="folder.request.body?.formdata !== undefined"> { <span v-for="formData in folder.request.body.formdata" :key="formData.key">'{{ formData.key }}': '{{ formData.value }}'</span> } </span>
+    });
+</pre>
+<pre class="hidden overflow-x-auto p-2 text-xs text-white text-left" role="request-lang-tabs" id="php-tab">
+    // create & initialize a curl session
+    <span style="color: var(--shiki-token-keyword)"></span>$curl = <span style="color: var(--shiki-token-keyword)">curl_init()</span>;
+    
+    // set our url with curl_setopt()
+    <span style="color: var(--shiki-token-keyword)">curl_setopt(</span>$curl, CURLOPT_URL, "api.example.com"<span style="color: var(--shiki-token-keyword)">)</span>;
+    
+    // return the transfer as a string, also with setopt()
+    <span style="color: var(--shiki-token-keyword)">curl_setopt(</span>$curl, CURLOPT_RETURNTRANSFER, 1<span style="color: var(--shiki-token-keyword)">)</span>;
+    
+    // curl_exec() executes the started curl session
+    <span style="color: var(--shiki-color-text)">$output</span> = <span style="color: var(--shiki-token-keyword)">curl_exec(</span>$curl<span style="color: var(--shiki-token-keyword)">)</span>;
+    
+    // close curl resource to free up system resources
+    <span style="color: var(--shiki-token-keyword)">curl_close(</span>$curl<span style="color: var(--shiki-token-keyword)">)</span>;
+</pre>
+                                </div>
                             </div>
-                            <span class="h-0.5 w-0.5 rounded-full bg-zinc-500"></span>
-                            <span class="font-mono text-xs text-zinc-400">
-                            {{ folder.request.url?.raw !== undefined ? folder.request.url.raw : '' }}
-                            </span>
                         </div>
-                        <div class="relative">
-                            <pre class="overflow-x-auto p-2 text-xs text-white">
-                            <code class="language-bash">
-                                <span><span style="color: var(--shiki-color-text)">curl https://api.protocol.chat/v1/contacts \</span></span>
-                                <span><span style="color: var(--shiki-color-text)">  -H </span><span style="color: var(--shiki-token-string-expression)">"Authorization: Bearer {token}"</span><span style="color: var(--shiki-color-text)"> \</span></span>
-                                <span><span style="color: var(--shiki-color-text)">  -d username=</span><span style="color: var(--shiki-token-string-expression)">"FrankMcCallister"</span><span style="color: var(--shiki-color-text)"> \</span></span>
-                                <span><span style="color: var(--shiki-color-text)">  -d phone_number=</span><span style="color: var(--shiki-token-string-expression)">"1-800-759-3000"</span><span style="color: var(--shiki-color-text)"> \</span></span>
-                                <span><span style="color: var(--shiki-color-text)">  -d avatar_url=</span><span style="color: var(--shiki-token-string-expression)">"https://assets.protocol.chat/avatars/frank.jpg"</span></span>
-                                <span></span>
-                            </code>
-                            </pre>
-                        </div>
-                        </div>
-                    </div>
-                    <span id="headlessui-tabs-panel-:rm:" role="tabpanel" tabindex="-1" aria-labelledby="headlessui-tabs-tab-:ri:"
-                        style="position: fixed; top: 1px; left: 1px; width: 1px; height: 0px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;">
-                        </span>
-                        <span id="headlessui-tabs-panel-:rn:" role="tabpanel" tabindex="-1" aria-labelledby="headlessui-tabs-tab-:rj:"
-                        style="position: fixed; top: 1px; left: 1px; width: 1px; height: 0px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;">
-                        </span>
-                        <span id="headlessui-tabs-panel-:ro:" role="tabpanel" tabindex="-1" aria-labelledby="headlessui-tabs-tab-:rk:" style="
-                        position: fixed; top: 1px; left: 1px; width: 1px; height: 0px; padding: 0px;
-                        margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap;border-width: 0px;"
-                    ></span>
                     </div>
                 </div>
 
                 <!-- Response -->
-                <div class="not-prose my-6 overflow-hidden rounded-2xl bg-zinc-900 shadow-md dark:ring-1 dark:ring-white/10">
+                <!-- <div class="not-prose my-6 overflow-hidden rounded-2xl bg-zinc-900 shadow-md dark:ring-1 dark:ring-white/10">
                     <div class="flex min-h-[calc(theme(spacing.12)+1px)] flex-wrap items-center gap-x-4 border-b border-zinc-700 bg-zinc-800 px-4 dark:border-zinc-800 dark:bg-transparent">
                     <h3 class="mr-auto text-xs font-semibold text-white">
                         Response
@@ -288,24 +279,24 @@
                     </div>
                     <div class="group dark:bg-white/2.5">
                     <div class="relative">
-                        <pre class="overflow-x-auto text-xs text-white">
-                        <code class="language-json">
-                            <span><span style="color: var(--shiki-color-text)">{</span></span>
-                            <span><span style="color: var(--shiki-color-text)">  </span><span style="color: var(--shiki-token-keyword)">"id"</span><span style="color: var(--shiki-token-punctuation)">:</span><span style="color: var(--shiki-color-text)"> </span><span style="color: var(--shiki-token-string-expression)">"WAz8eIbvDR60rouK"</span><span style="color: var(--shiki-token-punctuation)">,</span></span>
-                            <span><span style="color: var(--shiki-color-text)">  </span><span style="color: var(--shiki-token-keyword)">"username"</span><span style="color: var(--shiki-token-punctuation)">:</span><span style="color: var(--shiki-color-text)"> </span><span style="color: var(--shiki-token-string-expression)">"FrankMcCallister"</span><span style="color: var(--shiki-token-punctuation)">,</span></span>
-                            <span><span style="color: var(--shiki-color-text)">  </span><span style="color: var(--shiki-token-keyword)">"phone_number"</span><span style="color: var(--shiki-token-punctuation)">:</span><span style="color: var(--shiki-color-text)"> </span><span style="color: var(--shiki-token-string-expression)">"1-800-759-3000"</span><span style="color: var(--shiki-token-punctuation)">,</span></span>
-                            <span><span style="color: var(--shiki-color-text)">  </span><span style="color: var(--shiki-token-keyword)">"avatar_url"</span><span style="color: var(--shiki-token-punctuation)">:</span><span style="color: var(--shiki-color-text)"> </span><span style="color: var(--shiki-token-string-expression)">"https://assets.protocol.chat/avatars/frank.jpg"</span><span style="color: var(--shiki-token-punctuation)">,</span></span>
-                            <span><span style="color: var(--shiki-color-text)">  </span><span style="color: var(--shiki-token-keyword)">"display_name"</span><span style="color: var(--shiki-token-punctuation)">:</span><span style="color: var(--shiki-color-text)"> </span><span style="color: var(--shiki-token-constant)">null</span><span style="color: var(--shiki-token-punctuation)">,</span></span>
-                            <span><span style="color: var(--shiki-color-text)">  </span><span style="color: var(--shiki-token-keyword)">"conversation_id"</span><span style="color: var(--shiki-token-punctuation)">:</span><span style="color: var(--shiki-color-text)"> </span><span style="color: var(--shiki-token-string-expression)">"xgQQXg3hrtjh7AvZ"</span><span style="color: var(--shiki-token-punctuation)">,</span></span>
-                            <span><span style="color: var(--shiki-color-text)">  </span><span style="color: var(--shiki-token-keyword)">"last_active_at"</span><span style="color: var(--shiki-token-punctuation)">:</span><span style="color: var(--shiki-color-text)"> </span><span style="color: var(--shiki-token-constant)">null</span><span style="color: var(--shiki-token-punctuation)">,</span></span>
-                            <span><span style="color: var(--shiki-color-text)">  </span><span style="color: var(--shiki-token-keyword)">"created_at"</span><span style="color: var(--shiki-token-punctuation)">:</span><span style="color: var(--shiki-color-text)"> </span><span style="color: var(--shiki-token-constant)">692233200</span></span>
-                            <span><span style="color: var(--shiki-color-text)">}</span></span>
-                            <span></span>
-                        </code>
-                        </pre>
+<pre class="overflow-x-auto text-xs text-white">
+    <code class="language-json">
+        <span><span style="color: var(--shiki-color-text)">{</span></span>
+        <span><span style="color: var(--shiki-color-text)">  </span><span style="color: var(--shiki-token-keyword)">"id"</span><span style="color: var(--shiki-token-punctuation)">:</span><span style="color: var(--shiki-color-text)"> </span><span style="color: var(--shiki-token-string-expression)">"WAz8eIbvDR60rouK"</span><span style="color: var(--shiki-token-punctuation)">,</span></span>
+        <span><span style="color: var(--shiki-color-text)">  </span><span style="color: var(--shiki-token-keyword)">"username"</span><span style="color: var(--shiki-token-punctuation)">:</span><span style="color: var(--shiki-color-text)"> </span><span style="color: var(--shiki-token-string-expression)">"FrankMcCallister"</span><span style="color: var(--shiki-token-punctuation)">,</span></span>
+        <span><span style="color: var(--shiki-color-text)">  </span><span style="color: var(--shiki-token-keyword)">"phone_number"</span><span style="color: var(--shiki-token-punctuation)">:</span><span style="color: var(--shiki-color-text)"> </span><span style="color: var(--shiki-token-string-expression)">"1-800-759-3000"</span><span style="color: var(--shiki-token-punctuation)">,</span></span>
+        <span><span style="color: var(--shiki-color-text)">  </span><span style="color: var(--shiki-token-keyword)">"avatar_url"</span><span style="color: var(--shiki-token-punctuation)">:</span><span style="color: var(--shiki-color-text)"> </span><span style="color: var(--shiki-token-string-expression)">"https://assets.protocol.chat/avatars/frank.jpg"</span><span style="color: var(--shiki-token-punctuation)">,</span></span>
+        <span><span style="color: var(--shiki-color-text)">  </span><span style="color: var(--shiki-token-keyword)">"display_name"</span><span style="color: var(--shiki-token-punctuation)">:</span><span style="color: var(--shiki-color-text)"> </span><span style="color: var(--shiki-token-constant)">null</span><span style="color: var(--shiki-token-punctuation)">,</span></span>
+        <span><span style="color: var(--shiki-color-text)">  </span><span style="color: var(--shiki-token-keyword)">"conversation_id"</span><span style="color: var(--shiki-token-punctuation)">:</span><span style="color: var(--shiki-color-text)"> </span><span style="color: var(--shiki-token-string-expression)">"xgQQXg3hrtjh7AvZ"</span><span style="color: var(--shiki-token-punctuation)">,</span></span>
+        <span><span style="color: var(--shiki-color-text)">  </span><span style="color: var(--shiki-token-keyword)">"last_active_at"</span><span style="color: var(--shiki-token-punctuation)">:</span><span style="color: var(--shiki-color-text)"> </span><span style="color: var(--shiki-token-constant)">null</span><span style="color: var(--shiki-token-punctuation)">,</span></span>
+        <span><span style="color: var(--shiki-color-text)">  </span><span style="color: var(--shiki-token-keyword)">"created_at"</span><span style="color: var(--shiki-token-punctuation)">:</span><span style="color: var(--shiki-color-text)"> </span><span style="color: var(--shiki-token-constant)">692233200</span></span>
+        <span><span style="color: var(--shiki-color-text)">}</span></span>
+        <span></span>
+    </code>
+</pre>
                     </div>
                     </div>
-                </div>
+                </div> -->
 
                 </div>
             </div>
@@ -395,6 +386,16 @@ export default {
         subject: "Copied",
         source: "/",
       });
+    },
+
+    openActiveTab(tabId) {
+      document
+        .querySelectorAll('[role="request-lang-tabs"]')
+        .forEach((Element) => {
+          Element.classList.add("hidden");
+        });
+
+      document.getElementById(tabId).classList.remove("hidden");
     },
   },
 };

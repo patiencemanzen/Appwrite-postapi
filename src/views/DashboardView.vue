@@ -5,7 +5,7 @@
 
     <div class="flex px-4 py-4 transition sm:px-6 lg:px-8">
       <!-- Side bar contain all collection folders -->
-      <div class="h-[72vh] w-[300px] px-3 py-4 overflow-y-auto rounded-[10px] border border-gray-200 transition delay-150 duration-700 ease-in-out bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:bg-gray-800">
+      <div class="h-[72vh] w-[300px] px-3 py-4 overflow-y-auto rounded-[10px] ring-1 ring-zinc-900/10 transition hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 delay-150 duration-700 ease-in-out bg-white dark:bg-white/5 bg-clip-border shadow-3xl shadow-shadow-500">
         <FoldersList />
       </div>
       

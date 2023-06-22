@@ -8,7 +8,7 @@
     --max-width-global-wrap: 1600px;
     --max-width-post-wrap: 800px;
     --grid-gap: 16px;
-    --border-radius: 26px;
+    --border-radius: 20px;
     --margin-wrap-left-right: 5.5vw;
     --font-family-system: "Anek Telugu", sans-serif;
     --font-family-one: var(--font-family-system);
@@ -180,7 +180,6 @@ body .is-partial-color:not(.is-partial-dark) {
     DOCS SECTION
     ---------------------------------------- */
 .loop-section {
-    background-color: rgba(245, 245, 245, 1);
     border-top: var(--border) var(--color-border-one);
     height: 80vh;
 }
@@ -258,7 +257,7 @@ body .is-partial-color:not(.is-partial-dark) {
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    padding: 1vw 2vw 2vw 2vw !important;
+    padding: 1vw 1vw 2vw 2vw !important;
 }
 .item-title {
     font-family: var(--font-family-two);

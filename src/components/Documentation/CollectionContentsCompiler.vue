@@ -11,7 +11,7 @@
         /></div>
 
         <main class=" py-20 px-10 w-[900px] h-[90vh] overflow-auto">
-          <article class="prose dark:prose-invert">
+          <article v-if="!dynamicChange && isEmpty(dynamicContent)" class="prose dark:prose-invert">
             <div><PatternsVue /></div>
 
             <h1 class="text-4xl"> {{ data.name }} </h1>
@@ -27,7 +27,13 @@
             </div>
           </article>
           
-          <div class="">
+          <div class="" v-if="dynamicChange && !isEmpty(dynamicContent)">
+            <CollectionStructure
+              :folder="dynamicContent"
+              :owner="owner"
+            />
+          </div>
+          <div class="" v-else>
             <CollectionStructure
               v-for="item in items"
               :key="slugify(item.name + id.unique())"
@@ -35,7 +41,6 @@
               :owner="owner"
             />
           </div>
-          
         </main>
       </div>
 
@@ -55,7 +60,7 @@ import {
 } from "../../configs/services";
 import { useUserStore } from "../../stores/UserStore";
 import { ID } from "appwrite";
-import { slugify } from "../../utils/GeneralUtils";
+import { slugify, isEmpty } from "../../utils/GeneralUtils";
 import { AppwriteService } from "../../resources/AppwriteService";
 
 export default {
@@ -84,6 +89,9 @@ export default {
     isLoading: false,
     id: ID,
     slugify,
+    isEmpty,
+    dynamicChange: false,
+    dynamicContent: [],
   }),
   methods: {
     /**
@@ -142,6 +150,11 @@ export default {
         after: () => this.$root.$emit("refresh_collection"),
       });
     },
+
+    openContent(content) {
+      this.dynamicChange = true;
+      this.dynamicContent = content;
+    },
   },
   watch: {
     collection: {
@@ -193,6 +206,8 @@ export default {
     },
   },
   async mounted() {
+    this.$root.$on("new_dyno_content", (content) => this.openContent(content));
+
     /**
      * Listen to collection refresh request
      * and register updated collectiom

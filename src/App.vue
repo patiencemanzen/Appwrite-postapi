@@ -44,5 +44,9 @@ export default {
     NavBar: () => import("./components/NavBar.vue"),
     FooterSection: () => import("./components/Footer.vue"),
   },
+  mounted() {
+    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+    document.documentElement.classList.add("dark");
+  },
 };
 </script>

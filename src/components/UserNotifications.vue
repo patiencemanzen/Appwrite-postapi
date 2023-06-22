@@ -1,7 +1,7 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-    <div v-if="isOpened" class="absolute top-10 w-80 right-10 border border-gray-200 z-20 max-w-sm bg-white divide-y divide-gray-100 rounded-[10px] shadow dark:bg-gray-800 dark:divide-gray-700" aria-labelledby="dropdownNotificationButton">
-        <div class="block px-4 py-2 font-bold text-center text-gray-700 rounded-t-lg bg-gray-50 dark:bg-gray-800 dark:text-white">
+    <div v-if="isOpened" class="absolute top-16 w-80 right-10 ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 z-20 max-w-sm bg-white divide-y divide-gray-100 rounded-[20px] shadow dark:bg-[#17202e] dark:divide-gray-700" aria-labelledby="dropdownNotificationButton">
+        <div class="block px-4 py-2 font-bold text-center text-gray-700 rounded-t-[20px] bg-gray-50 dark:bg-gray-800 dark:text-white">
             Notifications
             <button @click="closeNotifications" type="button" data-drawer-hide="drawer-right-example" aria-controls="drawer-right-example" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" >
                 <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
@@ -24,7 +24,7 @@
             </a>
           </div>
           <div v-if="isEmpty(notifications) && !isLoading" class="flex items-center grayscale justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-40 h-40 text-gray-300">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-40 h-40 text-gray-300 dark:text-gray-400">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9.143 17.082a24.248 24.248 0 003.844.148m-3.844-.148a23.856 23.856 0 01-5.455-1.31 8.964 8.964 0 002.3-5.542m3.155 6.852a3 3 0 005.667 1.97m1.965-2.277L21 21m-4.225-4.225a23.81 23.81 0 003.536-1.003A8.967 8.967 0 0118 9.75V9A6 6 0 006.53 6.53m10.245 10.245L6.53 6.53M3 3l3.53 3.53" />
             </svg>              
           </div>
