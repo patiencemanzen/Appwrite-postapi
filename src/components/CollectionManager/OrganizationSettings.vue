@@ -11,7 +11,7 @@
                     <span class="sr-only">Close modal</span>
                 </button>
                 <div class="px-6 py-6 lg:px-8">
-                    <h3 class="mb-4 text-md font-semibold text-gray-500 dark:text-white capitalize truncate">{{ organization.name }}</h3>
+                    <h3 class="mb-4 text-4xl font-semibold text-gray-500 dark:text-white capitalize truncate">{{ organization.name }}</h3>
                     <hr class="h-px mt-8 mb-4 bg-gray-200 border-0 dark:bg-gray-700">
                     <div>
                         <input v-model="model.organization_name" type="text" name="organization" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Organization Name">
@@ -19,54 +19,54 @@
                     <hr class="h-px mt-4 bg-gray-200 border-0 dark:bg-gray-700">
 
                     <div class="mt-4 mb-4">
-                        <div class="inline-flex items-center justify-between px-1 py-1 pr-4 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
-                            <span aria-hidden="true" class="text-xs bg-[#065F46] rounded-full text-white px-3 py-1.5 mr-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                                </svg>                              
-                            </span> 
-                            <span class="text-sm font-medium">
-                                Members | invite new member
-                            </span>
-                        </div>
+                      <div class="inline-flex items-center justify-between px-1 py-1 pr-4 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
+                        <span aria-hidden="true" class="text-xs bg-[#065F46] rounded-full text-white px-3 py-1.5 mr-3">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                          </svg>                              
+                        </span> 
+                        <span class="text-sm font-medium">
+                          Members | invite new member
+                        </span>
+                      </div>
                     </div>
 
                     <form class="flex items-center mt-4">   
-                        <label for="simple-search" class="sr-only">Search</label>
-                        <div class="relative w-full">
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
-                                </svg>
-                            </div>
-                            <input @keyup="searchUsers($event.target.value)" autocomplete="false" type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Users...">
-                        </div>
-                        <div v-if="!isEmpty(search_user_result)" class="w-full border mb-2 border-gray-100 rounded-b-[5px] bg-white px-3 py-2.5 shadow-sm shadow-shadow-200 dark:!bg-navy-800 dark:shadow-none md:flex-grow-0 md:gap-1 xl:gap-2">
-                            <div v-for="user in search_user_result" :key="user.$id" class="border cursor-pointer border-gray-200 p-2 rounded-[10px] mt-3 hover:bg-gray-100 relative">
-                                <div class="flex items-center space-x-4" @click="openRoleOptions(user.$id)">
-                                    <div class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-deep-green-700 rounded-full dark:bg-gray-600">
-                                        <span class="font-medium text-gray-100 dark:text-gray-300">{{ getInitials(user.name) }}</span>
+                      <label for="simple-search" class="sr-only">Search</label>
+                      <div class="relative w-full">
+                          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                              <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                  <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+                              </svg>
+                          </div>
+                          <input @keyup="searchUsers($event.target.value)" autocomplete="false" type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Users...">
+                      </div>
+                      <div v-if="!isEmpty(search_user_result)" class="w-full mb-2 ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 rounded-b-[5px] bg-white dark:bg-white/5 px-3 py-2.5 shadow-sm shadow-shadow-200 dark:!bg-navy-800 dark:shadow-none md:flex-grow-0 md:gap-1 xl:gap-2">
+                          <div v-for="user in search_user_result" :key="user.$id" class="cursor-pointer ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 p-2 rounded-[10px] mt-3 hover:bg-gray-100 relative dark:bg-white/5">
+                              <div class="flex items-center space-x-4" @click="openRoleOptions(user.$id)">
+                                  <div class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-deep-green-700 rounded-full dark:bg-gray-600">
+                                    <span class="font-medium text-gray-100 dark:text-gray-300 capitalize">{{ getInitials(user.name) }}</span>
+                                  </div>
+                                  <div class="font-medium dark:text-white">
+                                    <div class="capitalize">{{ user.name }}</div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                                        <span>Invite Member</span>
                                     </div>
-                                    <div class="font-medium dark:text-white">
-                                        <div>{{ user.name }}</div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">
-                                            <span>Invite Member</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="hidden" :id="'roles_'+user.$id">
-                                    <div class="absolute z-10 w-full top-0 right-2 left-2 bottom-0 flex items-center justify-center">
-                                        <a class="flex items-center justify-between px-2 w-full py-2 pr-4 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-[10px] dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700" aria-label="Component requires Flowbite JavaScript">
-                                            <select v-model="model.role" id="underline_select" class="ml-3 py-2 px-0 capitalize border-none text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-                                                <option selected>Pick a Role</option>
-                                                <option v-for="(role, key) in roles" :key="role.$id" :value="role.$id" :selected="key == 0">{{ role.name }}</option>
-                                            </select>
-                                            <button @click="inviteUser(user)" type="button" class="text-white bg-[#0F766E] hover:bg-[#0F766E]/75 font-medium rounded-lg text-sm px-3 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">invite</button>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                  </div>
+                              </div>
+                              <div class="hidden" :id="'roles_'+user.$id">
+                                  <div class="absolute z-10 w-full top-0 right-2 left-2 bottom-0 flex items-center justify-center">
+                                      <a class="flex items-center justify-between px-2 w-full py-2 pr-4 text-sm text-gray-700 bg-gray-50 ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 rounded-[10px] dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700" aria-label="Component requires Flowbite JavaScript">
+                                        <select v-model="model.role" id="underline_select" class="py-2 px-4 capitalize border-none rounded-lg text-sm text-gray-500 ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+                                          <option selected>Pick a Role</option>
+                                          <option v-for="(role, key) in roles" :key="role.$id" :value="role.$id" :selected="key == 0">{{ role.name }}</option>
+                                        </select>
+                                        <button @click="inviteUser(user)" type="button" class="text-white bg-[#0F766E] hover:bg-[#0F766E]/75 font-medium rounded-lg text-sm px-3 py-1 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">invite</button>
+                                      </a>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
                     </form>
 
                     <div v-if="!isEmpty(members)">
@@ -107,6 +107,7 @@
                     </button>
                 </div>
             </div>
+
         </div>
     </div>
 </template>

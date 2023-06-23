@@ -114,5 +114,6 @@ const loginWithGitHub = () => {
 
 onMounted(async () => {
   auth.value = await Auth().check();
+  if (auth.value) window.location.replace("/dashboard");
 });
 </script>

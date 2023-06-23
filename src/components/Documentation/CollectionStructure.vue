@@ -2,21 +2,31 @@
 <template>
     <article class="prose dark:prose-invert mt-10 relative">
         <div v-if="!folder.hasOwnProperty('request')" :id="folder.name">
-            <h1>{{ folder.name }}</h1>
+            <div class="flex items-center">
+                <h1 class="capitalize">{{ folder.name }}</h1>
 
-            <div v-if="owner" @click="openFolderTitleEditor(uniqueIdentifier)" :id="'*_title_'+uniqueIdentifier" class="cursor-pointer inline-flex items-center justify-between px-1 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">
-                <span class="text-xs bg-white dark:bg-gray-900 rounded-full text-black px-3 py-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-                    </svg>
-                </span>
+                <div class="flex items-center">
+                    <div v-if="owner" @click="openFolderTitleEditor(uniqueIdentifier)" :id="'*_title_'+uniqueIdentifier" class="ml-3 cursor-pointer inline-flex items-center justify-between px-1 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-white/5 dark:text-white">
+                        <span class="text-xs bg-white dark:bg-gray-900 dark:text-gray-200 rounded-full text-black px-3 py-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                            </svg>
+                        </span>
+                    </div>
+    
+                    <div v-if="owner" @click="openDescEditor(uniqueIdentifier)" :id="'*_desc_'+uniqueIdentifier" class="ml-3 cursor-pointer inline-flex items-center justify-between px-1 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-white/5 dark:text-white">
+                        <span class="text-xs bg-white dark:bg-gray-900 dark:text-gray-200 rounded-full text-black px-3 py-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                            </svg>
+                        </span>                        
+                    </div>
+                </div>
             </div>
 
             <div class="hidden" :id="'#_title_'+uniqueIdentifier">
-                <div class="absolute z-10 flex w-auto border border-gray-100 flex-grow items-center justify-center rounded-[10px] bg-white px-3 py-2.5 shadow-md shadow-shadow-200 dark:!bg-navy-800 dark:shadow-none md:w-[365px] md:flex-grow-0 md:gap-1 xl:w-[365px] xl:gap-2">
-                    <div>
-                        <input :value="folder.name" type="text" :id="'#v-model_name_'+uniqueIdentifier" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Title..">
-                    </div>
+                <div class="absolute z-10 flex w-auto ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 flex-grow items-center justify-between rounded-[10px] bg-white dark:bg-[#17202e] px-3 py-2.5 shadow-md shadow-shadow-200 dark:!bg-navy-800 dark:shadow-none md:w-[365px] md:flex-grow-0 md:gap-1 xl:w-[365px] xl:gap-2">
+                    <div> <input :value="folder.name" type="text" :id="'#v-model_name_'+uniqueIdentifier" aria-describedby="helper-text-explanation" class="bg-gray-50 border-none ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-white/5 dark:border-gray-600 font-semibold dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Title.."></div>
                     <div>
                         <button @click="submitDocFolderName(folder.id, uniqueIdentifier)" class="relative cursor-pointer inline-flex h-10 w-20 items-center justify-center rounded-lg border border-transparent text-white bg-gray-800 hover:bg-gray-900 px-2 py-1 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-75">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
@@ -37,14 +47,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div v-if="owner" @click="openDescEditor(uniqueIdentifier)" :id="'*_desc_'+uniqueIdentifier" class="ml-3 cursor-pointer inline-flex items-center justify-between px-1 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">
-                <span class="text-xs bg-white dark:bg-gray-900 rounded-full text-black px-3 py-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                    </svg>
-                </span>                        
             </div>
 
             <p class="lead">{{ folder.description }}</p>
@@ -93,25 +95,26 @@
             </div>
             <h2 id="create-a-contact" class="mt-2 scroll-mt-32">
                 <a class="group text-inherit no-underline hover:text-inherit" href="/contacts#create-a-contact">{{ folder.name }}</a>
-                <div v-if="owner" @click="openFolderTitleEditor(uniqueIdentifier)" :id="'*_title_'+uniqueIdentifier" class="cursor-pointer ml-3 inline-flex items-center justify-between px-1 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">
-                    <span class="text-xs bg-white dark:bg-gray-900 rounded-full text-black px-3 py-1.5">
+                <div v-if="owner" @click="openFolderTitleEditor(uniqueIdentifier)" :id="'*_title_'+uniqueIdentifier" class="mr-3 cursor-pointer ml-3 inline-flex items-center justify-between px-1 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-white/5 dark:text-white">
+                    <span class="text-xs bg-white dark:bg-gray-900 dark:text-gray-200 rounded-full text-black px-3 py-1.5">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
                         </svg>
                     </span>
                 </div>
-                <div v-if="owner" @click="openDescEditor(uniqueIdentifier)" :id="'*_desc_'+uniqueIdentifier" class="cursor-pointer inline-flex items-center justify-between px-1 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">
-                    <span class="text-xs bg-white dark:bg-gray-900 rounded-full text-black px-3 py-1.5">
+                <div v-if="owner" @click="openDescEditor(uniqueIdentifier)" :id="'*_desc_'+uniqueIdentifier" class="cursor-pointer inline-flex items-center justify-between px-1 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-white/5 dark:text-white">
+                    <span class="text-xs bg-white dark:bg-gray-900 dark:text-gray-200 rounded-full text-black px-3 py-1.5">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                         </svg> 
                     </span>
                 </div>
             </h2>
+
             <div class="hidden" :id="'#_title_'+uniqueIdentifier">
-                <div class="absolute z-10 flex w-auto border border-gray-100 flex-grow items-center justify-center rounded-[10px] bg-white px-3 py-2.5 shadow-md shadow-shadow-200 dark:!bg-navy-800 dark:shadow-none md:w-[365px] md:flex-grow-0 md:gap-1 xl:w-[365px] xl:gap-2">
+                <div class="absolute z-10 flex w-auto ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 flex-grow items-center justify-between rounded-[10px] bg-white dark:bg-[#17202e] px-3 py-2.5 shadow-md shadow-shadow-200 dark:!bg-navy-800 dark:shadow-none md:w-[365px] md:flex-grow-0 md:gap-1 xl:w-[365px] xl:gap-2">
                     <div>
-                        <input :value="folder.name" type="text" :id="'#v-model_name_'+uniqueIdentifier" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Title..">
+                        <input :value="folder.name" type="text" :id="'#v-model_name_'+uniqueIdentifier" aria-describedby="helper-text-explanation" class="ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 border-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-white/5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Title..">
                     </div>
                     <div>
                         <button @click="submitDocFolderName(folder.id, uniqueIdentifier)" class="relative cursor-pointer inline-flex h-10 w-20 items-center justify-center rounded-lg border border-transparent text-white bg-gray-800 hover:bg-gray-900 px-2 py-1 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-75">
@@ -141,6 +144,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="xl:max-w-none xl:grid-cols-2">
                 <div class="[&amp;>:first-child]:mt-0 [&amp;>:last-child]:mb-0">
                     <p>{{ folder.description }}</p>

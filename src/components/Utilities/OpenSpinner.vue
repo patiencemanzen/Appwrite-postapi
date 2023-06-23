@@ -1,7 +1,7 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
     <div v-if="isLoading">
-        <div class="fixed animated-loader fade-in bg-gray-50 top-0 right-0 bottom-0 left-0 z-20 w-full h-full backdrop-blur-sm rounded-[10px] flex items-center justify-center">
+        <div class="fixed animated-loader fade-in bg-gray-50 top-0 right-0 bottom-0 left-0 z-20 w-full h-full backdrop-blur-sm rounded-[10px] flex items-center justify-center dark:bg-white/5">
             <span class="relative inset-0 inline-flex h-16 w-16 animate-spin items-center justify-center rounded-full border-2 border-gray-300 after:absolute after:h-20 after:w-20 after:rounded-full after:border-2 after:border-y-indigo-500 after:border-x-transparent"></span>
         </div>
     </div>
