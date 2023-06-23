@@ -1,6 +1,7 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-    <div class="flex items-center justify-center h-[80vh]">
+    <div class="flex items-center justify-center h-[90vh]">
+        <div><PatternsVue /></div>
         <div class="text-center mt-5">
             <svg width="631" height="379" viewBox="0 0 631 379" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clip-path="url(#clip0)">
@@ -179,3 +180,7 @@
         </div>
     </div>
 </template>
+
+<script setup>
+import PatternsVue from "../components/PatternsVue.vue";
+</script>

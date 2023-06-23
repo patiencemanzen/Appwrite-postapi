@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div class="relative">
+  <div class="relative h-[90vh]">
     <div><PatternsVue /></div>
 
     <div class="loop-section global-padding pt-28 border-none">
