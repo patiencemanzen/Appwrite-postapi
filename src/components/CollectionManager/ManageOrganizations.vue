@@ -130,20 +130,44 @@ export default {
 
       tryCatch(
         () => {
+          // Get all my organizations
           this.database.collection(appwriteCollections.organization_table);
           this.database
             .index([
               Query.equal("user_id", [this.user.$id]),
               Query.orderDesc("$createdAt"),
             ])
-            .then(async (data) => {
-              this.organizations = data.documents;
-              this.isLoading = false;
+            .then(async (myOrganization) => {
+              this.organizations.push(...myOrganization.documents);
+              this.sharedOrganizations();
             })
             .catch(() => (this.isLoading = false));
         },
         () => (this.isLoading = false)
       );
+    },
+
+    /**
+     * Get all shared Organizations
+     */
+    sharedOrganizations() {
+      this.database.collection(appwriteCollections.organization_members_table);
+      this.database
+        .index([Query.equal("user_id", [this.user.$id])])
+        .then(async (sideOrganization) => {
+          sideOrganization.documents.forEach((value) => {
+            if (value.accepted) {
+              this.database.collection(appwriteCollections.organization_table);
+              this.database
+                .show(value.organization_id)
+                .then(async (organization) =>
+                  this.organizations.push(organization)
+                );
+            }
+          });
+
+          this.isLoading = false;
+        });
     },
 
     /**

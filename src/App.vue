@@ -11,9 +11,6 @@
     <!-- Handle all collection changes and save -->
     <div><CollectionChanges /></div>
 
-    <!-- User Invitation banner -->
-    <div><UserInvitation /></div>
-
     <!-- Navigation Bar -->
     <div><NavBar /></div>
 
@@ -24,6 +21,9 @@
     <router-view />
 
     <div><UrlHandler /></div>
+
+     <!-- User Invitation banner -->
+     <div><UserInvitation /></div>
 
     <!-- Footer -->
     <div><FooterSection /></div>

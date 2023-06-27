@@ -61,7 +61,12 @@
                                           <option selected>Pick a Role</option>
                                           <option v-for="(role, key) in roles" :key="role.$id" :value="role.$id" :selected="key == 0">{{ role.name }}</option>
                                         </select>
-                                        <button @click="inviteUser(user)" type="button" class="text-white bg-[#0F766E] hover:bg-[#0F766E]/75 font-medium rounded-lg text-sm px-3 py-1 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">invite</button>
+                                        <button v-if="isLoading" type="button" disabled class="text-white disabled bg-[#0F766E] hover:bg-[#0F766E]/75 font-medium rounded-lg text-sm px-3 py-1 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                          Sending...
+                                        </button>
+                                        <button v-else @click="inviteUser(user)" type="button" class="text-white bg-[#0F766E] hover:bg-[#0F766E]/75 font-medium rounded-lg text-sm px-3 py-1 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                          Invite
+                                        </button>
                                       </a>
                                   </div>
                               </div>
@@ -147,6 +152,7 @@ export default {
       isEmpty,
       getInitials,
       diffFromHuman,
+      isLoading: false,
     };
   },
   watch: {
@@ -265,7 +271,6 @@ export default {
         tryCatch(
           () => {
             this.isLoading = true;
-            this.$root.$emit("set_loader_on");
 
             let org = appwriteCollections.organization_members_table;
             let query = [
@@ -316,9 +321,11 @@ export default {
         .create({
           sender_id: this.user.$id,
           reciever_id: user.$id,
-          payload: JSON.stringify({
+          payload: {
             organization_id: this.organization.$id,
-          }),
+            organization_name: this.organization.name,
+            message: `${this.user.name} invites you to join the organization '${this.organization.name}'`,
+          },
           active_status: true,
         })
         .then(() => this.sendInvitationEmail(user))
@@ -331,11 +338,11 @@ export default {
     sendInvitationEmail(user) {
       let message = `${this.user.name} invites you to join the organization '${this.organization.name}', to confurm go to your dashboard`;
 
-      sendEmail(user.name, user.email, `New Invitation From Postapi`, message)
-        .then((response) => {
+      sendEmail(user.email, `New Invitation From Postapi`, message)
+        .then(() => {
           this.$root.$emit("new_message", {
             responseType: "success",
-            response: response.message,
+            response: "Invitation Sent",
             subject: "Invitations",
             source: "/",
             shouldSave: true,

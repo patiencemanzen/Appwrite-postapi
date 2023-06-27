@@ -10,7 +10,7 @@
         </div>
         <div class="max-h-[40rem] overflow-auto p-3">
           <div v-if="!isEmpty(notifications)" class="divide-y divide-gray-100 dark:divide-gray-700">
-            <a v-for="notification in notifications" :key="notification.$id" :href="notification.source" class="slide-top flex px-2 py-3 shadow-sm border border-gray-200 rounded-[10px] mb-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+            <a v-for="notification in notifications" :key="notification.$id" :href="notification.source" class="slide-top flex px-2 py-3 shadow-sm right-10 ring-1 ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 rounded-[10px] mb-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-white/5">
               <div class="w-full pl-3">
                   <div class="text-gray-600 text-md font-bold mb-1.5 dark:text-gray-400">{{ notification.subject }}</div>
                   <div class="text-gray-500 mb-1.5 dark:text-gray-400">{{ notification.message }}</div>

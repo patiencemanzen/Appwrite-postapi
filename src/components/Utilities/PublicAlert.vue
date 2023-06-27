@@ -70,7 +70,7 @@ export default {
           this.database.collection(appwriteCollections.notifications_table);
           this.database
             .create({
-              user_id: this.user.$id,
+              user_id: useUserStore().get.$id,
               subject: payload.subject,
               message: payload.response,
               type: payload.responseType,

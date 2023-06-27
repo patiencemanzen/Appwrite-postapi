@@ -13,21 +13,21 @@ const routes = [
     name: "home",
     component: HomeView,
     meta: { title: "Home" },
-    // beforeEnter: async (to, from, next) => await Auth().guard(to, from, next),
+    beforeEnter: async (to, from, next) => (await Auth().check()) ? window.location.replace("/dashboard") : next(),
   },
   {
     path: "/login",
     name: "login",
     meta: { title: "Login" },
     component: () => import("../views/LoginView.vue"),
-    // beforeEnter: async (to, from, next) => await Auth().guard(to, from, next),
+    beforeEnter: async (to, from, next) => (await Auth().check()) ? window.location.replace("/dashboard") : next(),
   },
   {
     path: "/published",
     name: "published",
     meta: { title: "Published Collections" },
     component: () => import("../views/PublishedView.vue"),
-    beforeEnter: async (to, from, next) => await Auth().guard(to, from, next),
+    beforeEnter: async (to, from, next) => (await Auth().check()) ? next() : window.location.replace("/login"),
   },
   {
     path: "/collection/:collection",
@@ -40,7 +40,7 @@ const routes = [
     name: "dashboard",
     meta: { title: "Dashboard" },
     component: () => import("../views/DashboardView.vue"),
-    beforeEnter: async (to, from, next) => await Auth().guard(to, from, next),
+    beforeEnter: async (to, from, next) => (await Auth().check()) ? next() : window.location.replace("/login"),
   },
   {
     path: "*",
