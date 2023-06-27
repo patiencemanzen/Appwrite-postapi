@@ -2,17 +2,17 @@
 <template>
     <div>
         <div>
-            <label for="first_name" class="block mb-2 text-md font-anek text-gray-900 dark:text-white">Name</label>
-            <input v-model="data.name" type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Request name" required>
+          <label for="first_name" class="block mb-2 text-md font-anek text-gray-900 dark:text-white">Name</label>
+          <input v-model="data.name" type="text" id="first_name" class="bg-gray-50 border-none ring-1 ring-zinc-900/10 transition hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 dark:bg-white/5 text-gray-900 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Request name" required>
         </div>
         <div class="mt-6">
-            <label for="message" class="block mb-2 text-md font-anek text-gray-900 dark:text-white">Description</label>
-            <textarea v-model="data.description" id="message" rows="4" class="block p-2.5 w-full text-md text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Describe your request..."></textarea>
+          <label for="message" class="block mb-2 text-md font-anek text-gray-900 dark:text-white">Description</label>
+          <textarea v-model="data.description" id="message" rows="4" class="block p-2.5 w-full text-md text-gray-900 bg-gray-50 rounded-lg border-none ring-1 ring-zinc-900/10 transition hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 dark:bg-white/5 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Describe your request..."></textarea>
         </div>
         <div class="mt-3" v-if="id">
-            <button @click="submitRequestInfo" :class="(sendingRequest ? 'disabled' : '')+' relative cursor-pointer inline-flex h-10 w-32 items-center justify-center rounded-lg border border-transparent text-white bg-gray-800 hover:bg-gray-900 px-2 py-1 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-75'">
-                <span>save changes</span>
-            </button>
+          <button @click="submitRequestInfo" :class="(sendingRequest ? 'disabled' : '')+' relative cursor-pointer inline-flex h-10 w-32 items-center justify-center rounded-lg border border-transparent text-white bg-gray-800 hover:bg-gray-900 px-2 py-1 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-75'">
+            <span>save changes</span>
+          </button>
         </div>
         <div :class="!sendingRequest ? 'hidden' : ''">
             <div class="absolute top-0 right-0 bottom-0 left-0 w-full h-full backdrop-blur-sm z-10 rounded-[10px] flex items-center justify-center">

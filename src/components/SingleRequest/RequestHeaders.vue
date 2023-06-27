@@ -1,14 +1,14 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
     <div>
-      <div class="flex justify-between">
+      <div class="flex justify-between mb-4">
         <div></div>
-        <div class="w-auto border mb-2 border-gray-100 rounded-[10px] bg-white px-3 py-2.5 shadow-sm shadow-shadow-200 dark:!bg-navy-800 dark:shadow-none md:flex-grow-0 md:gap-1 xl:gap-2">
-            <div class="font-semibold text-sm mb-3">Add new row</div>
+        <div class="w-auto mb-2 ring-1 ring-zinc-900/10 transition hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 rounded-[10px] bg-white dark:bg-white/5 px-3 py-2.5 shadow-sm shadow-shadow-200 dark:!bg-navy-800 dark:shadow-none md:flex-grow-0 md:gap-1 xl:gap-2">
+            <div class="font-semibold text-sm mb-3 dark:text-gray-200">Add new row</div>
             <div class="flex flex-grow items-center justify-center relative">
-                <div class="flex items-center">
-                    <div class="mr-1"><input v-model="newFormKeyPaired.key" type="text" autocomplete="false" id="helper-text" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="key"></div>
-                    <div><input v-model="newFormKeyPaired.value" autocomplete="false" type="text" id="helper-text" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="value"></div>
+                <div class="flex items-center mr-3">
+                    <div class="mr-1"><input v-model="newFormKeyPaired.key" type="text" autocomplete="false" id="helper-text" aria-describedby="helper-text-explanation" class="bg-gray-50 border-none ring-1 ring-zinc-900/10 transition hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 dark:bg-white/5 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="key"></div>
+                    <div><input v-model="newFormKeyPaired.value" autocomplete="false" type="text" id="helper-text" aria-describedby="helper-text-explanation" class="bg-gray-50 border-none ring-1 ring-zinc-900/10 transition hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 dark:bg-white/5 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ml-2" placeholder="value"></div>
                 </div>
                 <div class="ml-3">
                     <button @click="registerHeader" class="relative cursor-pointer inline-flex h-10 w-10 items-center justify-center rounded-lg border border-transparent text-white bg-gray-800 hover:bg-gray-900 px-2 py-1 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-75">

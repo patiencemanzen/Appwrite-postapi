@@ -4,34 +4,34 @@
         <div class="mb-4 border-b border-gray-200 pb-2 dark:border-gray-700">
             <ul class="flex flex-wrap text-md font-bold font-anek text-left p-0 m-0" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
                 <li class="mr-2" role="presentation">
-                    <button class="inline-block py-2 px-4 rounded hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" @click="openActiveTab('formdata')" id="form-data-tab" data-tabs-target="#form-data" type="button" role="tab" aria-controls="form-data" aria-selected="true">
+                    <button class="inline-block py-2 px-4 rounded dark:text-gray-400 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" @click="openActiveTab('formdata')" id="form-data-tab" data-tabs-target="#form-data" type="button" role="tab" aria-controls="form-data" aria-selected="true">
                         Form-data
                     </button>
                 </li>
                 <li class="mr-2" role="presentation">
-                    <button class="inline-block py-2 px-4 rounded" id="raw-data-tab" @click="openActiveTab('json')" data-tabs-target="#raw-data" type="button" role="tab" aria-controls="raw-data" aria-selected="false">
+                    <button class="inline-block py-2 px-4 rounded dark:text-gray-400" id="raw-data-tab" @click="openActiveTab('json')" data-tabs-target="#raw-data" type="button" role="tab" aria-controls="raw-data" aria-selected="false">
                         Raw
                     </button>
                 </li>
             </ul>
         </div>
         <div id="myTabContent">
-            <div class="rounded-lg bg-gray-50 dark:bg-gray-800" id="formdata-content" role="tree-3-tabs" aria-labelledby="form-data-tab">
+            <div class="rounded-lg p-5 bg-gray-50 dark:bg-gray-800" id="formdata-content" role="tree-3-tabs" aria-labelledby="form-data-tab">
                 <div class="flex justify-between">
                     <div></div>
-                    <div class="w-auto border mb-2 border-gray-100 rounded-[10px] bg-white px-3 py-2.5 shadow-sm shadow-shadow-200 dark:!bg-navy-800 dark:shadow-none md:flex-grow-0 md:gap-1 xl:gap-2">
-                        <div class="font-semibold text-sm mb-3">Add new row</div>
+                    <div class="w-auto mb-2 ring-1 ring-zinc-900/10 transition hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 rounded-[10px] bg-white dark:bg-white/5 px-3 py-2.5 shadow-sm shadow-shadow-200 dark:!bg-navy-800 dark:shadow-none md:flex-grow-0 md:gap-1 xl:gap-2">
+                        <div class="font-semibold text-sm mb-3 dark:text-gray-200">Add new row</div>
                         <div class="flex flex-grow items-center justify-center relative">
                             <div class="flex items-center">
                                 <div class="mr-1">
-                                    <select v-model="newFormKeyPaired.type" id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <select v-model="newFormKeyPaired.type" id="countries" class="bg-gray-50 border-none ring-1 ring-zinc-900/10 transition hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 dark:bg-white/5 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                         <option value="text" selected>text</option>
                                         <option value="file">file</option>
                                     </select>
                                 </div>
-                                <div class="mr-1"><input v-model="newFormKeyPaired.key" type="text" autocomplete="false" id="helper-text" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="key"></div>
+                                <div class="mr-1"><input v-model="newFormKeyPaired.key" type="text" autocomplete="false" id="helper-text" aria-describedby="helper-text-explanation" class="bg-gray-50 border-none ring-1 ring-zinc-900/10 transition hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 dark:bg-white/5 ml-2 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="key"></div>
                                 <div v-if="newFormKeyPaired.type == 'text'"><input v-model="newFormKeyPaired.value" autocomplete="false" type="text" id="helper-text" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="value"></div>
-                                <div v-if="newFormKeyPaired.type == 'file'"><input @change="onFileChange" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file"></div>
+                                <div v-if="newFormKeyPaired.type == 'file'"><input @change="onFileChange" class="block w-full text-sm text-gray-900 border-none ring-1 ring-zinc-900/10 transition hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 dark:bg-white/5 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file"></div>
                             </div>
                             <div class="ml-3">
                                 <button @click="registerFormdata" class="relative cursor-pointer inline-flex h-10 w-10 items-center justify-center rounded-lg border border-transparent text-white bg-gray-800 hover:bg-gray-900 px-2 py-1 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-75">
@@ -64,9 +64,9 @@
                   </table>
                 </div>
             </div>
-            <div class="hidden rounded-lg bg-gray-50 dark:bg-gray-800 text-sm" id="json-content" role="tree-3-tabs" aria-labelledby="raw-data-tab">
+            <div class="hidden p-5 rounded-lg bg-gray-50 dark:bg-gray-800 text-sm" id="json-content" role="tree-3-tabs" aria-labelledby="raw-data-tab">
                 <div> 
-                    <textarea id="request_body_as_json" v-model="request_body_as_json" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="{}"></textarea>
+                    <textarea id="request_body_as_json" v-model="request_body_as_json" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border-none ring-1 ring-zinc-900/10 transition hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 dark:bg-white/5 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="{}"></textarea>
 
                     <ssh-pre language="json" label="body" copy-button @copied="onBodyCopied">
                         <template #copy-button>

@@ -6,27 +6,27 @@
     <div class="mb-4 mx-2 ring-1 rounded-[10px] ring-zinc-900/10 hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20 py-2 dark:border-gray-700">
         <ul class="flex flex-wrap text-md font-bold text-left p-0 m-0" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
             <li class="mr-2" role="presentation">
-                <button class="inline-block py-2 px-4 rounded hover:border-gray-300 dark:hover:text-gray-300" id="auth-tab" @click="openActiveTab('auth-content-tab', 'auth-tab')" control-tab="tab-controller" data-tabs-target="#auth" type="button" role="tab" aria-controls="auth" aria-selected="false">
+                <button class="inline-block py-2 dark:text-gray-400 px-4 rounded hover:border-gray-300 dark:hover:text-gray-300" id="auth-tab" @click="openActiveTab('auth-content-tab', 'auth-tab')" control-tab="tab-controller" data-tabs-target="#auth" type="button" role="tab" aria-controls="auth" aria-selected="false">
                     Auth
                 </button>
             </li>
             <li class="mr-2" role="presentation">
-                <button class="inline-block py-2 px-4 rounded" id="headers-tab" data-tabs-target="#headers" type="button" role="tab" @click="openActiveTab('headers-content-tab', 'headers-tab')" control-tab="tab-controller" aria-controls="headers" aria-selected="false">
+                <button class="inline-block py-2 px-4 dark:text-gray-400 rounded" id="headers-tab" data-tabs-target="#headers" type="button" role="tab" @click="openActiveTab('headers-content-tab', 'headers-tab')" control-tab="tab-controller" aria-controls="headers" aria-selected="false">
                     Headers
                 </button>
             </li>
             <li class="mr-2" role="presentation">
-                <button class="inline-block p-3 py-2 px-4 rounded hover:border-gray-300 dark:hover:text-gray-300" id="body-tab" data-tabs-target="#body" @click="openActiveTab('body-content-tab', 'body-tab')" control-tab="tab-controller" type="button" role="tab" aria-controls="body" aria-selected="false">
+                <button class="inline-block p-3 py-2 dark:text-gray-400 px-4 rounded hover:border-gray-300 dark:hover:text-gray-300" id="body-tab" data-tabs-target="#body" @click="openActiveTab('body-content-tab', 'body-tab')" control-tab="tab-controller" type="button" role="tab" aria-controls="body" aria-selected="false">
                     Body
                 </button>
             </li>
             <li class="mr-2" role="presentation">
-                <button class="inline-block py-2 px-4 rounded hover:border-gray-300 dark:hover:text-gray-300" id="params-tab" data-tabs-target="#params" @click="openActiveTab('params-content-tab', 'params-tab')" control-tab="tab-controller" type="button" role="tab" aria-controls="params" aria-selected="false">
+                <button class="inline-block py-2 px-4 rounded dark:text-gray-400 hover:border-gray-300 dark:hover:text-gray-300" id="params-tab" data-tabs-target="#params" @click="openActiveTab('params-content-tab', 'params-tab')" control-tab="tab-controller" type="button" role="tab" aria-controls="params" aria-selected="false">
                     Params
                 </button>
             </li>
             <li class="mr-2" role="presentation">
-                <button class="inline-block py-2 px-4 rounded bg-[#475569] text-white hover:border-gray-300 dark:hover:text-gray-300" id="Description-tab" data-tabs-target="#Description" @click="openActiveTab('description-content-tab', 'Description-tab')" control-tab="tab-controller" type="button" role="tab" aria-controls="Description" aria-selected="true">
+                <button class="inline-block py-2 px-4 rounded dark:text-gray-400 bg-[#475569] text-white hover:border-gray-300 dark:hover:text-gray-300" id="Description-tab" data-tabs-target="#Description" @click="openActiveTab('description-content-tab', 'Description-tab')" control-tab="tab-controller" type="button" role="tab" aria-controls="Description" aria-selected="true">
                     Description
                 </button>
             </li>
@@ -85,12 +85,12 @@ export default {
       document
         .querySelectorAll('[control-tab="tab-controller"]')
         .forEach((Element) => {
-          Element.classList.remove("text-white");
+          Element.classList.remove("dark:text-white");
           Element.classList.remove("bg-[#475569]");
         });
 
       if (self) {
-        document.getElementById(self).classList.add("text-white");
+        document.getElementById(self).classList.add("dark:text-white");
         document.getElementById(self).classList.add("bg-[#475569]");
       }
 
