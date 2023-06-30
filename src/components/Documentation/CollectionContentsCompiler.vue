@@ -10,7 +10,7 @@
           :collection_items="items"
         /></div>
 
-        <main class=" py-20 px-10 w-[900px] h-[90vh] overflow-auto">
+        <main class="py-20 md:px-10 md:w-[900px] md:h-[90vh] md:overflow-auto xsm:w-[95vw] xsm:overflow-x-hidden">
           <article v-if="!dynamicChange && isEmpty(dynamicContent)" class="prose dark:prose-invert">
             <div><PatternsVue /></div>
 

@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-    <div v-if="isOpen" class="translate-x-0 fixed top-5 right-5 bottom-5 rounded-2xl z-40 p-4 overflow-y-auto transition-transform bg-white w-[30vw] shadow-lg ring-1 ring-zinc-900/10 dark:bg-[#17202e] hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20">
+    <div v-if="isOpen" class="translate-x-0 fixed top-5 right-5 bottom-5 rounded-2xl z-40 p-4 overflow-y-auto transition-transform bg-white xsm:w-[80vw] sm:w-[50vw] md:w-[30vw] shadow-lg ring-1 ring-zinc-900/10 dark:bg-[#17202e] hover:ring-zinc-900/20 dark:ring-white/10 dark:hover:ring-white/20">
         <div class="flex items-center gap-2.5 rounded-2xl border border-emerald-500/20 bg-[#2c5385]/10 p-4 leading-6 text-emerald-900 dark:border-emerald-500/30 dark:bg-emerald-500/5 dark:text-emerald-200 dark:[--tw-prose-links-hover:theme(colors.emerald.300)] dark:[--tw-prose-links:theme(colors.white)]">
           <svg viewBox="0 0 16 16" aria-hidden="true" class="mt-1 h-4 w-4 flex-none fill-emerald-500 stroke-white dark:fill-emerald-200/20 dark:stroke-emerald-200">
             <circle cx="8" cy="8" r="8" stroke-width="0"></circle>
