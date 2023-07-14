@@ -12,7 +12,7 @@
               <p class="lead dark:text-gray-200">
                 Simplifies the process of creating, organizing, and maintaining 
                 APIS Collection. And Save your teams to collaborate effectively, improves documentation consistency, 
-                and ensures that information is easily accessible to all your Team member, project manager and DevOps.
+                and ensures that information is easily accessible to all your Team member and project manager.
               </p>
   
               <h2 class="scroll-mt-20 dark:text-gray-200 text-2xl font-extrabold leading-none tracking-tight md:text-2xl xl:text-2xl mt-10 mb-5">Getting started</h2>
